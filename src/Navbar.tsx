@@ -4,6 +4,7 @@ import { faFolder } from "@fortawesome/free-solid-svg-icons";
 import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 // application navigation bar described with JSX
 function Navbar() {
@@ -28,8 +29,10 @@ function Navbar() {
                 <span style={{display: menuHidden ? "none": "block"}} className="menu-text">Profile</span>
             </button>
             <button>
-                <FontAwesomeIcon icon={faRightFromBracket} className="menu-icon" />
-                <span style={{display: menuHidden ? "none": "block"}} className="menu-text">Log out</span>
+                <Link style={{ textDecoration: 'none', color: '#004A94' }} to="/">
+                    <FontAwesomeIcon icon={faRightFromBracket} className="menu-icon" />
+                    <span style={{display: menuHidden ? "none": "block"}} className="menu-text">Log out</span>
+                </Link>
             </button>
         </div>
     );
