@@ -7,14 +7,14 @@
     flex-direction: column;
     padding: 0.5rem;
     position: sticky;
-    transition: 0.5 ease;
+    transition: 0.3s ease;
 }
-.menu.clicked {
+.menu.notclicked {
     width: 50px;
 }
 
-.menu.notclicked{
-    width: 150px;
+.menu.clicked{
+    width: 200px;
 }
 
 .menu button {
