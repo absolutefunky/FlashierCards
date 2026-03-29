@@ -1,5 +1,6 @@
 import React from 'react';
 import Dashboard from './Dashboard.tsx';
+import Profile from './Profile.tsx';
 import Navbar from "./Navbar"
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -15,6 +16,7 @@ function App() {
         <div className="routes">
           <Routes>
             <Route path="/" element={<Dashboard/>} />
+            <Route path="/profile" element={<Profile/>} />
           </Routes>
         </div>
       </div>
