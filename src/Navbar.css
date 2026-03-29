@@ -16,7 +16,7 @@
     width: 200px;
 }
 
-.menu button {
+.menu li {
     margin-bottom: 0.5rem;
     color: #004A94;
     font-family: "Imprima", sans-serif;
@@ -26,13 +26,13 @@
     border: none;
     font-size: 20px;
     background-color: white;
-    border-radius: 5px;
+    border-radius: 2px;
     cursor: pointer;
 }
 .menu-icon {
     font-size: 30px;
 }
-.menu button:hover {
+.menu li:hover {
     background-color: #004A94;
     color: white;
 }
