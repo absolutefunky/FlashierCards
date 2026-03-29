@@ -11,8 +11,6 @@ function Deck() {
     const front = "Front of card " + number;
     const back = "Back of card " + number;
     const cardRef = useRef<HTMLDivElement>(null);
-    const leftRef = useRef<HTMLDivElement>(null);
-    const rightRef = useRef<HTMLDivElement>(null);
 
     function flipCard() {
         if (cardRef.current) {
@@ -31,9 +29,9 @@ function Deck() {
                     </div>
                 </div>
                 <div id="deck-nav">
-                    <span ref={leftRef}><FontAwesomeIcon icon={faChevronLeft} /></span>
+                    <span><FontAwesomeIcon icon={faChevronLeft} /></span>
                     <span>{number}/{total}</span>
-                    <span ref={rightRef}><FontAwesomeIcon icon={faChevronRight} /></span>
+                    <span><FontAwesomeIcon icon={faChevronRight} /></span>
                 </div>
             </div>
         </div>

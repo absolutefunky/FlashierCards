@@ -1,5 +1,5 @@
 import Navbar from "./Navbar"
-import Deck from "./Deck"
+import Deck from "./StudyDeck"
 
 // study component of application
 function Study() {

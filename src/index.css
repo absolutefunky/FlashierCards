@@ -30,6 +30,7 @@ html, body {
     background-color: #004A94;
     border: 2px solid #004A94;
     color: white;
+    cursor: pointer;
 }
 
 .menu button .menu-icon {
@@ -134,4 +135,90 @@ html, body {
 
 #deck-nav span:last-of-type {
     cursor: pointer;
+}
+
+.toolbar {
+    background-color: #D9EDF8;
+    border-radius: 5px;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.toolbar button {
+    margin-right: 0.5rem;
+    font-size: 18px;
+    color: #004A94;
+    background-color: #D9EDF8;
+    border: 2px solid #D9EDF8;
+    border-radius: 5px;
+    padding: 0.2rem;
+}
+
+.toolbar button:hover {
+    color: white;
+    background-color: #004A94;
+    border: 2px solid #004A94;
+    cursor: pointer;
+}
+
+.edit-deck {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#edit-card-front, #edit-card-back {
+    width: 700px;
+    height: 400px;
+    background-color: white;
+    font-size: 20px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #004A94;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+#edit-card {
+    perspective: 1000px;
+    width: 700px;
+    height: 400px;
+    margin-bottom: 1.5rem;
+}
+
+#edit-card:hover {
+    cursor: pointer;
+}
+
+#edit-card-inner {
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 1s;
+}
+
+#edit-card.flip #edit-card-inner {
+    transform: rotateY(180deg);
+}
+
+#edit-card-front, #edit-card-back {
+    width: 700px;
+    height: 400px;
+    position: absolute;
+    backface-visibility: hidden;
+    background-color: white;
+    font-size: 20px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #004A94;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+#edit-card-front {
+    z-index: 2;
+    transform: rotateY(0deg);
+}
+
+#edit-card-back {
+    transform: rotateY(180deg);
 }

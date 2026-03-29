@@ -1,9 +1,10 @@
 import Study from "./Study"
+import Edit from "./Edit"
 
 function App() {
   return (
     <>
-      <Study />
+      <Edit />
     </>
   );
 }
