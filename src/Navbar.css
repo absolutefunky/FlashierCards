@@ -6,7 +6,15 @@
     display: flex;
     flex-direction: column;
     padding: 0.5rem;
-    transition: width 0.3s ease;
+    position: sticky;
+    transition: 0.5 ease;
+}
+.menu.clicked {
+    width: 50px;
+}
+
+.menu.notclicked{
+    width: 150px;
 }
 
 .menu button {
@@ -17,12 +25,13 @@
     align-items: center;
     padding: 0.5rem;
     border: none;
+    font-size: 20px;
     background-color: white;
     border-radius: 5px;
     cursor: pointer;
 }
 .menu-icon {
-    font-size: 20px;
+    font-size: 30px;
 }
 .menu button:hover {
     background-color: #004A94;

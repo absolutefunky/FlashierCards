@@ -14,7 +14,7 @@ function Navbar() {
     }
 
     return (
-        <div className="menu">
+        <div className={`menu ${menuHidden ? 'clicked' : 'notclicked'}`}>
             <button onClick={showMenu}>
                 <FontAwesomeIcon icon={faBars} className="menu-icon" />
                 <span style={{display: menuHidden ? "none": "block"}} className="menu-text">Menu</span>
