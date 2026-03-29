@@ -3,10 +3,10 @@ import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { faFolder } from "@fortawesome/free-solid-svg-icons";
 import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import "./Navbar.css";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-// application navigation bar described with JSX
 function Navbar() {
     const [menuHidden, setMenuHidden] = useState(true);
 
