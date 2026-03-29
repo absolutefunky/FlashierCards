@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import "./Dashboard.css";
 
 const Dashboard = () => {
@@ -7,7 +7,7 @@ const Dashboard = () => {
 
     return (
         <div className='main'>
-             <span className="title">Flashier Cards</span>
+        <h1 className="title">Flashier Cards</h1>
             <nav className='toolbar'>
                 {( !deckClicked &&
                     <>
