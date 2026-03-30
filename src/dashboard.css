@@ -1,15 +1,17 @@
-#root{
-    background-color: white;
+.dashboard-main {
+    display: flex;
+    position: relative;
 }
-.main{
+
+.dashboard-content {
     flex: 1;
     display: flex;
     flex-direction: column;
     padding: 1rem;
 }
-.title {
 
-    font-size: 60px;
+.dashboard-title {
+    font-size: 45px;
     font-family: "Rampart One", sans-serif;
     font-weight: 400;
     font-style: normal;
@@ -18,18 +20,16 @@
     padding: 1rem 0rem;
     margin-bottom: 0.5rem;
 }
+
 .toolbar {
     background-color: #D9EDF8;
     border-radius: 10px;
-    height: 40px;
-    width: 1300px;
     display: flex;
     padding: 0.5rem;
     margin-bottom: 0.5rem;
     box-shadow: 10px 5px 2px rgba(18, 31, 50, 0.234);
-
-
 }
+
 .toolbar button {
     font-size: 25px;
     font-family: "Imprima", sans-serif;

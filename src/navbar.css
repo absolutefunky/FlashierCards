@@ -1,0 +1,43 @@
+.menu {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+}
+
+.menu button {
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    border: 2px solid white;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #004A94;
+}
+
+.menu button:hover {
+    background-color: #004A94;
+    border: 2px solid #004A94;
+    cursor: pointer;
+}
+
+.menu button:hover .nav-link {
+    color: white;
+}
+
+.menu button .menu-icon {
+    font-size: 22px;
+}
+
+.menu button .menu-text {
+    margin-left: 1rem;
+    font-size: 18px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    display: none;
+}
