@@ -1,0 +1,63 @@
+#home-main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+#home-title {
+    font-size: 70px;
+    font-family: "Rampart One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #004A94;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    margin-top: 6rem;
+}
+
+#home-sub-title {
+    font-size: 25px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #004A94;
+    text-align: center;
+    margin-bottom: 5rem;
+}
+
+#home-sign-up-btn {
+    text-decoration: none;
+    font-size: 20px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 200px;
+    min-height: 50px;
+    border-radius: 5px;
+    background-color: #ffffff;
+    color: #004A94;
+    border: 2px solid #004A94;
+    margin-bottom: 1rem;
+}
+
+#home-log-in-btn {
+    text-decoration: none;
+    font-size: 20px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 200px;
+    min-height: 50px;
+    border-radius: 5px;
+    background-color: #004A94;
+    color: white;
+    border: 2px solid #004A94;
+}
