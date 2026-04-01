@@ -5,6 +5,7 @@ import { useRef } from "react";
 
 // deck component part of study component
 function Deck() {
+    /*
     const name = "SENG 645 Exam 1";
     const number = 1;
     const total = 5;
@@ -16,9 +17,11 @@ function Deck() {
         if (cardRef.current) {
             cardRef.current.classList.toggle("flip");
         }
-    }
+    }*/
 
     return (
+        <div>deck view</div>
+        /*
         <div className="main-content">
             <div className="title">{name}</div>
             <div className="study-deck">
@@ -34,7 +37,7 @@ function Deck() {
                     <span><FontAwesomeIcon icon={faChevronRight} /></span>
                 </div>
             </div>
-        </div>
+        </div>*/
     );
 }
 
