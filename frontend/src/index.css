@@ -120,42 +120,56 @@ html, body {
     min-width: 250px;
 }
 
+/* navbar css */
+
 #navbar {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     padding: 0.5rem;
 }
 
-.nav-option {
-    display: flex;
+#navbar button {
     margin-bottom: 0.5rem;
-    text-decoration: none;
+    display: flex;
+    align-items: center;
     padding: 0.5rem;
     border-radius: 5px;
-    color: #004A94;
     background-color: white;
     border: 2px solid white;
 }
 
-.nav-option:hover {
-    color: white;
+#navbar button:hover {
+    cursor: pointer;
     background-color: #004A94;
     border: 2px solid #004A94;
 }
 
-.nav-option span:first-of-type {
-    font-size: 22px;
+#navbar button:hover span:first-of-type {
+    color: white;
 }
 
-.nav-option span:last-of-type {
+#navbar button:hover span:last-of-type {
+    color: white;
+}
+
+#navbar button span:first-of-type {
+    font-size: 22px;
+    color: #004A94;
+}
+
+#navbar button span:last-of-type {
+    margin-left: 1rem;
     font-size: 20px;
     font-family: "Imprima", sans-serif;
     font-weight: 400;
     font-style: normal;
-    margin-left: 1rem;
-    margin-right: 0.2rem;
-    display: none;
+    color: #004A94;
+}
+
+.nav-option {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
 }
 
 #dashboard-content {

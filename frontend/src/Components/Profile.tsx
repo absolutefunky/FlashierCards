@@ -1,3 +1,4 @@
+import Navbar from "./Navbar";
 import {useState} from 'react';
 import { Link } from "react-router-dom";
 
@@ -10,24 +11,7 @@ import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 function Profile() {
     return (
         <div id="dashboard-content">
-            <div id="navbar">
-                <Link className="nav-option" to="/dashboard">
-                    <span><FontAwesomeIcon icon={faBars} className="menu-icon" /></span>
-                    <span>Menu</span>
-                </Link>
-                <Link className="nav-option" to="/dashboard">
-                    <span><FontAwesomeIcon icon={faFolder} className="menu-icon" /></span>
-                    <span>Decks</span>
-                </Link>
-                <Link style={{backgroundColor: "#004A94", border: "2px solid #004A94", color: "white"}} className="nav-option" to="/profile">
-                    <span><FontAwesomeIcon icon={faCircleUser} className="menu-icon" /></span>
-                    <span>Profile</span>
-                </Link>
-                <Link className="nav-option" to="/">
-                    <span><FontAwesomeIcon icon={faRightFromBracket} className="menu-icon" /></span>
-                    <span>Log out</span>
-                </Link>
-            </div>
+            <Navbar />
             <div>
                 profile content
             </div>
