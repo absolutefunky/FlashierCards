@@ -1,6 +1,5 @@
 import Navbar from "./Navbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowPointer } from "@fortawesome/free-solid-svg-icons";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { faBrush } from "@fortawesome/free-solid-svg-icons";
 import { faT } from "@fortawesome/free-solid-svg-icons";
@@ -12,28 +11,30 @@ import { faImage } from "@fortawesome/free-solid-svg-icons";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
-// edit component of application
 function Edit() {
     return (
-      <div>eidt view</div>
-    /*
-    <div className="main">
-      <Navbar />
-      <div className="toolbar">
-          <button><FontAwesomeIcon icon={faCircleXmark} /></button>
-          <button><FontAwesomeIcon icon={faArrowPointer} /></button>
-          <button><FontAwesomeIcon icon={faPlus} /></button>
-          <button><FontAwesomeIcon icon={faT} /></button>
-          <button><FontAwesomeIcon icon={faBold} /></button>
-          <button><FontAwesomeIcon icon={faItalic} /></button>
-          <button><FontAwesomeIcon icon={faHighlighter} /></button>
-          <button><FontAwesomeIcon icon={faBrush} /></button>
-          <button><FontAwesomeIcon icon={faTrash} /></button>
-          <button><FontAwesomeIcon icon={faImage} /></button>
-          <button><FontAwesomeIcon icon={faHeart} /></button>
-      </div>
-    </div>*/
-  );
+        <div id="dashboard-content">
+            <Navbar />
+            <div>
+                <div id="signup-title">Flashier Cards</div>
+                <div id="toolbar">
+                    <button className="tool-option"><FontAwesomeIcon icon={faCircleXmark} /></button>
+                    <button className="tool-option"><FontAwesomeIcon icon={faPlus} /></button>
+                    <button className="tool-option"><FontAwesomeIcon icon={faT} /></button>
+                    <button className="tool-option"><FontAwesomeIcon icon={faBold} /></button>
+                    <button className="tool-option"><FontAwesomeIcon icon={faItalic} /></button>
+                    <button className="tool-option"><FontAwesomeIcon icon={faHighlighter} /></button>
+                    <button className="tool-option"><FontAwesomeIcon icon={faBrush} /></button>
+                    <button className="tool-option"><FontAwesomeIcon icon={faImage} /></button>
+                    <button className="tool-option"><FontAwesomeIcon icon={faHeart} /></button>
+                    <button className="tool-option"><FontAwesomeIcon icon={faTrash} /></button>
+                </div>
+                <div>
+                    edit content
+                </div>
+            </div>
+        </div>
+    );
 }
 
-export default Edit;
+export default Edit

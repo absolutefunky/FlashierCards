@@ -128,7 +128,8 @@ html, body {
     padding: 0.5rem;
 }
 
-#navbar button {
+.nav-option {
+    text-decoration: none;
     margin-bottom: 0.5rem;
     display: flex;
     align-items: center;
@@ -138,26 +139,12 @@ html, body {
     border: 2px solid white;
 }
 
-#navbar button:hover {
-    cursor: pointer;
-    background-color: #004A94;
-    border: 2px solid #004A94;
-}
-
-#navbar button:hover span:first-of-type {
-    color: white;
-}
-
-#navbar button:hover span:last-of-type {
-    color: white;
-}
-
-#navbar button span:first-of-type {
+.nav-option span:first-of-type {
     font-size: 22px;
     color: #004A94;
 }
 
-#navbar button span:last-of-type {
+.nav-option span:last-of-type {
     margin-left: 1rem;
     font-size: 20px;
     font-family: "Imprima", sans-serif;
@@ -166,19 +153,58 @@ html, body {
     color: #004A94;
 }
 
-.nav-option {
-    text-decoration: none;
-    display: flex;
-    align-items: center;
+.nav-option:hover {
+    cursor: pointer;
+    background-color: #004A94;
+    border: 2px solid #004A94;
+    
 }
+
+.nav-option:hover span {
+    color: white;
+}
+
+/* dashboard css */
 
 #dashboard-content {
     display: flex;
 }
 
 #dashboard-content > div:last-of-type {
-    background-color: aqua;
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1rem;
+}
+
+#toolbar {
+    background-color: #D9EDF8;
+    border-radius: 5px;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+}
+
+.tool-option {
+    margin-right: 0.5rem;
+    font-size: 22px;
+    color: #004A94;
+    display: flex;
+    border-radius: 5px;
+    padding: 0.5rem;
+    background-color: white;
+    border: 2px solid white;
+}
+
+.tool-option:hover {
+    cursor: pointer;
+    color: white;
+    background-color: #004A94;
+    border: 2px solid #004A94;
+}
+
+#dashboard-form {
+    background-color: red;
 }
 
 /*
@@ -194,17 +220,6 @@ html, body {
     display: flex;
     flex-direction: column;
     padding: 1rem;
-}
-
-.dashboard-title {
-    font-size: 45px;
-    font-family: "Rampart One", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    color: #004A94;
-    text-align: center;
-    padding: 1rem 0rem;
-    margin-bottom: 0.5rem;
 }
 
 .toolbar {

@@ -1,16 +1,18 @@
-import Navbar from "./Navbar"
-import Deck from "./Deck"
+import Navbar from "./Navbar";
+import Deck from "./Deck";
 
-// study component of application
 function Study() {
     return (
-      <div>Study view</div>
-      /*
-    <div className="main">
-      <Navbar />
-      <Deck />
-    </div>*/
-  );
+        <div id="dashboard-content">
+            <Navbar />
+            <div>
+                <div id="signup-title">Flashier Cards</div>
+                <div>
+                    study deck
+                </div>
+            </div>
+        </div>
+    );
 }
 
-export default Study;
+export default Study

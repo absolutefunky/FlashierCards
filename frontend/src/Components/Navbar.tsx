@@ -15,28 +15,22 @@ function Navbar() {
 
     return (
         <div id="navbar">
-            <button onClick={() => {showMenu()}}>
+            <button className="nav-option" onClick={() => {showMenu()}}>
                 <span><FontAwesomeIcon icon={faBars} /></span>
                 <span style={{display: menuHidden ? "none" : "block"}}>Menu</span>
             </button>
-            <button>
-                <Link className="nav-option" to="/dashboard">
-                    <span><FontAwesomeIcon icon={faFolder} /></span>
-                    <span style={{display: menuHidden ? "none" : "block"}}>Decks</span>
-                </Link>
-            </button>
-            <button>
-                <Link className="nav-option" to="/profile">
-                    <span><FontAwesomeIcon icon={faCircleUser} /></span>
-                    <span style={{display: menuHidden ? "none" : "block"}}>Profile</span>
-                </Link>
-            </button>
-            <button>
-                <Link className="nav-option" to="/">
-                    <span><FontAwesomeIcon icon={faRightFromBracket} /></span>
-                    <span style={{display: menuHidden ? "none" : "block"}}>Logout</span>
-                </Link>
-            </button>
+            <Link className="nav-option" to="/dashboard">
+                <span><FontAwesomeIcon icon={faFolder} /></span>
+                <span style={{display: menuHidden ? "none" : "block"}}>Decks</span>
+            </Link>
+            <Link className="nav-option" to="/profile">
+                <span><FontAwesomeIcon icon={faCircleUser} /></span>
+                <span style={{display: menuHidden ? "none" : "block"}}>Profile</span>
+            </Link>
+            <Link className="nav-option" to="/">
+                <span><FontAwesomeIcon icon={faRightFromBracket} /></span>
+                <span style={{display: menuHidden ? "none" : "block"}}>Logout</span>
+            </Link>
         </div>
     );
 }
