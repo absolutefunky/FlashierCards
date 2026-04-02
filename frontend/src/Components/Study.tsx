@@ -7,9 +7,7 @@ function Study() {
             <Navbar />
             <div>
                 <div id="signup-title">Flashier Cards</div>
-                <div>
-                    study deck
-                </div>
+                <Deck />
             </div>
         </div>
     );

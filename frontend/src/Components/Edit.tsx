@@ -1,4 +1,5 @@
 import Navbar from "./Navbar";
+import Deck from "./Deck";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { faBrush } from "@fortawesome/free-solid-svg-icons";
@@ -29,9 +30,7 @@ function Edit() {
                     <button className="tool-option"><FontAwesomeIcon icon={faHeart} /></button>
                     <button className="tool-option"><FontAwesomeIcon icon={faTrash} /></button>
                 </div>
-                <div>
-                    edit content
-                </div>
+                <Deck />
             </div>
         </div>
     );
