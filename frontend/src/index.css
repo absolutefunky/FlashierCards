@@ -1,0 +1,350 @@
+@import url('https://fonts.googleapis.com/css2?family=Imprima&family=Rampart+One&display=swap');
+
+html, body {
+    margin: 0;
+    height: 100%;
+}
+
+#root {
+    height: 100%;
+}
+
+/* home css below */
+
+#home-content {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#home-title {
+    font-size: 70px;
+    font-family: "Rampart One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #004A94;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+#home-subtitle {
+    font-size: 25px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #004A94;
+    text-align: center;
+    margin-bottom: 5rem;
+}
+
+#white-btn {
+    text-decoration: none;
+    font-size: 20px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 200px;
+    min-height: 50px;
+    border-radius: 5px;
+    background-color: #ffffff;
+    color: #004A94;
+    border: 2px solid #004A94;
+    margin-bottom: 1rem;
+}
+
+#blue-btn {
+    text-decoration: none;
+    font-size: 20px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 200px;
+    min-height: 50px;
+    border-radius: 5px;
+    background-color: #004A94;
+    color: white;
+    border: 2px solid #004A94;
+}
+
+/* signup/login css below */
+
+#signup-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4rem;
+}
+
+#signup-title {
+    font-size: 45px;
+    font-family: "Rampart One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #004A94;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.signup-subtitle {
+    font-size: 20px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #004A94;
+    margin-bottom: 0.2rem;
+}
+
+#signup-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#signup-form > div  {
+    margin-bottom: 1rem;
+}
+
+#signup-form div input {
+    border: 2px solid #004A94;
+    border-radius: 5px;
+    font-size: 18px;
+    padding: 0.5rem;
+    min-width: 250px;
+}
+
+/* navbar css below */
+
+#navbar {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+}
+
+.nav-option {
+    text-decoration: none;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    border-radius: 5px;
+    background-color: white;
+    border: 2px solid white;
+}
+
+.nav-option span:first-of-type {
+    font-size: 22px;
+    color: #004A94;
+}
+
+.nav-option span:last-of-type {
+    margin-left: 1rem;
+    font-size: 20px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #004A94;
+}
+
+.nav-option:hover {
+    cursor: pointer;
+    background-color: #004A94;
+    border: 2px solid #004A94;
+    
+}
+
+.nav-option:hover span {
+    color: white;
+}
+
+/* dashboard/study/edit css below */
+
+#dashboard-content {
+    display: flex;
+}
+
+#dashboard-content > div:last-of-type {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1rem;
+}
+
+#toolbar {
+    background-color: #D9EDF8;
+    border-radius: 5px;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+}
+
+.tool-option {
+    margin-right: 0.5rem;
+    font-size: 22px;
+    color: #004A94;
+    display: flex;
+    border-radius: 5px;
+    padding: 0.5rem;
+    background-color: white;
+    border: 2px solid white;
+}
+
+.tool-option:hover {
+    cursor: pointer;
+    color: white;
+    background-color: #004A94;
+    border: 2px solid #004A94;
+}
+
+.decks-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+
+.decks-list input[type="radio"] {
+    appearance: none;
+    position: fixed;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.decks-list label {
+    background-color: #D9EDF8;
+    border: 2px solid #D9EDF8;
+    box-shadow: 10px 10px 5px rgba(18, 31, 50, 0.234);
+    min-width: 350px;
+    min-height: 200px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 600;
+    font-family: "Imprima", sans-serif;
+    color: #004A94;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.decks-list label:hover {
+    background-color: #B3DEF4;
+    border: 2px solid #B3DEF4;
+    transform: translateY(5px);
+}
+
+.decks-list input[type="radio"]:checked + label {
+    background-color: #004A94;
+    border: 2px solid #004A94;
+    color: white;
+}
+
+/* deck css below */
+
+.deck {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#card {
+    perspective: 1000px;
+    width: 800px;
+    height: 400px;
+    margin-bottom: 1.5rem;
+}
+
+#card:hover {
+    cursor: pointer;
+}
+
+#card-inner {
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 1s;
+}
+
+#card.flip #card-inner {
+    transform: rotateY(180deg);
+}
+
+#card-front, #card-back {
+    width: 800px;
+    height: 400px;
+    position: absolute;
+    backface-visibility: hidden;
+    background-color: white;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+#card-front {
+    z-index: 2;
+    transform: rotateY(0deg);
+}
+
+#card-back {
+    transform: rotateY(180deg);
+}
+
+#deck-nav {
+    display: flex;
+    gap: 10px;
+}
+
+#deck-nav span {
+    display: flex;
+    align-items: center;
+    font-size: 22px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #004A94;
+}
+
+#deck-nav span:first-of-type {
+    color: #D9EDF8;
+}
+
+#deck-nav span:last-of-type {
+    cursor: pointer;
+}
+
+/* profile css below */
+.profile {
+    display: flex;
+}
+
+.profile > div:first-of-type {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-option {
+    text-decoration: none;
+    color: #004A94;
+    font-size: 20px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    padding: 0.5rem 2rem 0.5rem 0.5rem;
+    border-bottom: 2px solid #004A94;
+}
+
+.profile-option:hover {
+    background-color: #004A94;
+    color: white;
+}
+
+#profile-content {  
+    background-color: #D9EDF8;
+    flex: 1;
+    padding: 0rem 1rem;
+}
