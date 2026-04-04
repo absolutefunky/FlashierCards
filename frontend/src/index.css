@@ -299,7 +299,7 @@ html, body {
     gap: 10px;
 }
 
-#deck-nav span {
+#deck-nav button, span {
     display: flex;
     align-items: center;
     font-size: 22px;
@@ -309,12 +309,16 @@ html, body {
     color: #004A94;
 }
 
-#deck-nav span:first-of-type {
-    color: #D9EDF8;
+#deck-nav button {
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    padding: 0;
 }
 
-#deck-nav span:last-of-type {
-    cursor: pointer;
+#deck-nav button:disabled {
+    color: #D9EDF8;
+    cursor: auto;
 }
 
 /* profile css below */
