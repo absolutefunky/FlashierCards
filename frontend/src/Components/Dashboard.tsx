@@ -16,24 +16,92 @@ function Dashboard() {
         setToolOptionHidden(request);
     }
 
-    return (
+    
+
+ return (
         <div id="dashboard-content">
             <Navbar />
             <div>
                 <div id="signup-title">Flashier Cards</div>
+
                 <div id="toolbar">
-                    <button onClick={() => showToolOptions(true)} style={{display: toolOptionHidden ? "none" : "flex"}} className="tool-option"><FontAwesomeIcon icon={faCircleXmark} /></button>
-                    <Link className="tool-option" to="/"><FontAwesomeIcon icon={faPlus} /></Link>
-                    <Link style={{display: toolOptionHidden ? "none" : "flex"}} className="tool-option" to="/study"><FontAwesomeIcon icon={faFolderOpen} /></Link>
-                    <Link style={{display: toolOptionHidden ? "none" : "flex"}} className="tool-option" to="/edit"><FontAwesomeIcon icon={faPencil} /></Link>
-                    <Link style={{display: toolOptionHidden ? "none" : "flex"}} className="tool-option" to="/"><FontAwesomeIcon icon={faICursor} /></Link>
-                    <button style={{display: toolOptionHidden ? "none" : "flex"}} className="tool-option"><FontAwesomeIcon icon={faTrash} /></button>
+                    <button
+                        type="button"
+                        onClick={() => showToolOptions(true)}
+                        style={{ display: toolOptionHidden ? "none" : "inline-block" }}
+                        className="pushable"
+                    >
+                        <span className="shadow"></span>
+                        <span className="edge"></span>
+                        <span className="front">
+                            <FontAwesomeIcon icon={faCircleXmark} />
+                        </span>
+                    </button>
+
+                    <Link className="pushable" to="/">
+                        <span className="shadow"></span>
+                        <span className="edge"></span>
+                        <span className="front">
+                            <FontAwesomeIcon icon={faPlus} />
+                        </span>
+                    </Link>
+
+                    <Link
+                        style={{ display: toolOptionHidden ? "none" : "inline-block" }}
+                        className="pushable"
+                        to="/study"
+                    >
+                        <span className="shadow"></span>
+                        <span className="edge"></span>
+                        <span className="front">
+                            <FontAwesomeIcon icon={faFolderOpen} />
+                        </span>
+                    </Link>
+
+                    <Link
+                        style={{ display: toolOptionHidden ? "none" : "inline-block" }}
+                        className="pushable"
+                        to="/edit"
+                    >
+                        <span className="shadow"></span>
+                        <span className="edge"></span>
+                        <span className="front">
+                            <FontAwesomeIcon icon={faPencil} />
+                        </span>
+                    </Link>
+
+                    <Link
+                        style={{ display: toolOptionHidden ? "none" : "inline-block" }}
+                        className="pushable"
+                        to="/"
+                    >
+                        <span className="shadow"></span>
+                        <span className="edge"></span>
+                        <span className="front">
+                            <FontAwesomeIcon icon={faICursor} />
+                        </span>
+                    </Link>
+
+                    <button
+                        type="button"
+                        style={{ display: toolOptionHidden ? "none" : "inline-block" }}
+                        className="pushable"
+                    >
+                        <span className="shadow"></span>
+                        <span className="edge"></span>
+                        <span className="front">
+                            <FontAwesomeIcon icon={faTrash} />
+                        </span>
+                    </button>
                 </div>
+
                 <form className="decks-list" action="">
                     <input checked={toolOptionHidden === false} type="radio" id="deck-1" name="deck" />
                     <label onClick={() => showToolOptions(false)} htmlFor="deck-1">SENG 645 Exam 1 Review</label>
+
                     <input checked={toolOptionHidden === false} type="radio" id="deck-2" name="deck" />
                     <label onClick={() => showToolOptions(false)} htmlFor="deck-2">SENG 645 Exam 2 Review</label>
+
                     <input checked={toolOptionHidden === false} type="radio" id="deck-3" name="deck" />
                     <label onClick={() => showToolOptions(false)} htmlFor="deck-3">SENG 645 Exam 3 Review</label>
                 </form>
@@ -42,4 +110,4 @@ function Dashboard() {
     );
 }
 
-export default Dashboard
+export default Dashboard;

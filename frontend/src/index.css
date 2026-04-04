@@ -177,7 +177,7 @@ html, body {
     padding: 2rem 1rem;
 }
 
-#toolbar {
+/* #toolbar {
     background-color: #D9EDF8;
     border-radius: 5px;
     padding: 0.5rem;
@@ -201,6 +201,70 @@ html, body {
     color: white;
     background-color: #004A94;
     border: 2px solid #004A94;
+}*/
+
+#toolbar {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    background-color: #D9EDF8;
+    border-radius: 5px;
+    margin: 20px 0;
+    height: 100px;
+    flex-wrap: wrap;
+}
+
+.pushable {
+    position: relative;
+    display: inline-block;
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: none;
+    outline-offset: 4px;
+}
+
+.shadow {
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    background: rgba(0, 0, 0, 0.2);
+    transform: translateY(6px);
+}
+
+.edge {
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    background-color: #296b8e;
+}
+
+.front {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 68px;
+    height: 68px;
+    border-radius: 14px;
+    transform: translateY(-6px);
+    transition: transform 0.1s ease;
+    font-size: 24px;
+    background-color: #afd6eb;
+    color: white;
+}
+
+.pushable:hover .front {
+    transform: translateY(-8px);
+}
+
+.pushable:active .front {
+    transform: translateY(-2px);
+}
+
+.pushable:active .shadow {
+    transform: translateY(2px);
 }
 
 .decks-list {
