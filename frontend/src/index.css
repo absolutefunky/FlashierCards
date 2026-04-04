@@ -318,6 +318,7 @@ html, body {
 }
 
 /* profile css below */
+
 .profile {
     display: flex;
 }
@@ -346,20 +347,46 @@ html, body {
 #profile-content {  
     background-color: #D9EDF8;
     flex: 1;
-    padding: 0rem 1rem;
+    padding: 1rem;
     position: relative;
 }
 
+.profile-text {
+    font-size: 18px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    padding: 0.5rem 0rem;
+    margin-bottom: 1rem;
+}
+
+/* overlay css below */
+
 .overlay {
-    background-color: white;
-    border: 2px solid #004A94;
     display: flex;
     flex-direction: column;
-    border-radius: 5px;
-    position: absolute;
-    width: 300px;
-    height: 300px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    position: absolute;
+    background-color: white;
+    border: 2px solid #004A94;
+    border-radius: 5px;
+    padding: 1rem;
+}
+
+.cancel-action {
+    display: flex;
+    justify-content: flex-end;
+    color: #004A94;
+    font-size: 20px;
+}
+
+.overlay input {
+    border: 2px solid #004A94;
+    border-radius: 5px;
+    font-size: 18px;
+    padding: 0.5rem;
+    min-width: 350px;
+    margin-bottom: 1rem;
 }
