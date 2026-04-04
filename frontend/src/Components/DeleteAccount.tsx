@@ -16,7 +16,14 @@ function DeleteAccount() {
 			</div>
 			<div style={{display: showOverlay ? "flex" : "none"}}  className="overlay">
 				<button onClick={() => showProfileOverlay(false)}>X</button>
-				<div>overlay content</div>
+				<div>Are you sure you want to delete your account? This action cannot be undone.</div>
+				<form action="">
+					<div>
+						<input id="password" type="password" />
+						<label htmlFor="password">Please enter your password to confirm.</label>
+					</div>
+					<button>Delete</button>
+				</form>
 			</div>
 		</>
     );
