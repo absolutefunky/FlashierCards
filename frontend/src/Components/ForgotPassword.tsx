@@ -9,7 +9,7 @@ function ForgotPassword() {
                     <div className="sub-title">Email</div>
                     <input type="email" required />
                 </div>
-                <Link className="log-in-btn" to="/login">Continue</Link>
+                <Link className="log-in-btn" to="/verify">Continue</Link>
             </form>
         </div>
     );
