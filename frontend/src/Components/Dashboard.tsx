@@ -10,10 +10,16 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useState } from 'react';
 
 function Dashboard() {
-    const [toolOptionHidden, setToolOptionHidden] = useState(true);
+    const [toolbar, setToolbar] = useState(false);
+    const [deck, setDeck] = useState("");
+   
+    function handleToolbarChange(event: boolean) {
+        setToolbar(event);
+    }
 
-    function showToolOptions(request: boolean) {
-        setToolOptionHidden(request);
+    function handleDeckChange(event: any) {
+        setDeck(event.target.value);
+        handleToolbarChange(true);
     }
 
     return (
@@ -22,20 +28,47 @@ function Dashboard() {
             <div>
                 <div id="signup-title">Flashier Cards</div>
                 <div id="toolbar">
-                    <button onClick={() => showToolOptions(true)} style={{display: toolOptionHidden ? "none" : "flex"}} className="tool-option"><FontAwesomeIcon icon={faCircleXmark} /></button>
+                    <button onClick={() => handleToolbarChange(false)} style={{display: toolbar ? "flex" : "none"}} className="tool-option"><FontAwesomeIcon icon={faCircleXmark} /></button>
                     <Link className="tool-option" to="/"><FontAwesomeIcon icon={faPlus} /></Link>
-                    <Link style={{display: toolOptionHidden ? "none" : "flex"}} className="tool-option" to="/study"><FontAwesomeIcon icon={faFolderOpen} /></Link>
-                    <Link style={{display: toolOptionHidden ? "none" : "flex"}} className="tool-option" to="/edit"><FontAwesomeIcon icon={faPencil} /></Link>
-                    <Link style={{display: toolOptionHidden ? "none" : "flex"}} className="tool-option" to="/"><FontAwesomeIcon icon={faICursor} /></Link>
-                    <button style={{display: toolOptionHidden ? "none" : "flex"}} className="tool-option"><FontAwesomeIcon icon={faTrash} /></button>
+                    <Link style={{display: toolbar ? "flex" : "none"}} className="tool-option" to="/study" title={deck}><FontAwesomeIcon icon={faFolderOpen} /></Link>
+                    <Link style={{display: toolbar ? "flex" : "none"}} className="tool-option" to="/edit"><FontAwesomeIcon icon={faPencil} /></Link>
+                    <Link style={{display: toolbar ? "flex" : "none"}} className="tool-option" to="/"><FontAwesomeIcon icon={faICursor} /></Link>
+                    <button style={{display: toolbar ? "flex" : "none"}} className="tool-option"><FontAwesomeIcon icon={faTrash} /></button>
                 </div>
                 <form className="decks-list" action="">
-                    <input checked={toolOptionHidden === false} type="radio" id="deck-1" name="deck" />
-                    <label onClick={() => showToolOptions(false)} htmlFor="deck-1">SENG 645 Exam 1 Review</label>
-                    <input checked={toolOptionHidden === false} type="radio" id="deck-2" name="deck" />
-                    <label onClick={() => showToolOptions(false)} htmlFor="deck-2">SENG 645 Exam 2 Review</label>
-                    <input checked={toolOptionHidden === false} type="radio" id="deck-3" name="deck" />
-                    <label onClick={() => showToolOptions(false)} htmlFor="deck-3">SENG 645 Exam 3 Review</label>
+                    <label>
+                        SENG 645 Exam 1 Review
+                        <input
+                            type="radio"
+                            name="deck" 
+                            id="deck-1" 
+                            value="SENG 645 Exam 1 Review"
+                            checked={deck === "SENG 645 Exam 1 Review"}
+                            onChange={handleDeckChange}
+                        />
+                    </label>
+                    <label>
+                        SENG 645 Exam 2 Review
+                        <input
+                            type="radio"
+                            name="deck"
+                            id="deck-2"
+                            value="SENG 645 Exam 2 Review"
+                            checked={deck === "SENG 645 Exam 2 Review"} 
+                            onChange={handleDeckChange}
+                        />
+                    </label>
+                    <label>
+                        SENG 645 Exam 3 Review
+                        <input
+                            type="radio"
+                            name="deck" 
+                            id="deck-3" 
+                            value="SENG 645 Exam 3 Review"
+                            checked={deck === "SENG 645 Exam 3 Review"}
+                            onChange={handleDeckChange}
+                        />
+                    </label>
                 </form>
             </div>
         </div>
