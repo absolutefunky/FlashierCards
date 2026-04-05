@@ -11,9 +11,18 @@ import { useState } from 'react';
 
 function Dashboard() {
     const [toolOptionHidden, setToolOptionHidden] = useState(true);
+    const [createOverlay, setCreateOverlay] = useState(false);
+    const [renameOverlay, setRenameOverlay] = useState(false);
 
     function showToolOptions(request: boolean) {
         setToolOptionHidden(request);
+    }
+
+    function showCreateOverlay(request: boolean){
+        setCreateOverlay(request);
+    }
+    function showRenameOverlay(request: boolean){
+        setRenameOverlay(request);
     }
 
     
@@ -29,7 +38,7 @@ function Dashboard() {
                         type="button"
                         onClick={() => showToolOptions(true)}
                         style={{ display: toolOptionHidden ? "none" : "inline-block" }}
-                        className="pushable"
+                        className="tool-option"
                     >
                         <span className="shadow"></span>
                         <span className="edge"></span>
@@ -38,17 +47,18 @@ function Dashboard() {
                         </span>
                     </button>
 
-                    <Link className="pushable" to="/">
+                    <button className="tool-option"
+                    onClick={() => showCreateOverlay(true)} >
                         <span className="shadow"></span>
                         <span className="edge"></span>
                         <span className="front">
                             <FontAwesomeIcon icon={faPlus} />
                         </span>
-                    </Link>
+                    </button>
 
                     <Link
                         style={{ display: toolOptionHidden ? "none" : "inline-block" }}
-                        className="pushable"
+                        className="tool-option"
                         to="/study"
                     >
                         <span className="shadow"></span>
@@ -60,7 +70,7 @@ function Dashboard() {
 
                     <Link
                         style={{ display: toolOptionHidden ? "none" : "inline-block" }}
-                        className="pushable"
+                        className="tool-option"
                         to="/edit"
                     >
                         <span className="shadow"></span>
@@ -70,22 +80,22 @@ function Dashboard() {
                         </span>
                     </Link>
 
-                    <Link
+                    <button
                         style={{ display: toolOptionHidden ? "none" : "inline-block" }}
-                        className="pushable"
-                        to="/"
+                        className="tool-option"
+                        onClick={() => showRenameOverlay(true)}
                     >
                         <span className="shadow"></span>
                         <span className="edge"></span>
                         <span className="front">
                             <FontAwesomeIcon icon={faICursor} />
                         </span>
-                    </Link>
+                    </button>
 
                     <button
                         type="button"
                         style={{ display: toolOptionHidden ? "none" : "inline-block" }}
-                        className="pushable"
+                        className="tool-option"
                     >
                         <span className="shadow"></span>
                         <span className="edge"></span>
@@ -106,6 +116,38 @@ function Dashboard() {
                     <label onClick={() => showToolOptions(false)} htmlFor="deck-3">SENG 645 Exam 3 Review</label>
                 </form>
             </div>
+            {
+                createOverlay && (
+                    <div className="overlay">
+                        <div className="cancel-action">
+                                <FontAwesomeIcon icon={faCircleXmark} onClick={() => showCreateOverlay(false)} />
+                        </div>
+                        <div className="signup-subtitle"> Create a New Deck</div>
+                            <input type="text"/>
+                            <button className="input-button">
+                                <span className="shadow-input"></span>
+                                <span className="edge-input"></span>
+                                <span className="front-input">CREATE</span>
+                            </button>
+                    </div>
+                )
+            }
+            {
+             renameOverlay && (
+                <div className="overlay">
+                        <div className="cancel-action">
+                                <FontAwesomeIcon icon={faCircleXmark} onClick={() => showRenameOverlay(false)} />
+                        </div>
+                        <div className="signup-subtitle"> Rename the Deck</div>
+                            <input type="text"/>
+                            <button className="input-button">
+                                <span className="shadow-input"></span>
+                                <span className="edge-input"></span>
+                                <span className="front-input">ENTER</span>
+                            </button>
+                    </div>
+             )   
+            }
         </div>
     );
 }
