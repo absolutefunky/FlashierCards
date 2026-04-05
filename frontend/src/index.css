@@ -394,3 +394,13 @@ html, body {
     min-width: 350px;
     margin-bottom: 1rem;
 }
+
+/* text object css below */
+
+#board {
+    background-color: rgb(141, 101, 101);
+    width: 800px;
+    height: 400px;
+    overflow: hidden;
+    position: relative;
+}
