@@ -13,6 +13,7 @@ function Dashboard() {
     const [toolOptionHidden, setToolOptionHidden] = useState(true);
     const [createOverlay, setCreateOverlay] = useState(false);
     const [renameOverlay, setRenameOverlay] = useState(false);
+    const [checkedDeck, setCheckedDeck] = useState<string | null>(null);
 
     function showToolOptions(request: boolean) {
         setToolOptionHidden(request);
@@ -106,13 +107,13 @@ function Dashboard() {
                 </div>
 
                 <form className="decks-list" action="">
-                    <input checked={toolOptionHidden === false} type="radio" id="deck-1" name="deck" />
+                <input type="radio" id="deck-1" name="deck" checked={checkedDeck === "deck-1"}onChange={() => setCheckedDeck("deck-1")} />
                     <label onClick={() => showToolOptions(false)} htmlFor="deck-1">SENG 645 Exam 1 Review</label>
 
-                    <input checked={toolOptionHidden === false} type="radio" id="deck-2" name="deck" />
+                <input type="radio" id="deck-2" name="deck"checked={checkedDeck === "deck-2"} onChange={() => setCheckedDeck("deck-2")} />
                     <label onClick={() => showToolOptions(false)} htmlFor="deck-2">SENG 645 Exam 2 Review</label>
 
-                    <input checked={toolOptionHidden === false} type="radio" id="deck-3" name="deck" />
+                <input type="radio" id="deck-3" name="deck"checked={checkedDeck === "deck-3"}onChange={() => setCheckedDeck("deck-3")} />
                     <label onClick={() => showToolOptions(false)} htmlFor="deck-3">SENG 645 Exam 3 Review</label>
                 </form>
             </div>
