@@ -441,6 +441,7 @@ html, body {
     min-width: 350px;
     margin-bottom: 1rem;
 }
+
 /*for the input buttons */
 .input-button {
     position: relative;
@@ -495,4 +496,41 @@ html, body {
 
 .input-button:active .shadow-input {
     transform: translateY(2px);
+}
+/* change password content */
+#password-content {
+    font-family: "Rampart One", sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4rem;
+    gap: 15px;
+    font-size: 30px;
+    color: #004A94;
+}
+.password-confirm {
+    font-size: 30px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #004A94;
+    margin-bottom: 0.2rem;
+}
+.password-overlay{
+    display: flex;
+    flex-direction: unset;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    background-color: white;
+    border: 2px solid #004A94;
+    border-radius: 5px;
+    padding: 1rem;
+}
+.password-overlay button {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1rem;
 }
