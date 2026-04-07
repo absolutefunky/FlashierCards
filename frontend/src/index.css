@@ -168,6 +168,7 @@ html, body {
 
 #dashboard-content {
     display: flex;
+    background-color: green;
 }
 
 #dashboard-content > div:last-of-type {

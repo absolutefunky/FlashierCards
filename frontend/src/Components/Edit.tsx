@@ -15,8 +15,10 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons/faChevronRight";
 import React, { useRef, useState, type JSX } from "react";
+import styles from "../Styles/Edit.module.css";
 
 function Edit() {
+    const [textTool, setTextTool] = useState(false);
     const [textObjects, setTextObjects] = useState<JSX.Element[]>([]);
     const cardRef = useRef<HTMLDivElement>(null);
     let [card, setCard] = useState(1);
@@ -45,35 +47,29 @@ function Edit() {
     }
 
     function addTextObject() {
+        setTextTool(true);
         setTextObjects(prev => [...prev, <TextObject key={prev.length} />]);
     }
 
     return (
-        <div id="dashboard-content">
+        <div id={styles.dashboardContent}>
             <Navbar />
             <div>
-                <div id="signup-title">Flashier Cards</div>
-                <div id="toolbar">
-                    <button className="tool-option"><FontAwesomeIcon icon={faCircleXmark} /></button>
-                    <button className="tool-option"><FontAwesomeIcon icon={faPlus} /></button>
-                    <button onClick={addTextObject} className="tool-option"><FontAwesomeIcon icon={faT} /></button>
-                    <button className="tool-option"><FontAwesomeIcon icon={faBold} /></button>
-                    <button className="tool-option"><FontAwesomeIcon icon={faItalic} /></button>
-                    <button className="tool-option"><FontAwesomeIcon icon={faUnderline} /></button>
-                    <button className="tool-option"><FontAwesomeIcon icon={faBrush} /></button>
-                    <button className="tool-option"><FontAwesomeIcon icon={faImage} /></button>
-                    <button className="tool-option"><FontAwesomeIcon icon={faHeart} /></button>
-                    <button className="tool-option"><FontAwesomeIcon icon={faTrash} /></button>
+                <div id={styles.title}>Flashier Cards</div>
+                <div id={styles.toolbar}>
+                    <button className={styles.toolOption}><FontAwesomeIcon icon={faCircleXmark} /></button>
+                    <button className={styles.toolOption}><FontAwesomeIcon icon={faPlus} /></button>
+                    <button onClick={addTextObject} className={styles.toolOption}><FontAwesomeIcon icon={faT} /></button>
+                    <button style={{display: textTool ? "flex" : "none"}} className={styles.toolOption}><FontAwesomeIcon icon={faBold} /></button>
+                    <button style={{display: textTool ? "flex" : "none"}} className={styles.toolOption}><FontAwesomeIcon icon={faItalic} /></button>
+                    <button style={{display: textTool ? "flex" : "none"}} className={styles.toolOption}><FontAwesomeIcon icon={faUnderline} /></button>
+                    <button className={styles.toolOption}><FontAwesomeIcon icon={faBrush} /></button>
+                    <button className={styles.toolOption}><FontAwesomeIcon icon={faImage} /></button>
+                    <button className={styles.toolOption}><FontAwesomeIcon icon={faHeart} /></button>
+                    <button className={styles.toolOption}><FontAwesomeIcon icon={faTrash} /></button>
                 </div>
-                {/*<Deck />*/}
-                <div className="deck">
-                    <div id="card" onClick={() => flipCard()} ref={cardRef}>
-                        <div id="card-inner">
-                            <div id="card-front">{textObjects}</div>
-                            <div id="card-back">{backText}</div>
-                        </div>
-                    </div>
-                    <div id="deck-nav">
+                <div id={styles.deck}>
+                    <div id={styles.deckNav}>
                         <button disabled={card === 1} onClick={showPrevCard}>
                             <FontAwesomeIcon icon={faChevronLeft} />
                         </button>
@@ -81,6 +77,14 @@ function Edit() {
                         <button disabled={card === total} onClick={showNextCard}>
                             <FontAwesomeIcon icon={faChevronRight} />
                         </button>
+                    </div>
+                    <div>
+                        <div className={styles.card}>
+                            {textObjects}
+                        </div>
+                        <div className={styles.card}>
+                            back card
+                        </div>
                     </div>
                 </div>
             </div>
