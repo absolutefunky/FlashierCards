@@ -9,8 +9,10 @@ function ForgotPassword() {
                     <div className="verify-sub-title">Email</div>
                     <input type="text" required />
                 </div>
-                <Link className="verify-form-blue-btn" to="/verify">
+                <Link className="verify-form-blue-btn" to="/verify?from=forgotPassword">
                     Continue
+                    
+
                     </Link>
             </form>
         </div>

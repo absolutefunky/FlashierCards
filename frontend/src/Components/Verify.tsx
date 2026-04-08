@@ -10,7 +10,7 @@ function Verify() {
           <div className="verify-sub-title">Enter verification code from email</div>
           <input type="text" required />
         </div>
-        <Link className="verify-form-blue-btn" to="/dashboard">
+        <Link className="verify-form-blue-btn" to="/CreateNewPassword">
           Verify
         </Link>
       </form>

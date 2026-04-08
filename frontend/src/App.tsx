@@ -12,6 +12,7 @@ import DeleteAccount from "./Components/DeleteAccount";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Verify from "./Components/Verify";
 import ForgotPassword from "./Components/ForgotPassword";
+import CreateNewPassword from "./Components/CreateNewPassword";
 
 function App() {
     return (
@@ -19,7 +20,8 @@ function App() {
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/signup" element={<Signup/>} />
-                <Route path="/verify" element={<Verify/>} />  
+                <Route path="/verify" element={<Verify/>} /> 
+                    <Route path="/create-new-password" element={<CreateNewPassword/>} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/dashboard" element={<Dashboard />} />
