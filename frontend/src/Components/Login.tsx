@@ -14,7 +14,9 @@ function Login() {
                     <input type="password" />
                 </div>
                 <Link id="blue-btn" to="/dashboard">Log in</Link>
+                
             </form>
+            <Link id="blue-btn"to="/forgot-password">Forgot password?</Link>
         </div>
     );
 }

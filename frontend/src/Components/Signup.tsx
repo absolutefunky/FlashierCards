@@ -1,4 +1,5 @@
 function Signup() {
+    {/* conditional return */}
     return (
         <div id="signup-content">
             <div id="signup-title">Join Flashier Cards</div>
@@ -19,6 +20,7 @@ function Signup() {
                     <div>Email</div>
                     <input type="email" />
                 </div>
+                {/* its a placeholder */}
                 <input id="blue-btn" type="submit" value={"Create account"} />
             </form>
         </div>
