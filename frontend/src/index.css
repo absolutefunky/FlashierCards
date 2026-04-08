@@ -177,7 +177,7 @@ html, body {
     padding: 2rem 1rem;
 }
 
-#toolbar {
+/* #toolbar {
     background-color: #D9EDF8;
     border-radius: 5px;
     padding: 0.5rem;
@@ -201,6 +201,70 @@ html, body {
     color: white;
     background-color: #004A94;
     border: 2px solid #004A94;
+}*/
+
+#toolbar {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    background-color: #D9EDF8;
+    border-radius: 5px;
+    margin: 20px 0;
+    height: 100px;
+    flex-wrap: wrap;
+}
+
+.tool-option {
+    position: relative;
+    display: inline-block;
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: none;
+    outline-offset: 4px;
+}
+
+.shadow {
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    background: rgba(0, 0, 0, 0.2);
+    transform: translateY(6px);
+}
+
+.edge {
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    background-color: #296b8e;
+}
+
+.front {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+    transform: translateY(-6px);
+    transition: transform 0.1s ease;
+    font-size: 24px;
+    background-color: #afd6eb;
+    color: white;
+}
+
+.tool-option:hover .front {
+    transform: translateY(-8px);
+}
+
+.tool-option:active .front {
+    transform: translateY(-2px);
+}
+
+.tool-option:active .shadow {
+    transform: translateY(2px);
 }
 
 .decks-list {
@@ -376,6 +440,103 @@ html, body {
 
 .verify-sub-title {
     font-size: 20px;
+.overlay {
+    display: flex;
+    flex-direction: column;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    background-color: white;
+    border: 2px solid #004A94;
+    border-radius: 5px;
+    padding: 1rem;
+}
+
+.cancel-action {
+    display: flex;
+    justify-content: flex-end;
+    color: #004A94;
+    font-size: 20px;
+}
+
+.overlay input {
+    border: 2px solid #004A94;
+    border-radius: 5px;
+    font-size: 18px;
+    padding: 0.5rem;
+    min-width: 350px;
+    margin-bottom: 1rem;
+}
+
+/*for the input buttons */
+.input-button {
+    position: relative;
+    display: inline-block;
+    font-family: "Imprima", sans-serif;
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: none;
+    outline-offset: 4px;
+}
+.shadow-input {
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    background: rgba(0, 0, 0, 0.2);
+    transform: translateY(6px);
+    width: 140px;
+}
+
+.edge-input {
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    background-color: #01162b;
+    width: 140px;
+}
+
+.front-input {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 140px;
+    height: 50px;
+    border-radius: 14px;
+    transform: translateY(-6px);
+    transition: transform 0.1s ease;
+    font-size: 18px;
+    background-color: #004A94;
+    color: white;
+}
+
+.input-button:hover .front-input {
+    transform: translateY(-8px);
+}
+
+.input-button:active .front-input {
+    transform: translateY(-2px);
+}
+
+.input-button:active .shadow-input {
+    transform: translateY(2px);
+}
+/* change password content */
+#password-content {
+    font-family: "Rampart One", sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4rem;
+    gap: 15px;
+    font-size: 30px;
+    color: #004A94;
+}
+.password-confirm {
+    font-size: 30px;
     font-family: "Imprima", sans-serif;
     font-weight: 400;
     font-style: normal;
@@ -407,4 +568,24 @@ html, body {
     background-color: #004A94;
     color: white;
     border: 2px solid #004A94;
+}
+    margin-bottom: 0.2rem;
+}
+.password-overlay{
+    display: flex;
+    flex-direction: unset;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    background-color: white;
+    border: 2px solid #004A94;
+    border-radius: 5px;
+    padding: 1rem;
+}
+.password-overlay button {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1rem;
 }
