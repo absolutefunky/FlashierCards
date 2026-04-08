@@ -117,7 +117,7 @@ function Dashboard() {
                         </span>
                     </button>
                 </div>
-{/*
+
                 <form className="decks-list" action="">
                 <input type="radio" id="deck-1" name="deck" checked={checkedDeck === "deck-1"}onChange={() => setCheckedDeck("deck-1")} />
                     <label onClick={() => showToolOptions(false)} htmlFor="deck-1">SENG 645 Exam 1 Review</label>
@@ -128,7 +128,7 @@ function Dashboard() {
                 <input type="radio" id="deck-3" name="deck"checked={checkedDeck === "deck-3"}onChange={() => setCheckedDeck("deck-3")} />
                     <label onClick={() => showToolOptions(false)} htmlFor="deck-3">SENG 645 Exam 3 Review</label>
                 </form>
-*/}
+
             </div>
             {
                 createOverlay && (
