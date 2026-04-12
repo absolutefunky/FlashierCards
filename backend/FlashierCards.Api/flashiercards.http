@@ -1,0 +1,44 @@
+GET http://localhost:5159/users/10
+###
+POST http://localhost:5159/users
+Content-Type: application/json
+
+{
+    "username": "Mano",
+    "passwordHash": "fsgereefoeguesueurwis",
+    "email": "Mano@gmail.com"
+}
+
+###
+PUT http://localhost:5159/users/9
+Content-Type: application/json
+
+{
+    "passwordHash": "rosesareviolet"
+}
+
+###
+DELETE http://localhost:5159/users/10
+
+
+###
+GET http://localhost:5159/users/8/profiles
+
+###
+POST http://localhost:5159/users/7/profiles
+Content-Type: application/json
+
+{
+    "userId": 7,
+    "backgroundColor": "purple",
+    "animationType": "triangles"
+}
+
+###
+PUT http://localhost:5159/users/7/profiles
+Content-Type: application/json
+
+{
+    "backgroundColor": "gold",
+    "animationType": "triangles"
+}
