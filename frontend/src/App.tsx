@@ -13,8 +13,27 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Verify from "./Components/Verify";
 import ForgotPassword from "./Components/ForgotPassword";
 import CreateNewPassword from "./Components/CreateNewPassword";
+import { useEffect, useState } from 'react';
+import type UserModel from "./Interfaces/User";
+import type ProfileModel from "./Interfaces/Profile";
+import type DeckModel from "./Interfaces/Deck";
 
 function App() {
+    const [user, setUser] = useState<UserModel>();
+    const [profile, setProfile] = useState<ProfileModel>();
+    const [decks, setDecks] = useState<DeckModel[]>();
+  
+    useEffect(() => {
+        fetch(`${import.meta.env.VITE_API_URL}/users/11`)
+            .then(response => response.json().then(json => setUser(json)))
+    }, []);
+
+    useEffect(() => {
+        fetch(`${import.meta.env.VITE_API_URL}/users/11/profiles`)
+            .then(response => response.json().then(json => setProfile(json)))
+    }, []);
+
+
     return (
         <BrowserRouter>
             <Routes>
@@ -28,7 +47,8 @@ function App() {
                 <Route path="/study" element={<Study />} />
                 <Route path="/edit" element={<Edit />} />
                 <Route path="/profile" element={<Profile />}>
-                    <Route path="account-information" element={<AccountInformation />} />
+                    {profile ? <Route path="account-information" element={<AccountInformation id={profile.id} userId={profile.userId} backgroundColor={profile.backgroundColor} animationType={profile.animationType} />} /> : 
+                    <Route path="account-information" element={<AccountInformation id={0} userId={0} backgroundColor="none" animationType="none" /> } /> }
                     <Route path="theme" element={<Theme />} />
                     <Route path="change-password" element={<ChangePassword />} />
                     <Route path="delete-account" element={<DeleteAccount />} />
