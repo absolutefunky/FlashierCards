@@ -7,13 +7,13 @@ function Login() {
             <div id={styles.title}>Flashier Cards</div>
             <form id={styles.signupForm}>
                 <div>
-                    <div className={styles.subtitle}>Username</div>
-                    <input type="text" />
+                    <div className={styles.subtitle}>Email</div>
+                    <input type="email" />
                 </div>
                 <div>
                     <div className={styles.subtitle}>Password</div>
                     <input type="password" />
-                    <Link id={styles.forgotLink} to="/forgot-password">Forgot password?</Link>
+                    <Link id={styles.forgotLink} to="/login/forgot-password">Forgot password?</Link>
                 </div>
                 <Link
                     to="/dashboard"

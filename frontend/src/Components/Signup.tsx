@@ -6,9 +6,9 @@ function Signup() {
         <div id={styles.content}>
             <div id={styles.title}>Join Flashier Cards</div>
             <form id={styles.signupForm}>
-                <div>
-                    <div className={styles.subtitle}>Username</div>
-                    <input type="text" />
+                <div className={styles.subtitle}>
+                    <div>Email</div>
+                    <input type="email" />
                 </div>
                 <div className={styles.subtitle}>
                     <div>Password</div>
@@ -18,12 +18,8 @@ function Signup() {
                     <div>Confirm Password</div>
                     <input type="password" />
                 </div>
-                <div className={styles.subtitle}>
-                    <div>Email</div>
-                    <input type="email" />
-                </div>
                 <Link
-                    to="/verify"
+                    to="/dashboard"
                     className={styles.homeBtn}
                     style={{marginTop: "0.5rem"}}
                 >

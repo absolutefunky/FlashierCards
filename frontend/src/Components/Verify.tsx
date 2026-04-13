@@ -1,21 +1,27 @@
 import { Link } from "react-router-dom";
+import styles from "../Styles/HomeForms.module.css";
 
-
-function Verify() {
-  return (
-    <div id="verify-form">
-      <span className="verify-title">Flashier Cards</span>
-      <form action="">
-        <div>
-          <div className="verify-sub-title">Enter verification code from email</div>
-          <input type="text" required />
+function Verify(prop : any) {
+    return (
+        <div id={styles.content}>
+            <div id={styles.title}>Flashier Cards</div>
+            <form id={styles.signupForm}>
+                <div>
+                    <div className={styles.subtitle}>Enter verification code from email</div>
+                    <input type="text" />
+                </div>
+                <Link
+                    to={prop.location}
+                    className={styles.homeBtn}
+                    style={{marginTop: "0.5rem"}}
+                >
+                    <span className={styles.loginShadow}></span>
+                    <span className={styles.loginEdge}></span>
+                    <span className={styles.loginFront}>Verify</span>
+                </Link>
+            </form>
         </div>
-        <Link className="verify-form-blue-btn" to="/CreateNewPassword">
-          Verify
-        </Link>
-      </form>
-    </div>
-  );
+    );
 }
 
-export default Verify;
+export default Verify

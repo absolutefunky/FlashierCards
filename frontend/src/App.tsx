@@ -37,14 +37,22 @@ function App() {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/signup" element={<Signup/>} />
-                <Route path="/verify" element={<Verify/>} /> 
-                    <Route path="/create-new-password" element={<CreateNewPassword/>} />
+
+                {/* signup routes */}
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/signup/verify" element={<Verify location="/dashboard" />} /> 
+                
+                {/* login routes */}
                 <Route path="/login" element={<Login />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/login/forgot-password" element={<ForgotPassword />} />
+                <Route path="/login/forgot-password/verify" element={<Verify location="/login/forgot-password/create-new-password" />} /> 
+                <Route path="/login/forgot-password/create-new-password" element={<CreateNewPassword />} />
+                
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/study" element={<Study />} />
                 <Route path="/edit" element={<Edit />} />
+
+                {/* profile routes */}
                 <Route path="/profile/account-information" element={<AccountInformation />} />
                 <Route path="/profile/theme" element={<Theme />} />
                 <Route path="/profile/change-password" element={<ChangePassword />} />
