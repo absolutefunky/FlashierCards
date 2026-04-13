@@ -23,7 +23,7 @@ function Navbar() {
                 <span><FontAwesomeIcon icon={faFolder} /></span>
                 <span style={{display: menuHidden ? "none" : "block"}}>Decks</span>
             </Link>
-            <Link className="nav-option" to="/profile">
+            <Link className="nav-option" to="/profile/account-information">
                 <span><FontAwesomeIcon icon={faCircleUser} /></span>
                 <span style={{display: menuHidden ? "none" : "block"}}>Profile</span>
             </Link>

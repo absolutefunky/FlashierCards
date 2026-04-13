@@ -4,7 +4,6 @@ import Login from "./Components/Login";
 import Dashboard from "./Components/Dashboard";
 import Study from "./Components/Study";
 import Edit from "./Components/Edit";
-import Profile from "./Components/Profile";
 import AccountInformation from "./Components/AccountInformation";
 import Theme from "./Components/Theme";
 import ChangePassword from "./Components/ChangePassword";
@@ -46,13 +45,10 @@ function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/study" element={<Study />} />
                 <Route path="/edit" element={<Edit />} />
-                <Route path="/profile" element={<Profile />}>
-                    {profile ? <Route path="account-information" element={<AccountInformation id={profile.id} userId={profile.userId} backgroundColor={profile.backgroundColor} animationType={profile.animationType} />} /> : 
-                    <Route path="account-information" element={<AccountInformation id={0} userId={0} backgroundColor="none" animationType="none" /> } /> }
-                    <Route path="theme" element={<Theme />} />
-                    <Route path="change-password" element={<ChangePassword />} />
-                    <Route path="delete-account" element={<DeleteAccount />} />
-                </Route>
+                <Route path="/profile/account-information" element={<AccountInformation />} />
+                <Route path="/profile/theme" element={<Theme />} />
+                <Route path="/profile/change-password" element={<ChangePassword />} />
+                <Route path="/profile/delete-account" element={<DeleteAccount />} />
             </Routes>
         </BrowserRouter>
     );
