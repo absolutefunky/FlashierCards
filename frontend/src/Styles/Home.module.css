@@ -1,0 +1,169 @@
+#homeContent {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#title {
+    font-size: 70px;
+    font-family: "Rampart One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #004A94;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+#subtitle {
+    font-size: 25px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #004A94;
+    text-align: center;
+    margin-bottom: 5rem;
+}
+
+/*
+#signupBtn {
+    text-decoration: none;
+    font-size: 20px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 200px;
+    min-height: 50px;
+    border-radius: 5px;
+    background-color: #ffffff;
+    color: #004A94;
+    border: 2px solid #004A94;
+    margin-bottom: 1rem;
+}
+
+#loginBtn {
+    text-decoration: none;
+    font-size: 20px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 200px;
+    min-height: 50px;
+    border-radius: 5px;
+    background-color: #004A94;
+    color: white;
+    border: 2px solid #004A94;
+}
+*/
+
+.homeBtn {
+    position: relative;
+    display: inline-block;
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: none;
+    outline-offset: 4px;
+}
+
+.homeBtn:first-of-type {
+    margin-bottom: 1.5rem;
+}
+
+.signupShadow {
+    position: absolute;
+    inset: 0;
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.1);
+    transform: translateY(6px);
+}
+
+.loginShadow {
+    position: absolute;
+    inset: 0;
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.2);
+    transform: translateY(6px);
+}
+
+.signupEdge {
+    position: absolute;
+    inset: 0;
+    border-radius: 5px;
+    background-color: #afd6eb;
+}
+
+.loginEdge {
+    position: absolute;
+    inset: 0;
+    border-radius: 5px;
+    background-color: #01162b;
+}
+
+.signupFront {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 200px;
+    min-height: 50px;
+    border-radius: 5px;
+    transform: translateY(-6px);
+    transition: transform 0.1s ease;
+    font-size: 20px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #004A94;
+    background-color: #D9EDF8;
+}
+
+.loginFront {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 200px;
+    min-height: 50px;
+    border-radius: 5px;
+    transform: translateY(-6px);
+    transition: transform 0.1s ease;
+    font-size: 20px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: white;
+    background-color: #004A94;
+}
+
+.homeBtn:hover .signupFront {
+    transform: translateY(-8px);
+}
+
+.homeBtn:hover .loginFront {
+    transform: translateY(-8px);
+}
+
+.homeBtn:active .signupFront {
+    transform: translateY(-2px);
+}
+
+.homeBtn:active .loginFront {
+    transform: translateY(-2px);
+}
+
+.homeBtn:active .signupShadow {
+    transform: translateY(2px);
+}
+
+.homeBtn:active .loginShadow {
+    transform: translateY(2px);
+}

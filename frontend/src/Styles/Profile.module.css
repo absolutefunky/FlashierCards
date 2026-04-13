@@ -24,6 +24,7 @@
     display: flex;
     flex-direction: column;
     border: 2px solid #B3DEF4;
+    border-radius: 5px;
 }
 
 #profileContent > div:first-of-type {
@@ -39,6 +40,7 @@
     font-family: "Imprima", sans-serif;
     color: #004A94;
     padding: 0.6rem 1rem;
+    text-wrap: nowrap;
 }
 
 .profileOption:hover {

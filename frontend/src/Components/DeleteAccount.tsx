@@ -22,7 +22,7 @@ function DeleteAccount() {
                         <Link className={styles.profileOption} to="/profile/account-information">Account Information</Link>
                         <Link className={styles.profileOption} to="/profile/theme">Theme</Link>
                         <Link className={styles.profileOption} to="/profile/change-password">Change Password</Link>
-                        <Link style={{backgroundColor: "#B3DEF4"}} className={styles.profileOption} to="/profile/delete-account">Delete Account</Link>
+                        <Link style={{backgroundColor: "#B3DEF4", fontWeight: "600"}} className={styles.profileOption} to="/profile/delete-account">Delete Account</Link>
                     </div>
                     <div>
 						<>

@@ -1,27 +1,36 @@
+import { Link } from "react-router-dom";
+import styles from "../Styles/HomeForms.module.css";
+
 function Signup() {
-    {/* conditional return */}
     return (
-        <div id="signup-content">
-            <div id="signup-title">Join Flashier Cards</div>
-            <form id="signup-form" action="">
+        <div id={styles.content}>
+            <div id={styles.title}>Join Flashier Cards</div>
+            <form id={styles.signupForm}>
                 <div>
-                    <div className="signup-subtitle">Username</div>
+                    <div className={styles.subtitle}>Username</div>
                     <input type="text" />
                 </div>
-                <div className="signup-subtitle">
+                <div className={styles.subtitle}>
                     <div>Password</div>
                     <input type="password" />
                 </div>
-                <div className="signup-subtitle">
+                <div className={styles.subtitle}>
                     <div>Confirm Password</div>
                     <input type="password" />
                 </div>
-                <div className="signup-subtitle">
+                <div className={styles.subtitle}>
                     <div>Email</div>
                     <input type="email" />
                 </div>
-                {/* its a placeholder */}
-                <input id="blue-btn" type="submit" value={"Create account"} />
+                <Link
+                    to="/verify"
+                    className={styles.homeBtn}
+                    style={{marginTop: "0.5rem"}}
+                >
+                    <span className={styles.loginShadow}></span>
+                    <span className={styles.loginEdge}></span>
+                    <span className={styles.loginFront}>Create account</span>
+                </Link>
             </form>
         </div>
     );
