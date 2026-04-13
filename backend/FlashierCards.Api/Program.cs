@@ -1,4 +1,5 @@
 using FlashierCards.Api.Endpoints;
+using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,11 +19,19 @@ await supabase.InitializeAsync();
 
 builder.Services.AddSingleton(supabase);
 
+// creating mongodb client
+var mongoUri = builder.Configuration["MONGODB_URI"];
+var mongoClient = new MongoClient(mongoUri);
+var mongodb = mongoClient.GetDatabase("flashiercards");
+
+builder.Services.AddSingleton(mongodb);
+
 var app = builder.Build();
 
 // endpoints
 app.MapUserEndpoints();
 app.MapDeckEndpoints();
 app.MapProfileEndpoints();
+app.MapCardEndpoints();
 
 app.Run();

@@ -66,3 +66,88 @@ Content-Type: application/json
 
 ###
 DELETE http://localhost:5159/users/13/decks/4
+
+###
+GET http://localhost:5159/decks/4/cards
+
+###
+POST http://localhost:5159/decks/4/cards?userId=13
+Content-Type: application/json
+
+{
+    "cardNumber": 1,
+    "cardFront": {
+        "backgroundColor": 16777215,
+        "text": [
+            {
+                "input": "What is photosynthesis?",
+                "color": 0,
+                "bold": true,
+                "italic": false,
+                "highlight": 0,
+                "position": "center"
+            }
+        ],
+        "images": [],
+        "gifs": [],
+        "stickers": []
+    },
+    "cardBack": {
+        "backgroundColor": 16777215,
+        "text": [
+            {
+                "input": "The process by which plants convert sunlight into food.",
+                "color": 0,
+                "bold": false,
+                "italic": false,
+                "highlight": 0,
+                "position": "center"
+            }
+        ],
+        "images": [],
+        "gifs": [],
+        "stickers": []
+    }
+}
+
+###
+PUT http://localhost:5159/decks/4/cards/1
+Content-Type: application/json
+
+{
+    "cardFront": {
+        "backgroundColor": 16777215,
+        "text": [
+            {
+                "input": "What is photosynthesis? (updated)",
+                "color": 0,
+                "bold": true,
+                "italic": false,
+                "highlight": 0,
+                "position": "center"
+            }
+        ],
+        "images": [],
+        "gifs": [],
+        "stickers": []
+    },
+    "cardBack": {
+        "backgroundColor": 16777215,
+        "text": [
+            {
+                "input": "Updated answer.",
+                "color": 0,
+                "bold": false,
+                "italic": false,
+                "highlight": 0,
+                "position": "center"
+            }
+        ],
+        "images": [],
+        "gifs": [],
+        "stickers": []
+    }
+}
+
+###
+DELETE http://localhost:5159/decks/4/cards/1
