@@ -4,9 +4,9 @@ POST http://localhost:5159/users
 Content-Type: application/json
 
 {
-    "username": "Mano",
-    "passwordHash": "fsgereefoeguesueurwis",
-    "email": "Mano@gmail.com"
+    "username": "doctor",
+    "passwordHash": "lolololololololol",
+    "email": "doctor@gmail.com"
 }
 
 ###
@@ -29,7 +29,7 @@ POST http://localhost:5159/users/7/profiles
 Content-Type: application/json
 
 {
-    "userId": 7,
+    "userId": 11,
     "backgroundColor": "purple",
     "animationType": "triangles"
 }
@@ -42,3 +42,27 @@ Content-Type: application/json
     "backgroundColor": "gold",
     "animationType": "triangles"
 }
+
+###
+GET http://localhost:5159/users/13/decks
+
+###
+POST http://localhost:5159/users/13/decks
+Content-Type: application/json
+
+{
+    "userId": 7,
+    "name": "Biology 101"
+}
+
+###
+PUT http://localhost:5159/users/13/decks/4
+Content-Type: application/json
+
+{
+    "name": "Biology 102",
+    "lastUpdated": "2026-04-12"
+}
+
+###
+DELETE http://localhost:5159/users/13/decks/4

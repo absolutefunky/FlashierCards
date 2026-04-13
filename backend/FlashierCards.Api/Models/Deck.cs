@@ -15,7 +15,7 @@ public class Deck : BaseModel
     public int UserId { get; set; }
 
     [Column("name")]
-    public required string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     [Column("last_updated")]
     public DateOnly LastUpdated { get; set; }
