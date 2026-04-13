@@ -11,13 +11,13 @@ function AccountInformation() {
                 <div id={styles.title}>Flashier Cards</div>
                 <div id={styles.profileContent}>
                     <div>
-                        <Link style={{backgroundColor: "#B3DEF4", fontWeight: "600"}} className={styles.profileOption} to="/profile/account-information">Account Information</Link>
+                        <Link style={{backgroundColor: "#D9EDF8", color: "#004A94"}} className={styles.profileOption} to="/profile/account-information">Account Information</Link>
                         <Link className={styles.profileOption} to="/profile/theme">Theme</Link>
                         <Link className={styles.profileOption} to="/profile/change-password">Change Password</Link>
                         <Link className={styles.profileOption} to="/profile/delete-account">Delete Account</Link>
                     </div>
-                    <div>
-                        add content here
+                    <div id={styles.profileInfo}>
+                        add user email, date account created, and number of decks here
                     </div>
                 </div>
             </div>

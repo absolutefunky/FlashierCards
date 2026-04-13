@@ -68,10 +68,6 @@
     outline-offset: 4px;
 }
 
-.homeBtn:first-of-type {
-    margin-bottom: 1.5rem;
-}
-
 .loginShadow {
     position: absolute;
     inset: 0;

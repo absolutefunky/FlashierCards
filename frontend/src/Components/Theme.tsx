@@ -11,7 +11,7 @@ function Theme() {
                 <div id={styles.profileContent}>
                     <div>
                         <Link className={styles.profileOption} to="/profile/account-information">Account Information</Link>
-                        <Link style={{backgroundColor: "#B3DEF4", fontWeight: "600"}} className={styles.profileOption} to="/profile/theme">Theme</Link>
+                        <Link style={{backgroundColor: "#D9EDF8", color: "#004A94"}} className={styles.profileOption} to="/profile/theme">Theme</Link>
                         <Link className={styles.profileOption} to="/profile/change-password">Change Password</Link>
                         <Link className={styles.profileOption} to="/profile/delete-account">Delete Account</Link>
                     </div>

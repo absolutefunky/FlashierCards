@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import Navbar from "./Navbar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
-import Navbar from "./Navbar";
 import { Link } from "react-router-dom";
+import { useState } from 'react';
 import styles from "../Styles/Profile.module.css";
 
 function DeleteAccount() {
@@ -22,28 +22,38 @@ function DeleteAccount() {
                         <Link className={styles.profileOption} to="/profile/account-information">Account Information</Link>
                         <Link className={styles.profileOption} to="/profile/theme">Theme</Link>
                         <Link className={styles.profileOption} to="/profile/change-password">Change Password</Link>
-                        <Link style={{backgroundColor: "#B3DEF4", fontWeight: "600"}} className={styles.profileOption} to="/profile/delete-account">Delete Account</Link>
+                        <Link style={{backgroundColor: "#D9EDF8", color: "#004A94"}} className={styles.profileOption} to="/profile/delete-account">Delete Account</Link>
                     </div>
                     <div>
-						<>
-							<div id="profile-content">
-								<div className="signup-subtitle">Delete Account</div>
-								<div className="profile-text">If you no longer wish to use Flashier Cards, you can permanently delete your account.</div>
-								<button id="blue-btn" onClick={() => showProfileOverlay(true)}>Delete My Account</button>	
-							</div>
-							<div style={{display: showOverlay ? "flex" : "none"}}  className="overlay">
-								<div className="cancel-action"><FontAwesomeIcon icon={faCircleXmark} onClick={() => showProfileOverlay(false)} /></div>
-								<div className="signup-subtitle" style={{fontWeight: 600}}>Delete My Account</div>
-								<div className="profile-text">Are you sure you want to delete your account? This action cannot be undone.</div>
-								<form action="">
-									<div>
-										<div className="signup-subtitle">Please enter your password to confirm.</div>
-										<input type="password" />
-									</div>
-									<button id="blue-btn">Delete</button>
-								</form>
-							</div>
-						</>
+						<div>
+							<div className={styles.profileText}>If you no longer wish to use Flashier Cards, you can permanently delete your account.</div>
+							<button
+								className={styles.homeBtn}
+								onClick={() => showProfileOverlay(true)}
+							>
+								<span className={styles.loginShadow}></span>
+								<span className={styles.loginEdge}></span>
+								<span className={styles.loginFront}>Delete My Account</span>
+							</button>
+						</div>
+						<div style={{display: showOverlay ? "flex" : "none"}}  className={styles.overlay}>
+							<div className={styles.cancelAction}><FontAwesomeIcon icon={faCircleXmark} onClick={() => showProfileOverlay(false)} /></div>
+							<div className={styles.subtitle} style={{fontWeight: "600"}}>Delete My Account</div>
+							<div className={styles.profileText}>Are you sure you want to delete your account? This action cannot be undone.</div>
+							<form id={styles.signupForm}>
+								<div>
+									<div className={styles.subtitle}>Enter your password to confirm.</div>
+									<input type="password" />
+								</div>
+								<button
+									className={styles.homeBtn}
+								>
+									<span className={styles.loginShadow}></span>
+									<span className={styles.loginEdge}></span>
+									<span className={styles.loginFront}>Delete</span>
+								</button>
+							</form>
+						</div>
                     </div>
                 </div>
             </div>
