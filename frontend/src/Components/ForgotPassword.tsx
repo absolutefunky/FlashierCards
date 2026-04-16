@@ -7,8 +7,12 @@ function ForgotPassword() {
             <div id={styles.title}>Flashier Cards</div>
             <form id={styles.signupForm}>
                 <div>
-                    <div className={styles.subtitle}>Enter you email</div>
+                    <div className={styles.subtitle}>Email</div>
                     <input type="email" />
+                </div>
+                <div>
+                    <div className={styles.subtitle}>Name of your best friend</div>
+                    <input type="text" />
                 </div>
                 <Link
                     to="/login/forgot-password/create-new-password"

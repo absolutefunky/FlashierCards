@@ -1,3 +1,6 @@
+/* this css applies to signup, login,
+forgot password, create new password, ... */
+
 #content {
     display: flex;
     flex-direction: column;
@@ -42,7 +45,7 @@
 #signupForm > div  {
     display: flex;
     flex-direction: column;
-    margin-bottom: 1.2rem;
+    margin-bottom: 1.3rem;
 }
 
 #signupForm > div input {
@@ -66,6 +69,10 @@
     cursor: pointer;
     text-decoration: none;
     outline-offset: 4px;
+}
+
+.homeBtn:first-of-type {
+    margin-bottom: 1.5rem;
 }
 
 .loginShadow {
@@ -110,5 +117,50 @@
 }
 
 .homeBtn:active .loginShadow {
+    transform: translateY(2px);
+}
+
+.signupShadow {
+    position: absolute;
+    inset: 0;
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.1);
+    transform: translateY(6px);
+}
+
+.signupEdge {
+    position: absolute;
+    inset: 0;
+    border-radius: 5px;
+    background-color: #afd6eb;
+}
+
+.signupFront {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 200px;
+    min-height: 50px;
+    border-radius: 5px;
+    transform: translateY(-6px);
+    transition: transform 0.1s ease;
+    font-size: 20px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #004A94;
+    background-color: #D9EDF8;
+}
+
+.homeBtn:hover .signupFront {
+    transform: translateY(-8px);
+}
+
+.homeBtn:active .signupFront {
+    transform: translateY(-2px);
+}
+
+.homeBtn:active .signupShadow {
     transform: translateY(2px);
 }

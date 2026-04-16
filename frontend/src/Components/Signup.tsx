@@ -6,17 +6,21 @@ function Signup() {
         <div id={styles.content}>
             <div id={styles.title}>Join Flashier Cards</div>
             <form id={styles.signupForm}>
-                <div className={styles.subtitle}>
-                    <div>Email</div>
+                <div>
+                    <div className={styles.subtitle}>Email</div>
                     <input type="email" />
                 </div>
-                <div className={styles.subtitle}>
-                    <div>Password</div>
+                <div>
+                    <div className={styles.subtitle}>Password</div>
                     <input type="password" />
                 </div>
-                <div className={styles.subtitle}>
-                    <div>Confirm Password</div>
+                <div>
+                    <div className={styles.subtitle}>Confirm password</div>
                     <input type="password" />
+                </div>
+                <div>
+                    <div className={styles.subtitle}>Name of your best friend</div>
+                    <input type="text" />
                 </div>
                 <Link
                     to="/dashboard"

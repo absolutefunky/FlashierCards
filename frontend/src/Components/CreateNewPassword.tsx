@@ -7,11 +7,11 @@ function CreateNewPassword() {
             <div id={styles.title}>Flashier Cards</div>
             <form id={styles.signupForm}>
                 <div>
-                    <div className={styles.subtitle}>New Password</div>
+                    <div className={styles.subtitle}>New password</div>
                     <input type="password" />
                 </div>
                 <div>
-                    <div className={styles.subtitle}>Confirm New Password</div>
+                    <div className={styles.subtitle}>Confirm new password</div>
                     <input type="password" />
                 </div>
                 <Link

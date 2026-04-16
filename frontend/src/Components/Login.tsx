@@ -13,7 +13,6 @@ function Login() {
                 <div>
                     <div className={styles.subtitle}>Password</div>
                     <input type="password" />
-                    <Link id={styles.forgotLink} to="/login/forgot-password">Forgot password?</Link>
                 </div>
                 <Link
                     to="/dashboard"
@@ -23,6 +22,14 @@ function Login() {
                     <span className={styles.loginShadow}></span>
                     <span className={styles.loginEdge}></span>
                     <span className={styles.loginFront}>Log in</span>
+                </Link>
+                <Link
+                    to="/login/forgot-password"
+                    className={styles.homeBtn}
+                >
+                    <span className={styles.signupShadow}></span>
+                    <span className={styles.signupEdge}></span>
+                    <span className={styles.signupFront}>Forgot password?</span>
                 </Link>
             </form>
         </div>
