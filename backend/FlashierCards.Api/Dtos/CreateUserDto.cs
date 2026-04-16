@@ -1,9 +1,9 @@
 namespace FlashierCards.Api.Dtos;
 
-// user information database expects from dotnet during insert
+// user information database expects from dotnet during insert request
 
 public record CreateUserDto (
-    string Username,
+    string Email,
     string PasswordHash,
-    string Email
+    string SQAnswer
 );

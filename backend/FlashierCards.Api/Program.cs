@@ -12,13 +12,13 @@ var options = new Supabase.SupabaseOptions
     AutoConnectRealtime = true
 };
 
-// creating supabase client
+// creating supabase client to establish connection with database
 var supabase = new Supabase.Client(url!, key, options);
 await supabase.InitializeAsync();
 
 builder.Services.AddSingleton(supabase);
 
-// configure CORS
+// configure CORS to establish connection with frontend
 var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
 
 builder.Services.AddCors(options =>

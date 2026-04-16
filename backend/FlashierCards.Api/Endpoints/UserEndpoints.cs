@@ -27,10 +27,11 @@ public static class UserEndpoints
             var userDto = new UserDto
             (
                 user.Id,
-                user.Username!,
-                user.PasswordHash!,
                 user.Email!,
-                user.DateAccountCreated
+                user.PasswordHash!,
+                user.SQAnswer!,
+                user.DateAccountCreated,
+                user.TotalDecks
             );
 
             return Results.Ok(userDto);

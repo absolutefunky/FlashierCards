@@ -1,8 +1,8 @@
 namespace FlashierCards.Api.Dtos;
 
-// deck information database expects from dotnet during update
+// deck information database expects from dotnet during update request
 
 public record UpdateDeckDto (
     string Name,
-    DateOnly LastUpdated
+    int TotalCards
 );

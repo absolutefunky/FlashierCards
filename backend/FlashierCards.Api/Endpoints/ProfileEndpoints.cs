@@ -28,7 +28,6 @@ public static class ProfileEndpoints
             (
                 profile.Id,
                 profile.UserId,
-                profile.BackgroundColor,
                 profile.AnimationType
             );
 
@@ -52,7 +51,6 @@ public static class ProfileEndpoints
                 var profile = new Profile
                 {
                     UserId = request.UserId,
-                    BackgroundColor = request.BackgroundColor,
                     AnimationType = request.AnimationType
                 };
 
@@ -73,7 +71,6 @@ public static class ProfileEndpoints
                 (
                     profile.Id,
                     profile.UserId,
-                    profile.BackgroundColor,
                     profile.AnimationType
                 );
 
@@ -87,7 +84,6 @@ public static class ProfileEndpoints
         {
             var profile = new Profile
             {
-                BackgroundColor = request.BackgroundColor,
                 AnimationType = request.AnimationType
             };
 
@@ -111,7 +107,6 @@ public static class ProfileEndpoints
             (
                 profile.Id,
                 profile.UserId,
-                profile.BackgroundColor,
                 profile.AnimationType
             );
 

@@ -4,8 +4,9 @@ namespace FlashierCards.Api.Dtos;
 
 public record UserDto (
     int Id,
-    string Username,
-    string PasswordHash,
     string Email,
-    DateOnly DateAccountCreated
+    string PasswordHash,
+    string SQAnswer,
+    DateOnly DateAccountCreated,
+    int TotalDecks
 );
