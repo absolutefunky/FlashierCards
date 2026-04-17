@@ -1,6 +1,7 @@
 import Navbar from "./Navbar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleXmark } from '@fortawesome/free-solid-svg-icons';
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { faX } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { useState } from 'react';
 import styles from "../Styles/Profile.module.css";
@@ -13,7 +14,7 @@ function DeleteAccount() {
     }
 	
     return (
-		<div id={styles.dashboardContent}>
+		<div id={styles.dashboardContent} style={{pointerEvents: showOverlay ? "none" : "auto"}}>
             <Navbar />
             <div>
                 <div id={styles.title}>Flashier Cards</div>
@@ -30,28 +31,43 @@ function DeleteAccount() {
 							<button
 								className={styles.homeBtn}
 								onClick={() => showProfileOverlay(true)}
+								style={{marginTop: "0.5rem"}}
 							>
 								<span className={styles.loginShadow}></span>
 								<span className={styles.loginEdge}></span>
-								<span className={styles.loginFront}>Delete My Account</span>
+								<span className={styles.loginFront}>Delete account</span>
 							</button>
 						</div>
 						<div style={{display: showOverlay ? "flex" : "none"}}  className={styles.overlay}>
-							<div className={styles.cancelAction}><FontAwesomeIcon icon={faCircleXmark} onClick={() => showProfileOverlay(false)} /></div>
 							<div className={styles.subtitle} style={{fontWeight: "600"}}>Delete My Account</div>
-							<div className={styles.profileText}>Are you sure you want to delete your account? This action cannot be undone.</div>
+							<div className={styles.profileText}>
+								Are you sure you want to delete your account? This action cannot be undone.
+							</div>
 							<form id={styles.signupForm}>
-								<div>
-									<div className={styles.subtitle}>Enter your password to confirm.</div>
+								<div className={styles.formField}>
+									<div className={styles.subtitle}>Enter password to confirm</div>
 									<input type="password" />
 								</div>
-								<button
-									className={styles.homeBtn}
-								>
-									<span className={styles.loginShadow}></span>
-									<span className={styles.loginEdge}></span>
-									<span className={styles.loginFront}>Delete</span>
-								</button>
+								<div style={{marginTop: "0.5rem"}}>
+									<button
+										className={styles.homeBtn}
+										style={{marginRight: "1rem"}}
+										type="button"
+									>
+										<span className={styles.signupShadow}></span>
+										<span className={styles.signupEdge}></span>
+										<span className={styles.signupFront}><FontAwesomeIcon icon={faCheck} /></span>
+									</button>
+									<button
+										className={styles.homeBtn}
+										type="button"
+										onClick={() => showProfileOverlay(false)}
+									>
+										<span className={styles.loginShadow}></span>
+										<span className={styles.loginEdge}></span>
+										<span className={styles.xFront}><FontAwesomeIcon icon={faX} /></span>
+									</button>
+								</div>
 							</form>
 						</div>
                     </div>

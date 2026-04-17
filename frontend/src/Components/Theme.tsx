@@ -16,7 +16,11 @@ function Theme() {
                         <Link className={styles.profileOption} to="/profile/delete-account">Delete Account</Link>
                     </div>
                     <div>
-                        add content here
+                        <div className={styles.subtitle} style={{fontWeight: "600"}}>Background Animations</div>
+                        <div id={styles.profileThemes}>
+                            <div>add animation 1 here</div>
+                            <div>add animation 2 here</div>
+                        </div>
                     </div>
                 </div>
             </div>

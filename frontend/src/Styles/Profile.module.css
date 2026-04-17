@@ -19,14 +19,40 @@
     margin-bottom: 2rem;
 }
 
-.subtitle {
-    font-size: 20px;
-    font-family: "Imprima", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    color: #004A94;
-    margin-bottom: 0.2rem;
+#profileContent {
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid #004A94;
+    position: relative;
 }
+
+#profileContent > div:first-of-type {
+    background-color: #004A94;
+    border-bottom: 2px solid #004A94;
+    display: flex;
+    gap: 10px;
+}
+
+#profileContent > div:last-of-type {
+    padding: 1rem;
+    
+}
+
+.profileOption {
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: 400;
+    font-family: "Imprima", sans-serif;
+    color: white;
+    padding: 0.8rem 1rem;
+    text-wrap: nowrap;
+}
+
+.profileOption:hover {
+    background-color: #003971;
+}
+
 
 .profileText {
     font-size: 18px;
@@ -37,37 +63,20 @@
     margin-bottom: 1rem;
 }
 
-#profileContent {
-    height: 500px;
+.overlay {
+    width: 400px;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
+    position: absolute;
+    background-color: white;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
     border: 2px solid #004A94;
-}
-
-#profileContent > div:first-of-type {
-    background-color: #004A94;
-    border-bottom: 2px solid #004A94;
-    display: flex;
-}
-
-.profileOption {
-    text-decoration: none;
-    font-size: 20px;
-    font-weight: 400;
-    font-family: "Imprima", sans-serif;
-    color: white;
-    padding: 0.8rem 1rem;
-    margin-right: 1rem;
-    text-wrap: nowrap;
-}
-
-.profileOption:hover {
-    background-color: #003971;
-}
-
-#profileContent > div:last-of-type {
-    padding: 1rem;
-    position: relative;
+    pointer-events: auto;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 #signupForm {
@@ -76,44 +85,32 @@
     align-items: flex-start;
 }
 
-#signupForm > div  {
+.formField  {
     display: flex;
     flex-direction: column;
-    margin-bottom: 1.2rem;
+    margin-bottom: 1.3rem;
 }
 
-#signupForm > div input {
+.subtitle {
+    font-size: 20px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #004A94;
+    margin-bottom: 0.2rem;
+}
+
+
+.formField input {
     border: 2px solid #004A94;
     border-radius: 5px;
     font-size: 18px;
     padding: 0.5rem;
-    min-width: 300px;
+    min-width: 250px;
 }
 
-#signupForm > div input:focus {
+.formField input:focus {
     outline: none;
-}
-
-.overlay {
-    display: flex;
-    flex-direction: column;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    position: absolute;
-    background-color: white;
-    border-radius: 10px;
-    width: 400px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-.cancelAction {
-    display: flex;
-    justify-content: flex-end;
-    color: #004A94;
-    font-size: 22px;
-    cursor: pointer;
 }
 
 .homeBtn {
@@ -125,7 +122,6 @@
     cursor: pointer;
     text-decoration: none;
     outline-offset: 4px;
-    margin-bottom: 0.5rem;
 }
 
 .loginShadow {
@@ -171,4 +167,88 @@
 
 .homeBtn:active .loginShadow {
     transform: translateY(2px);
+}
+
+.signupShadow {
+    position: absolute;
+    inset: 0;
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.1);
+    transform: translateY(6px);
+}
+
+.signupEdge {
+    position: absolute;
+    inset: 0;
+    border-radius: 5px;
+    background-color: #afd6eb;
+}
+
+.signupFront {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    min-height: 40px;
+    border-radius: 5px;
+    transform: translateY(-6px);
+    transition: transform 0.1s ease;
+    font-size: 20px;
+    color: #004A94;
+    background-color: #D9EDF8;
+}
+
+.homeBtn:hover .signupFront {
+    transform: translateY(-8px);
+}
+
+.homeBtn:active .signupFront {
+    transform: translateY(-2px);
+}
+
+.homeBtn:active .signupShadow {
+    transform: translateY(2px);
+}
+
+.xFront {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    min-height: 40px;
+    border-radius: 5px;
+    transform: translateY(-6px);
+    transition: transform 0.1s ease;
+    font-size: 20px;
+    color: white;
+    background-color: #004A94;
+}
+
+.homeBtn:hover .xFront {
+    transform: translateY(-8px);
+}
+
+.homeBtn:active .xFront {
+    transform: translateY(-2px);
+}
+
+#profileThemes {
+    margin-top: 1rem;
+    display: flex;
+    gap: 30px;
+}
+
+#profileThemes div {
+    width: 250px;
+    height: 200px;
+    background-color: #D9EDF8;
+    border-radius: 5px;
+    box-shadow: 10px 10px 5px rgba(18, 31, 50, 0.234);
+    transition: all 0.2s ease;
+}
+
+#profileThemes div:hover {
+    transform: translateY(5px);
 }

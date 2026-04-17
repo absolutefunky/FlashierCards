@@ -1,4 +1,3 @@
-import type Profile from "../Interfaces/Profile";
 import Navbar from "./Navbar";
 import { Link } from "react-router-dom";
 import styles from "../Styles/Profile.module.css";
@@ -16,8 +15,25 @@ function AccountInformation() {
                         <Link className={styles.profileOption} to="/profile/change-password">Change Password</Link>
                         <Link className={styles.profileOption} to="/profile/delete-account">Delete Account</Link>
                     </div>
-                    <div id={styles.profileInfo}>
-                        add user email, date account created, and number of decks here
+                    <div>
+                        <div className={styles.subtitle} style={{fontWeight: "600"}}>
+                            Email
+                        </div>
+                        <div className={styles.profileText}>
+                            enter email here
+                        </div>
+                        <div className={styles.subtitle} style={{fontWeight: "600"}}>
+                            Date Account Created
+                        </div>
+                        <div className={styles.profileText}>
+                            enter date here
+                        </div>
+                        <div className={styles.subtitle} style={{fontWeight: "600"}}>
+                            Total Number of Decks
+                        </div>
+                        <div className={styles.profileText}>
+                            enter number here
+                        </div>
                     </div>
                 </div>
             </div>
