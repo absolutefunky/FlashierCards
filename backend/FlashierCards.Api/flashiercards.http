@@ -1,4 +1,4 @@
-GET http://localhost:5159/users/10
+GET http://localhost:5159/users/1
 ###
 POST http://localhost:5159/users
 Content-Type: application/json

@@ -1,4 +1,7 @@
 using FlashierCards.Api.Dtos;
+using FlashierCards.Api.Dtos.CreateDtos;
+using FlashierCards.Api.Dtos.ReturnDtos;
+using FlashierCards.Api.Dtos.UpdateDtos;
 using FlashierCards.Api.Models;
 
 namespace FlashierCards.Api.Endpoints;
@@ -24,7 +27,7 @@ public static class ProfileEndpoints
             }
 
             // create a profile record to return
-            var profileDto = new ProfileDto
+            var profileDto = new ReturnProfileDto
             (
                 profile.Id,
                 profile.UserId,
@@ -67,7 +70,7 @@ public static class ProfileEndpoints
                 }
 
                 // create a profile record to return
-                var profileDto = new ProfileDto
+                var profileDto = new ReturnProfileDto
                 (
                     profile.Id,
                     profile.UserId,
@@ -103,7 +106,7 @@ public static class ProfileEndpoints
             }
 
             // create a user record to return
-            var profileDto = new ProfileDto
+            var profileDto = new ReturnProfileDto
             (
                 profile.Id,
                 profile.UserId,
@@ -112,5 +115,17 @@ public static class ProfileEndpoints
 
             return Results.Ok(profileDto);
         });
+
+
+        // GET /users/{id}/profile 
+        // use ReturnProfileDto record to return data
+
+        // POST /users/{id}/profile to create user profile
+        // use CreateProfileDto record for request data
+        // use ReturnProfileDto record to return data
+
+        // PUT /user{id}/profile/updateTheme
+        // use UpdateProfileDto record for request data
+        // use ReturnProfileDto record to return data
     }
 }

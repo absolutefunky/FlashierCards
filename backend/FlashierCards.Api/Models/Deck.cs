@@ -16,7 +16,4 @@ public class Deck : BaseModel
 
     [Column("name")]
     public required string Name { get; set; }
-
-    [Column("total_cards")]
-    public int TotalCards { get; set; }
 }

@@ -22,7 +22,4 @@ public class User : BaseModel
 
     [Column("date_account_created")]
     public DateOnly DateAccountCreated { get; set; }
-
-    [Column("total_decks")]
-    public int TotalDecks { get; set; }
 }

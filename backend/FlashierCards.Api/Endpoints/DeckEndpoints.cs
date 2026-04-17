@@ -4,12 +4,19 @@ public static class DeckEndpoints
 {
     public static void MapDeckEndpoints(this WebApplication app)
     {
-        // GET /users/id/decks
 
-        // POST /users/id/decks
+        // GET /users/{id}/decks
+        // use ReturnDeckDto to return a collection of decks
 
-        // UPDATE /users/id/decks/id
+        // POST /users/{id}/decks/create
+        // use CreateDeckDto for request data
+        // use ReturnDeckDto to return data
 
-        // DELETE /users/id/decks/id
+        // PUT /users/{userId}/decks/{id}/rename
+        // use UpdateDeckDto for request data
+        // use ReturnDeckTo return data
+
+        // DELETE /users/{userId}/decks/{id}/delete
+        // return respose.ok or something depending on status
     }
 }

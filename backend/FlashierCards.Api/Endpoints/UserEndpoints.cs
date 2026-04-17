@@ -1,4 +1,4 @@
-using FlashierCards.Api.Dtos;
+using FlashierCards.Api.Dtos.ReturnDtos;
 using FlashierCards.Api.Models;
 
 namespace FlashierCards.Api.Endpoints;
@@ -24,26 +24,38 @@ public static class UserEndpoints
             }
 
             // create a user record to return
-            var userDto = new UserDto
+            var userDto = new ReturnUserDto
             (
                 user.Id,
                 user.Email!,
-                user.PasswordHash!,
-                user.SQAnswer!,
-                user.DateAccountCreated,
-                user.TotalDecks
+                user.DateAccountCreated
             );
 
             return Results.Ok(userDto);
         });
 
-        // POST /users
-        
+        // GET /users/{id} 
+        // use ReturnuserDto crecord to return data
 
-        // PUT /users/id
-        
+        //  POST /users/signup to create a new user
+        // use CreateUserDto record for request data
+        // use ReturnUserDto record to return data
+        // create password hash before inserting data into db
 
-        // DELETE /users/id
-        
+        // POST /users/login to authenticate user
+        // use VerifyLoginDto record for request data
+        // use ReturnUserDto record to get and return data
+
+        // POST /users/forgotPassword to authenticate user
+        // use VerifyForgotPasswordDto record for request data
+        // just return Request.ok or something else depending on status
+
+        // PUT /users/updatePassword
+        // use UpdateUserDto record for request data
+        // use ReturnUserDto record to get and return data 
+        // create password hash before updating data into db
+
+        // DELETE /users/{id} 
+        // return request.ok or something else depending on status
     }
 }

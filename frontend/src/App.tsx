@@ -30,6 +30,7 @@ function App() {
     useEffect(() => {
         fetch(`${import.meta.env.VITE_API_URL}/users/11/profiles`)
             .then(response => response.json().then(json => setProfile(json)))
+            
     }, []);
 
 
