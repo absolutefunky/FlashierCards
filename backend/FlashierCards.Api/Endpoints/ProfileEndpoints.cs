@@ -37,11 +37,13 @@ public static class ProfileEndpoints
         });
 
         // POST /users/{id}/profiles
-        app.MapPost("/users/{id}/profiles", async(int id, CreateProfileDto request, Supabase.Client supabase) =>
+        app.MapPost("/users/{id}/profiles/create", async(int id, CreateProfileDto request, Supabase.Client supabase) =>
         {
             var profile = new Profile
             {
-                UserId = request.UserId
+                UserId = request.UserId,
+                BackgroundColor = request.BackgroundColor,
+                AnimationType = request.AnimationType
             };
 
             // insert profile into database
@@ -68,7 +70,7 @@ public static class ProfileEndpoints
         });
 
         // PUT /users/{id}/profiles
-        app.MapPut("/users/{id}/profiles", async(int id, UpdateProfileDto request, Supabase.Client supabase) =>
+        app.MapPut("/users/{id}/profiles/update", async(int id, UpdateProfileDto request, Supabase.Client supabase) =>
         {
             // update animation type in profile table
             var response = await supabase
