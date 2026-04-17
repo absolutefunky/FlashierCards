@@ -3,6 +3,9 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
+# testing files
+flshiercards.http
+
 # dotenv files
 .env
 
