@@ -10,6 +10,7 @@ function DeleteAccount() {
 	const [showOverlay, setShowOverlay] = useState(false);
 	const [error, setError] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+	const [success, setSuccess] = useState(false);
 
 	function showProfileOverlay(request: boolean) {
         setShowOverlay(request);
@@ -25,6 +26,7 @@ function DeleteAccount() {
             if (!response.ok) {
                 throw new Error("Invalid request.");
             }
+			setSuccess(true);
             setIsLoading(false);
         } catch (error: any) {
             setIsLoading(false);
@@ -57,7 +59,12 @@ function DeleteAccount() {
 										Invalid request.
 									</div>
 								:
-								<div></div>
+									(success) ?
+										<div className={styles.invalidRequest}>
+											Your account has been deleted. Please log out.
+										</div>
+									:
+										<div></div>
 							}
 							<div className={styles.profileText}>If you no longer wish to use Flashier Cards, you can permanently delete your account.</div>
 							<button

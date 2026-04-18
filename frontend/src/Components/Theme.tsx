@@ -6,6 +6,7 @@ import { useState } from 'react';
 function Theme() {
     const [error, setError] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [success, setSuccess] = useState(false);
 
     const updateProfileData = async (request: string) => {
         setIsLoading(true);
@@ -20,6 +21,7 @@ function Theme() {
             if (!response.ok) {
                 throw new Error("Invalid request.");
             }
+            setSuccess(true);
             setIsLoading(false);
         } catch (error: any) {
             setIsLoading(false);
@@ -52,7 +54,12 @@ function Theme() {
                                         Invalid request.
                                     </div>
                                 :
-                                <div></div>
+                                    (success) ?
+                                        <div className={styles.invalidRequest}>
+                                            Theme has been updated.
+                                        </div>
+                                    :
+                                        <div></div>
                             }
                             <div className={styles.subtitle} style={{fontWeight: "600"}}>Background Animations</div>
                             <div id={styles.profileThemes}>

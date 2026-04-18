@@ -13,6 +13,7 @@ function ChangePassword() {
     const [passwordMatch, setPasswordMatch] = useState(true);
     const [error, setError] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [success, setSuccess] = useState(false);
 
     function showProfileOverlay(request: boolean) {
         if (request === true && (inputs.currentPassword.length > 0 && inputs.newPassword.length > 0 && inputs.confirmNewPassword.length > 0)) {
@@ -57,6 +58,7 @@ function ChangePassword() {
             if (!response.ok) {
                 throw new Error("Invalid request.");
             }
+            setSuccess(true);
             setIsLoading(false);
         } catch (error: any) {
             setIsLoading(false);
@@ -102,7 +104,12 @@ function ChangePassword() {
                                     Invalid request.
                                 </div>
                             :
-                            <div></div>
+                                (success) ?
+                                    <div className={styles.invalidRequest}>
+                                        Password has been changed.
+                                    </div>
+                                :
+                                    <div></div>
                         }
                         <div className={styles.profileText}>
                             Enter the information below to confirm password change.
