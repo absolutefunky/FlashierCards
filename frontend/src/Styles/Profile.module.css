@@ -20,7 +20,7 @@
 }
 
 #profileContent {
-    height: 500px;
+    height: 550px;
     display: flex;
     flex-direction: column;
     border: 2px solid #004A94;
@@ -247,8 +247,21 @@
     border-radius: 5px;
     box-shadow: 10px 10px 5px rgba(18, 31, 50, 0.234);
     transition: all 0.2s ease;
+    cursor: pointer;
 }
 
 #profileThemes div:hover {
     transform: translateY(5px);
+}
+
+.invalidRequest {
+    color: #004A94;
+    font-size: 18px;
+    font-family: "Imprima", sans-serif;
+    font-style: normal;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    background-color: #D9EDF8;
+    border-radius: 5px;
+    padding: 1rem;
 }

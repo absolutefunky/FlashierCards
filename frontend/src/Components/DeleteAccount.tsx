@@ -8,10 +8,30 @@ import styles from "../Styles/Profile.module.css";
 
 function DeleteAccount() {
 	const [showOverlay, setShowOverlay] = useState(false);
+	const [error, setError] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
 	function showProfileOverlay(request: boolean) {
         setShowOverlay(request);
     }
+
+	const deleteUserData = async () => {
+		showProfileOverlay(false);
+        setIsLoading(true);
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/1/delete`, {
+                method: "DELETE",
+            });
+            if (!response.ok) {
+                throw new Error("Invalid request.");
+            }
+            setIsLoading(false);
+        } catch (error: any) {
+            setIsLoading(false);
+            setError(true);
+            console.log(error.message);
+        }
+    };
 	
     return (
 		<div id={styles.dashboardContent} style={{pointerEvents: showOverlay ? "none" : "auto"}}>
@@ -27,6 +47,18 @@ function DeleteAccount() {
                     </div>
                     <div>
 						<div>
+							{ (isLoading) ?
+								<div className={styles.invalidRequest}>
+									Loading request...
+								</div>
+							:
+								(error) ?
+									<div className={styles.invalidRequest}>
+										Invalid request.
+									</div>
+								:
+								<div></div>
+							}
 							<div className={styles.profileText}>If you no longer wish to use Flashier Cards, you can permanently delete your account.</div>
 							<button
 								className={styles.homeBtn}
@@ -43,32 +75,27 @@ function DeleteAccount() {
 							<div className={styles.profileText}>
 								Are you sure you want to delete your account? This action cannot be undone.
 							</div>
-							<form id={styles.signupForm}>
-								<div className={styles.formField}>
-									<div className={styles.subtitle}>Enter password to confirm</div>
-									<input type="password" />
-								</div>
-								<div style={{marginTop: "0.5rem"}}>
-									<button
-										className={styles.homeBtn}
-										style={{marginRight: "1rem"}}
-										type="button"
-									>
-										<span className={styles.signupShadow}></span>
-										<span className={styles.signupEdge}></span>
-										<span className={styles.signupFront}><FontAwesomeIcon icon={faCheck} /></span>
-									</button>
-									<button
-										className={styles.homeBtn}
-										type="button"
-										onClick={() => showProfileOverlay(false)}
-									>
-										<span className={styles.loginShadow}></span>
-										<span className={styles.loginEdge}></span>
-										<span className={styles.xFront}><FontAwesomeIcon icon={faX} /></span>
-									</button>
-								</div>
-							</form>
+							<div style={{marginTop: "0.5rem"}}>
+								<button
+									className={styles.homeBtn}
+									style={{marginRight: "1rem"}}
+									type="button"
+									onClick={deleteUserData}
+								>
+									<span className={styles.signupShadow}></span>
+									<span className={styles.signupEdge}></span>
+									<span className={styles.signupFront}><FontAwesomeIcon icon={faCheck} /></span>
+								</button>
+								<button
+									className={styles.homeBtn}
+									type="button"
+									onClick={() => showProfileOverlay(false)}
+								>
+									<span className={styles.loginShadow}></span>
+									<span className={styles.loginEdge}></span>
+									<span className={styles.xFront}><FontAwesomeIcon icon={faX} /></span>
+								</button>
+							</div>
 						</div>
                     </div>
                 </div>

@@ -1,4 +1,5 @@
 using FlashierCards.Api.Dtos.ReturnDtos;
+using FlashierCards.Api.Dtos.UpdateDtos;
 using FlashierCards.Api.Models;
 
 namespace FlashierCards.Api.Endpoints;
@@ -7,7 +8,7 @@ public static class UserEndpoints
 {
     public static void MapUserEndpoints(this WebApplication app)
     {
-        // GET /users/id
+        // GET /users/{id}
         app.MapGet("/users/{id}", async(int id, Supabase.Client supabase) =>
         {
             // find user who has the given id
@@ -34,9 +35,6 @@ public static class UserEndpoints
             return Results.Ok(userDto);
         });
 
-        // GET /users/{id} 
-        // use ReturnuserDto crecord to return data
-
         //  POST /users/signup to create a new user
         // use CreateUserDto record for request data
         // use ReturnUserDto record to return data
@@ -55,7 +53,20 @@ public static class UserEndpoints
         // use ReturnUserDto record to get and return data 
         // create password hash before updating data into db
 
-        // DELETE /users/{id} 
+        // PUT /users/{id}/changePassword
+        // implement this for changePassword component
+        // expect currentpassword and new password as input
+        // return ok or not found
+        app.MapPut("/users/{id}/changePassword", async(int id, UpdateUserDto request, Supabase.Client supabase) =>
+        {
+            return Results.Ok();
+        });
+
+        // DELETE /users/{id}/delete
         // return request.ok or something else depending on status
+        app.MapDelete("/users/{id}/delete", async(int id, Supabase.Client supabase) =>
+        {
+            return Results.Ok();
+        });
     }
 }

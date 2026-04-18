@@ -12,28 +12,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Verify from "./Components/Verify";
 import ForgotPassword from "./Components/ForgotPassword";
 import CreateNewPassword from "./Components/CreateNewPassword";
-import { useEffect, useState } from 'react';
-import type UserModel from "./Interfaces/User";
-import type ProfileModel from "./Interfaces/Profile";
-import type DeckModel from "./Interfaces/Deck";
 
 function App() {
-    const [user, setUser] = useState<UserModel>();
-    const [profile, setProfile] = useState<ProfileModel>();
-    const [decks, setDecks] = useState<DeckModel[]>();
-  
-    useEffect(() => {
-        fetch(`${import.meta.env.VITE_API_URL}/users/11`)
-            .then(response => response.json().then(json => setUser(json)))
-    }, []);
-
-    useEffect(() => {
-        fetch(`${import.meta.env.VITE_API_URL}/users/11/profiles`)
-            .then(response => response.json().then(json => setProfile(json)))
-            
-    }, []);
-
-
+   
     return (
         <BrowserRouter>
             <Routes>

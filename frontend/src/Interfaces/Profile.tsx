@@ -1,5 +1,5 @@
 export default interface Profile {
-    id: number;
-    userId: number;
+    id: Int8Array;
+    userId: Int8Array;
     animationType: string;
 }
