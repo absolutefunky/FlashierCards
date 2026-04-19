@@ -1,4 +1,4 @@
-import { Stage, Layer, Text, Transformer } from 'react-konva';
+import { Stage, Layer, Text, Transformer, Line } from 'react-konva';
 import { useState, useRef, useEffect} from 'react';
 
 function Canvas() {
