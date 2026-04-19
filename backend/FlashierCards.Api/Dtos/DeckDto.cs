@@ -7,6 +7,5 @@ namespace FlashierCards.Api.Dtos;
 public record DeckDto (
     int Id,
     int UserId,
-    string Name,
-    DateOnly LastUpdated
+    string Name
 );

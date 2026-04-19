@@ -17,6 +17,4 @@ public class Deck : BaseModel
     [Column("name")]
     public string Name { get; set; } = string.Empty;
 
-    [Column("last_updated")]
-    public DateOnly LastUpdated { get; set; }
 }

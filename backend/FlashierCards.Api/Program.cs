@@ -26,7 +26,19 @@ var mongodb = mongoClient.GetDatabase("flashiercards");
 
 builder.Services.AddSingleton(mongodb);
 
+var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();                                         
+                                                                                                                                   
+  builder.Services.AddCors(options =>                                                                                              
+  {                                                                                                                                
+      options.AddDefaultPolicy(optionsCORS =>                                                                                      
+      {                                                                                                                            
+          optionsCORS.WithOrigins(allowedOrigins!).AllowAnyMethod().AllowAnyHeader();                                              
+      });                                                                                                                          
+  });      
+
 var app = builder.Build();
+
+app.UseCors();           
 
 // endpoints
 app.MapUserEndpoints();

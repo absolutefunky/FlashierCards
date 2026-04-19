@@ -18,8 +18,7 @@ public static class DeckEndpoints
             var decks = response.Models.Select(d => new DeckDto(
                 d.Id,
                 d.UserId,
-                d.Name,
-                d.LastUpdated
+                d.Name
             ));
 
             return Results.Ok(decks);
@@ -31,8 +30,7 @@ public static class DeckEndpoints
             var deck = new Deck
             {
                 UserId = id,
-                Name = request.Name,
-                LastUpdated = DateOnly.FromDateTime(DateTime.UtcNow)
+                Name = request.Name
             };
 
             var response = await supabase
@@ -49,8 +47,7 @@ public static class DeckEndpoints
             var deckDto = new DeckDto(
                 created.Id,
                 created.UserId,
-                created.Name,
-                created.LastUpdated
+                created.Name
             );
 
             return Results.Created($"/users/{id}/decks/{created.Id}", deckDto);
@@ -63,7 +60,6 @@ public static class DeckEndpoints
                 .From<Deck>()
                 .Where(d => d.UserId == id && d.Id == deckId)
                 .Set(d => d.Name, request.Name)
-                .Set(d => d.LastUpdated, request.LastUpdated)
                 .Update();
 
             var deck = response.Models.FirstOrDefault();
@@ -76,8 +72,7 @@ public static class DeckEndpoints
             var deckDto = new DeckDto(
                 deck.Id,
                 deck.UserId,
-                deck.Name,
-                deck.LastUpdated
+                deck.Name
             );
 
             return Results.Ok(deckDto);
