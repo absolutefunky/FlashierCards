@@ -12,6 +12,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Verify from "./Components/Verify";
 import ForgotPassword from "./Components/ForgotPassword";
 import CreateNewPassword from "./Components/CreateNewPassword";
+import Canvas from "./Components/Canvas";
 
 function App() {
    
@@ -21,6 +22,7 @@ function App() {
                 <Route path="/" element={<Home />} />
 
                 {/* signup routes */}
+                <Route path="/canvas" element={<Canvas />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/signup/verify" element={<Verify location="/dashboard" />} /> 
                 
