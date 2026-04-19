@@ -8,8 +8,11 @@ import { faPencil } from "@fortawesome/free-solid-svg-icons";
 import { faICursor } from "@fortawesome/free-solid-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useState } from 'react';
+import type User from "../Interfaces/User";
 
 function Dashboard() {
+    const storedUser = sessionStorage.getItem("user");
+    const user: User | null = storedUser ? JSON.parse(storedUser) : null;
     const [toolbar, setToolbar] = useState(false);
     const [deck, setDeck] = useState("");
     const [toolOptionHidden, setToolOptionHidden] = useState(true);
@@ -45,6 +48,7 @@ function Dashboard() {
             <Navbar />
             <div>
                 <div id="signup-title">Flashier Cards</div>
+                {user && <p>Ello, {user.email}</p>}
 
                 <div id="toolbar">
                     <button

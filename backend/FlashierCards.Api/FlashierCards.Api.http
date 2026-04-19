@@ -1,0 +1,6 @@
+@FlashierCards.Api_HostAddress = http://localhost:5204
+
+GET {{FlashierCards.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
