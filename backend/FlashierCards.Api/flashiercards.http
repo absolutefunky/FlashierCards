@@ -1,25 +1,27 @@
-GET http://localhost:5159/users/1
+GET http://localhost:5159/users/3
 
 ###
-POST http://localhost:5159/users
+POST http://localhost:5159/users/register
 Content-Type: application/json
 
 {
-    "username": "Mano",
-    "passwordHash": "fsgereefoeguesueurwis",
-    "email": "Mano@gmail.com"
+    "authId": "8d2832b0-93b8-42c5-8153-aa4145ede53d",
+    "username": "coco",
+    "email": "coco@gmail.com",
+    "sqAnswer": "flowers"
 }
 
 ###
-PUT http://localhost:5159/users/9
+POST http://localhost:5159/users/forgotPassword
 Content-Type: application/json
 
 {
-    "passwordHash": "rosesareviolet"
+    "email": "coco@gmail.com",
+    "sqAnswer": "flowers"
 }
 
 ###
-DELETE http://localhost:5159/users/10
+DELETE http://localhost:5159/users/2/delete
 
 
 ###

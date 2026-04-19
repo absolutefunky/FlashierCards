@@ -164,3 +164,15 @@ forgot password, create new password, ... */
 .homeBtn:active .signupShadow {
     transform: translateY(2px);
 }
+
+.invalidRequest {
+    color: #004A94;
+    font-size: 18px;
+    font-family: "Imprima", sans-serif;
+    font-style: normal;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    background-color: #D9EDF8;
+    border-radius: 5px;
+    padding: 1rem;
+}

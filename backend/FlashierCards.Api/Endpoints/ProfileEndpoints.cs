@@ -10,7 +10,7 @@ public static class ProfileEndpoints
     public static void MapProfileEndpoints(this WebApplication app)
     {
         // GET /users/{id}/profiles
-        app.MapGet("/users/{id}/profiles", async(int id, Supabase.Client supabase) =>
+        app.MapGet("/users/{id}/profiles", async(string id, Supabase.Client supabase) =>
         {
             // find user profile with given id
             var response = await supabase
@@ -29,7 +29,7 @@ public static class ProfileEndpoints
             var profileDto = new ReturnProfileDto
             (
                 profile.Id,
-                profile.UserId,
+                profile.UserId!,
                 profile.AnimationType!
             );
 
@@ -37,7 +37,7 @@ public static class ProfileEndpoints
         });
 
         // POST /users/{id}/profiles
-        app.MapPost("/users/{id}/profiles/create", async(int id, CreateProfileDto request, Supabase.Client supabase) =>
+        app.MapPost("/users/{id}/profiles/create", async(string id, CreateProfileDto request, Supabase.Client supabase) =>
         {
             var profile = new Profile
             {
@@ -62,7 +62,7 @@ public static class ProfileEndpoints
             var profileDto = new ReturnProfileDto
             (
                 profile.Id,
-                profile.UserId,
+                profile.UserId!,
                 profile.AnimationType!
             );
 
@@ -70,7 +70,7 @@ public static class ProfileEndpoints
         });
 
         // PUT /users/{id}/profiles
-        app.MapPut("/users/{id}/profiles/update", async(int id, UpdateProfileDto request, Supabase.Client supabase) =>
+        app.MapPut("/users/{id}/profiles/update", async(string id, UpdateProfileDto request, Supabase.Client supabase) =>
         {
             // update animation type in profile table
             var response = await supabase
@@ -90,7 +90,7 @@ public static class ProfileEndpoints
             var profileDto = new ReturnProfileDto
             (
                 profile.Id,
-                profile.UserId,
+                profile.UserId!,
                 profile.AnimationType!
             );
 

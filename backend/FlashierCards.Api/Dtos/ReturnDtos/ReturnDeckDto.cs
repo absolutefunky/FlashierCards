@@ -4,6 +4,6 @@ namespace FlashierCards.Api.Dtos.ReturnDtos;
 
 public record ReturnDeckDto (
     int Id,
-    int UserId,
+    string UserId,
     string Name
 );

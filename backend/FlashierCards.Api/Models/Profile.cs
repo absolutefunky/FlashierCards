@@ -12,7 +12,7 @@ public class Profile : BaseModel
     public int Id { get; set; }
 
     [Column("user_id")]
-    public int UserId { get; set; }
+    public string? UserId { get; set; }
 
     [Column("background_color")]
     public string? BackgroundColor { get; set; }

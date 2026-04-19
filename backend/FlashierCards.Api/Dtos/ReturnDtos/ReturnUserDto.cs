@@ -4,6 +4,8 @@ namespace FlashierCards.Api.Dtos.ReturnDtos;
 
 public record ReturnUserDto (
     int Id,
+    string AuthId,
+    string Username,
     string Email,
-    DateOnly DateAccountCreated
+    DateOnly CreatedAt
 );
