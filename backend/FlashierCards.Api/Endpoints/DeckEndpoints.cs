@@ -1,22 +1,212 @@
+using FlashierCards.Api.Dtos.CreateDtos;
+using FlashierCards.Api.Dtos.ReturnDtos;
+using FlashierCards.Api.Dtos.UpdateDtos;
+using FlashierCards.Api.Models;
+
 namespace FlashierCards.Api.Endpoints;
 
 public static class DeckEndpoints
 {
     public static void MapDeckEndpoints(this WebApplication app)
     {
+        // GET /users/{id}/decks to return all decks
+        app.MapGet("/users/{id}/decks", async (int id, Supabase.Client supabase) =>
+        {
+            var response = await supabase
+                .From<Deck>()
+                .Where(d => d.UserId == id)
+                .Get();
 
-        // GET /users/{id}/decks
-        // use ReturnDeckDto to return a collection of decks
+            // store decks in a list
+            List<Deck> decks = response.Models;
 
-        // POST /users/{id}/decks/create
-        // use CreateDeckDto for request data
-        // use ReturnDeckDto to return data
+            // check if decks exist
+            if (decks.Count == 0)
+            {
+                return Results.NotFound(new {message = "NO DECKS FOUND"});
+            }
+           
+            var deckList = decks.Select(d => new ReturnDeckDto
+            (
+                d.Id,
+                d.UserId,
+                d.Name!
+            ));
 
-        // PUT /users/{userId}/decks/{id}/rename
-        // use UpdateDeckDto for request data
-        // use ReturnDeckTo return data
+            return Results.Ok(deckList);
+        });
 
-        // DELETE /users/{userId}/decks/{id}/delete
-        // return respose.ok or something depending on status
+        // POST /users/{id}/decks/create to create a new a deck
+        app.MapPost("/users/{id}/decks/create", async (int id, CreateDeckDto request, Supabase.Client supabase) =>
+        {
+            // check if an input field is empty
+            if (string.IsNullOrWhiteSpace(request.Name))
+            {
+                return Results.BadRequest(new { message = "FIELDS ARE INCOMPLETE" });
+            }
+
+            // check if user id violates foregin key constraint
+            var userResponse = await supabase
+                .From<User>()
+                .Where(u => u.Id == id)
+                .Get();
+
+            var userFound = userResponse.Models.FirstOrDefault();
+
+            if (userFound is null)
+            {
+                return Results.BadRequest(new {message = "USER DOES NOT EXIST"});
+            }
+
+            // check if deck with given name for user already exist
+            var deckResponse = await supabase
+                .From<Deck>()
+                .Where(d => d.UserId == id && d.Name == request.Name)
+                .Get();
+
+            var deckFound = deckResponse.Models.FirstOrDefault();
+
+            if (deckFound is not null)
+            {
+                return Results.BadRequest(new {message = "PLEASE CHOOSE A DIFFERENT NAME"});
+            }
+
+            var deck = new Deck
+            {
+                UserId = id,
+                Name = request.Name
+            };
+
+            // insert deck into table
+            var response = await supabase
+                .From<Deck>()
+                .Insert(deck);
+
+            var created = response.Models.FirstOrDefault();
+
+            // check if deck was created
+            if (created is null)
+            {
+                return Results.BadRequest(new {message = "DECK WAS NOT CREATED"});
+            }
+
+            var deckDto = new ReturnDeckDto
+            (
+                created.Id,
+                created.UserId,
+                created.Name!
+            );
+
+            return Results.Ok(new {message = "DECK WAS SUCCESSFULLY INSERTED", deckDto});
+        });
+
+        // PUT /users/{userId}/decks/{id}/rename to rename a deck
+        app.MapPut("/users/{userId}/decks/{id}", async (int userId, int id, UpdateDeckDto request, Supabase.Client supabase) =>
+        {
+            // check if an input field is empty
+            if (string.IsNullOrWhiteSpace(request.Name))
+            {
+                return Results.BadRequest(new { message = "FIELDS ARE INCOMPLETE" });
+            }
+
+            // check if user id violates foregin key constraint
+            var userResponse = await supabase
+                .From<User>()
+                .Where(u => u.Id == userId)
+                .Get();
+
+            var userFound = userResponse.Models.FirstOrDefault();
+
+            if (userFound is null)
+            {
+                return Results.BadRequest(new {message = "USER DOES NOT EXIST"});
+            }
+
+            // check if deck with given name for user already exist
+            var deckResponse = await supabase
+                .From<Deck>()
+                .Where(d => d.UserId == userId && d.Name == request.Name)
+                .Get();
+
+            var deckFound = deckResponse.Models.FirstOrDefault();
+
+            if (deckFound is not null)
+            {
+                return Results.BadRequest(new {message = "PLEASE CHOOSE A DIFFERENT NAME"});
+            }
+
+            // update deck name
+            var response = await supabase
+                .From<Deck>()
+                .Where(d => d.UserId == userId && d.Id == id)
+                .Set(d => d.Name!, request.Name)
+                .Update();
+
+            var deck = response.Models.FirstOrDefault();
+
+            if (deck is null)
+            {
+                return Results.NotFound(new {message = "DECK WAS NOT FOUND"});
+            }
+
+            var deckDto = new ReturnDeckDto(
+                deck.Id,
+                deck.UserId,
+                deck.Name!
+            );
+
+            return Results.Ok(new {message = "DECK WAS SUCCESSFULLY RENAMED", deckDto});
+        });
+
+        // DELETE /users/{userId}/decks/{id}/delete to delete a deck
+        app.MapDelete("/users/{userId}/decks/{id}/delete", async (int userId, int id, Supabase.Client supabase) =>
+        {
+            // check if user id violates foregin key constraint
+            var userResponse = await supabase
+                .From<User>()
+                .Where(u => u.Id == userId)
+                .Get();
+
+            var userFound = userResponse.Models.FirstOrDefault();
+
+            if (userFound is null)
+            {
+                return Results.BadRequest(new {message = "USER DOES NOT EXIST"});
+            }
+
+            // check if deck exist
+            var response = await supabase
+                .From<Deck>()
+                .Where(d => d.UserId == userId && d.Id == id)
+                .Get();
+
+            var deckFound = response.Models.FirstOrDefault();
+
+            if (deckFound is null)
+            {
+                return Results.BadRequest(new {message = "DECK WAS NOT FOUND"});
+            }
+
+            // delete the deck
+            await supabase
+                .From<Deck>()
+                .Where(d => d.UserId == userId && d.Id == id)
+                .Delete();
+
+            // check if deck was deleted
+            response = await supabase
+                .From<Deck>()
+                .Where(d => d.UserId == userId && d.Id == id)
+                .Get();
+
+            deckFound = response.Models.FirstOrDefault();
+
+            if (deckFound is null)
+            {
+                return Results.Ok(new {message = "DECK SUCCESSFULLY DELETED"});
+            }
+
+            return Results.BadRequest(new {message = "DECK WAS NOT DELETED"});
+        });
     }
 }

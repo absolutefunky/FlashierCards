@@ -1,4 +1,4 @@
-GET http://localhost:5159/users/3
+GET http://localhost:5159/users/1
 
 ###
 POST http://localhost:5159/users/register
@@ -50,11 +50,31 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:5159/users/2/delete
+DELETE http://localhost:5159/users/1/delete
 
 
 ###
-GET http://localhost:5159/users/8d2832b0-93b8-42c5-8153-aa4145ede53d/profiles
+GET http://localhost:5159/users/3/decks
+
+###
+POST http://localhost:5159/users/3/decks/create
+Content-Type: application/json
+
+{
+    "userId": 3,
+    "name": "I want to read a book."
+}
+
+###
+PUT  http://localhost:5159/users/3/decks/15
+Content-Type: application/json
+
+{
+    "name": "I want to read a books."
+}
+
+###
+DELETE http://localhost:5159/users/1/decks/1/delete
 
 ###
 POST http://localhost:5159/users/4/profiles/create
