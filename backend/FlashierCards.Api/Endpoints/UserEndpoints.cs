@@ -10,7 +10,7 @@ public static class UserEndpoints
 {
     public static void MapUserEndpoints(this WebApplication app)
     {
-        // GET /users/{id}
+        // GET /users/{id} to get user data
         app.MapGet("/users/{id}", async(int id, Supabase.Client supabase) =>
         {
             // find user who has the given id
@@ -37,9 +37,10 @@ public static class UserEndpoints
             return Results.Ok(userDto);
         });
 
-        // GET /users/register
+        // GET /users/register to create new user
         app.MapPost("/users/register", async (CreateUserDto newUser, Supabase.Client supabase) =>
         {
+            // check if an input field is empty
             if (string.IsNullOrWhiteSpace(newUser.Email) ||
                 string.IsNullOrWhiteSpace(newUser.Password) ||
                 string.IsNullOrWhiteSpace(newUser.ConfirmPassword) ||
@@ -48,6 +49,7 @@ public static class UserEndpoints
                 return Results.BadRequest(new { message = "NO INCOMPLETE FIELDS ALLOWED" });
             }
 
+            // check if passwords match
             if (newUser.Password != newUser.ConfirmPassword)
             {
                 return Results.BadRequest(new { message = "PASSWORDS DO NOT MATCH" });
@@ -58,6 +60,7 @@ public static class UserEndpoints
                 .Where(u => u.Email == newUser.Email)
                 .Get();
 
+            // check if user already exists
             if (existingUser.Models.Any())
             {
                 return Results.BadRequest(new { message = "THIS EMAIL IS CURRENTLY BEING USED BY A PREVIOUS ACCOUNT" });
@@ -73,6 +76,7 @@ public static class UserEndpoints
                 DateAccountCreated = DateOnly.FromDateTime(DateTime.UtcNow)
             };
 
+            // insert the user
             var insertResponse = await supabase
                 .From<User>()
                 .Insert(userToInsert);
@@ -97,15 +101,17 @@ public static class UserEndpoints
             });
         });
 
-        // POST /users/login
+        // POST /users/login to verify user for login
         app.MapPost("/users/login", async (VerifyLoginDto loginUser, Supabase.Client supabase) =>
         {
+            // check if an input field is empty
             if (string.IsNullOrWhiteSpace(loginUser.Email) ||
                 string.IsNullOrWhiteSpace(loginUser.Password))
             {
                 return Results.BadRequest(new { message = "A FIELD IS MISSING..." });
             }
 
+            // check if user exists
             var response = await supabase
                 .From<User>()
                 .Where(u => u.Email == loginUser.Email)
@@ -118,6 +124,7 @@ public static class UserEndpoints
                 return Results.Unauthorized();
             }
 
+            // check if password match
             bool samePassword = BCrypt.Net.BCrypt.Verify(loginUser.Password, user.PasswordHash);
 
             if (!samePassword)
@@ -137,26 +144,27 @@ public static class UserEndpoints
             });
         });
 
-        // PUT /users/change-password
-        app.MapPut("/users/change-password", async (UpdateUserDto passwordDto, Supabase.Client supabase) =>
+        // PUT /users/{id}/changePassword when user is logged in
+        app.MapPut("/users/{id}/changePassword", async (int id, UpdateUserDto passwordDto, Supabase.Client supabase) =>
         {
-            if (string.IsNullOrWhiteSpace(passwordDto.Email) ||
-                string.IsNullOrWhiteSpace(passwordDto.CurrentPassword) ||
-                string.IsNullOrWhiteSpace(passwordDto.SqAnswer) ||
+            // check if an input field is empty
+            if (string.IsNullOrWhiteSpace(passwordDto.CurrentPassword) ||
                 string.IsNullOrWhiteSpace(passwordDto.NewPassword) ||
                 string.IsNullOrWhiteSpace(passwordDto.ConfirmNewPassword))
             {
                 return Results.BadRequest(new { message = "FIELDS ARE INCOMPLETE" });
             }
 
+            // check if passwords match
             if (passwordDto.NewPassword != passwordDto.ConfirmNewPassword)
             {
                 return Results.BadRequest(new { message = "PASSWORDS DO NOT MATCH" });
             }
 
+            // check if current password is real
             var response = await supabase
                 .From<User>()
-                .Where(u => u.Email == passwordDto.Email)
+                .Where(u => u.Id == id)
                 .Get();
 
             var user = response.Models.FirstOrDefault();
@@ -173,25 +181,106 @@ public static class UserEndpoints
                 return Results.BadRequest(new { message = "CURRENT PASSWORD INCORRECT" });
             }
 
-            var submittedAnswer = passwordDto.SqAnswer.Trim().ToLower();
-            var savedAnswer = user.SqAnswer?.Trim().ToLower();
-
-            if (submittedAnswer != savedAnswer)
-            {
-                return Results.BadRequest(new { message = "ANSWER INCORRECT." });
-            }
-
+            // change password
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(passwordDto.NewPassword);
-
             await user.Update<User>();
 
             return Results.Ok(new { message = "PASSWORD SUCCESSFULLY UPDATED." });
         });
 
+        // POST /users/forgotPassword to authenticate user when they forget password
+        app.MapPost("/users/forgotPassword", async (VerifyForgotPasswordDto forgetfulUser, Supabase.Client supabase) =>
+        {
+            // check if an input field is empty
+            if (string.IsNullOrWhiteSpace(forgetfulUser.Email) ||
+                string.IsNullOrWhiteSpace(forgetfulUser.SqAnswer))
+            {
+                return Results.BadRequest(new { message = "A FIELD IS MISSING..." });
+            }
+
+            // check if user exists
+             var response = await supabase
+                .From<User>()
+                .Where(u => u.Email == forgetfulUser.Email)
+                .Get();
+
+            var user = response.Models.FirstOrDefault();
+
+            if (user is null)
+            {
+                return Results.NotFound(new { message = "USER NOT FOUND." });
+            }
+
+            var submittedAnswer = forgetfulUser.SqAnswer.Trim().ToLower();
+            var savedAnswer = user.SqAnswer?.Trim().ToLower();
+
+            // check if security question answer match
+            if (submittedAnswer != savedAnswer)
+            {
+                return Results.BadRequest(new { message = "ANSWER INCORRECT." });
+            }
+
+            var userDto = new ReturnUserDto(
+                user.Id,
+                user.Email!,
+                user.DateAccountCreated
+            );
+
+            return Results.Ok(new
+            {
+                user = userDto
+            });
+        });
+
+        // PUT /users/updatePassword when user forgot password
+        app.MapPut("/users/updatePassword", async (UpdateUserDto passwordDto, Supabase.Client supabase) =>
+        {
+            // check if an input field is empty
+            if (string.IsNullOrWhiteSpace(passwordDto.Email) ||
+                string.IsNullOrWhiteSpace(passwordDto.NewPassword) ||
+                string.IsNullOrWhiteSpace(passwordDto.ConfirmNewPassword))
+            {
+                return Results.BadRequest(new { message = "FIELDS ARE INCOMPLETE" });
+            }
+
+            // check if passwords match
+            if (passwordDto.NewPassword != passwordDto.ConfirmNewPassword)
+            {
+                return Results.BadRequest(new { message = "PASSWORDS DO NOT MATCH" });
+            }
+
+            // get user to create new password
+            var response = await supabase
+                .From<User>()
+                .Where(u => u.Email == passwordDto.Email)
+                .Get();
+
+            var user = response.Models.FirstOrDefault();
+
+            if (user is null)
+            {
+                return Results.NotFound(new { message = "USER NOT FOUND." });
+            }
+
+            // check if new password same as old password
+            bool sameNewPasswords = BCrypt.Net.BCrypt.Verify(passwordDto.NewPassword, user.PasswordHash);
+
+            if (sameNewPasswords)
+            {
+                return Results.BadRequest(new { message = "NEW PASSWORD MATCHES OLD PASSWORD" });
+            }
+
+            // create new password for forgetful user
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(passwordDto.NewPassword);
+            await user.Update<User>();
+
+            return Results.Ok(new { message = "PASSWORD SUCCESSFULLY CREATED." });
+        });
 
         // DELETE /users/{id}/delete
         app.MapDelete("/users/{id}/delete", async (int id, Supabase.Client supabase) =>
         {
+            // check if user exists
             var response = await supabase
                 .From<User>()
                 .Where(u => u.Id == id)

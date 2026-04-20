@@ -1,14 +1,33 @@
-GET http://localhost:5159/users/8d2832b0-93b8-42c5-8153-aa4145ede53d
+GET http://localhost:5159/users/3
 
 ###
 POST http://localhost:5159/users/register
 Content-Type: application/json
 
 {
-    "authId": "8d5832b0-93b8-42c5-8153-aa4145ede53d",
-    "username": "mango",
-    "email": "mango@gmail.com",
-    "sqAnswer": "flowers"
+    "email": "flowers@gmail.com",
+    "password": "flowers",
+    "confirmPassword": "flowers",
+    "sqAnswer": "mango"
+}
+
+###
+POST http://localhost:5159/users/login
+Content-Type: application/json
+
+{
+    "email": "flowers@gmail.com",
+    "password": "flowers"
+}
+
+###
+PUT http://localhost:5159/users/11/changePassword
+Content-Type: application/json
+
+{
+    "currentPassword": "flowers",
+    "newPassword": "roses",
+    "confirmNewPassword": "roses"
 }
 
 ###
@@ -16,12 +35,22 @@ POST http://localhost:5159/users/forgotPassword
 Content-Type: application/json
 
 {
-    "email": "coco@gmail.com",
+    "email": "flowers@gmail.com",
     "sqAnswer": "mango"
 }
 
 ###
-DELETE http://localhost:5159/users/8d2832b0-93b8-42c5-8153-aa4145ede53d/delete
+PUT http://localhost:5159/users/updatePassword
+Content-Type: application/json
+
+{
+    "email": "flowers@gmail.com",
+    "newPassword": "flowers",
+    "confirmNewPassword": "flowers"
+}
+
+###
+DELETE http://localhost:5159/users/2/delete
 
 
 ###
