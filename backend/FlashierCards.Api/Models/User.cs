@@ -22,7 +22,4 @@ public class User : BaseModel
 
     [Column("sq_answer")]
     public string? SqAnswer { get; set; }
-
-    [Column("created_at")]
-    public DateOnly CreatedAt { get; set; }
 }

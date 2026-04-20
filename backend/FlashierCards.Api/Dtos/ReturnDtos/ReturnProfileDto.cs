@@ -4,6 +4,6 @@ namespace FlashierCards.Api.Dtos.ReturnDtos;
 
 public record ReturnProfileDto (
     int Id,
-    string UserId,
+    string AuthId,
     string AnimationType
 );

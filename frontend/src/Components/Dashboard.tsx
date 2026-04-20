@@ -9,6 +9,7 @@ import { faICursor } from "@fortawesome/free-solid-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useState } from 'react';
 import styles from "../Styles/Dashboard.module.css";
+import { UserAuth } from "../AuthContext";
 
 function Dashboard() {
     const [toolVisible, setToolVisible] = useState(false);

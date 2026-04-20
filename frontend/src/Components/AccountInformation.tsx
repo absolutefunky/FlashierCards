@@ -12,12 +12,13 @@ function AccountInformation() {
     const fetchUserData = async () => {
         setIsLoading(true);
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/1`);
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/8d2832b0-93b8-42c5-8153-aa4145ede53d/profiles`);
             if (!response.ok) {
                 throw new Error("Invalid request.");
             }
             const data = await response.json();
             setIsLoading(false);
+            console.log(data);
             setUser(data);
         } catch (error: any) {
             setIsLoading(false);

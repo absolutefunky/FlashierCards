@@ -10,12 +10,12 @@ public static class UserEndpoints
     public static void MapUserEndpoints(this WebApplication app)
     {
         // GET /users/{id}
-        app.MapGet("/users/{id}", async(int id, Supabase.Client supabase) =>
+        app.MapGet("/users/{id}", async(string id, Supabase.Client supabase) =>
         {
             // find user who has the given id
             var response = await supabase
                 .From<User>()
-                .Where(u => u.Id == id)
+                .Where(u => u.AuthId == id)
                 .Get();
             
             var user = response.Models.FirstOrDefault();
@@ -28,11 +28,9 @@ public static class UserEndpoints
             // create a user record to return
             var userDto = new ReturnUserDto
             (
-                user.Id,
                 user.AuthId!,
                 user.Username!,
-                user.Email!,
-                user.CreatedAt
+                user.Email!
             );
 
             return Results.Ok(userDto);
@@ -62,11 +60,9 @@ public static class UserEndpoints
 
             var userDto = new ReturnUserDto
             (
-                insertedUser.Id,
                 insertedUser.AuthId!,
                 insertedUser.Username!,
-                insertedUser.Email!,
-                insertedUser.CreatedAt
+                insertedUser.Email!
             );
 
             return Results.Ok(userDto);
@@ -90,27 +86,25 @@ public static class UserEndpoints
 
             var userDto = new ReturnUserDto
             (
-                user.Id,
                 user.AuthId!,
                 user.Username!,
-                user.Email!,
-                user.CreatedAt
+                user.Email!
             );
 
             return Results.Ok(userDto);
         });
 
         // DELETE /users/{id}/delete
-        app.MapDelete("/users/{id}/delete", async(int id, Supabase.Client supabase) =>
+        app.MapDelete("/users/{id}/delete", async(string id, Supabase.Client supabase) =>
         {
             await supabase
                 .From<User>()
-                .Where(u => u.Id == id)
+                .Where(u => u.AuthId == id)
                 .Delete();
 
             var response = await supabase
                 .From<User>()
-                .Where(u => u.Id == id)
+                .Where(u => u.AuthId == id)
                 .Get();
 
             var user = response.Models.FirstOrDefault();

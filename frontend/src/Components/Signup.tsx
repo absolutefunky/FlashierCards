@@ -20,7 +20,8 @@ function Signup() {
         e.preventDefault();
         setLoading(true);
         try {
-            const response = await signUpUser(inputs.email, inputs.password);
+            // add user to authentication table
+            let response = await signUpUser(inputs.email, inputs.password);
             if (!response.success) {
                 throw new Error("Invalid request.");
             }

@@ -15,7 +15,7 @@ public static class ProfileEndpoints
             // find user profile with given id
             var response = await supabase
                 .From<Profile>()
-                .Where(p => p.UserId == id)
+                .Where(p => p.AuthId == id)
                 .Get();
             
             var profile = response.Models.FirstOrDefault();
@@ -29,7 +29,7 @@ public static class ProfileEndpoints
             var profileDto = new ReturnProfileDto
             (
                 profile.Id,
-                profile.UserId!,
+                profile.AuthId!,
                 profile.AnimationType!
             );
 
@@ -41,7 +41,7 @@ public static class ProfileEndpoints
         {
             var profile = new Profile
             {
-                UserId = request.UserId,
+                AuthId = request.AuthId,
                 BackgroundColor = request.BackgroundColor,
                 AnimationType = request.AnimationType
             };
@@ -62,7 +62,7 @@ public static class ProfileEndpoints
             var profileDto = new ReturnProfileDto
             (
                 profile.Id,
-                profile.UserId!,
+                profile.AuthId!,
                 profile.AnimationType!
             );
 
@@ -75,7 +75,7 @@ public static class ProfileEndpoints
             // update animation type in profile table
             var response = await supabase
                 .From<Profile>()
-                .Where(p => p.UserId == id)
+                .Where(p => p.AuthId == id)
                 .Set(p => p.AnimationType!, request.AnimationType)
                 .Update();
 
@@ -90,7 +90,7 @@ public static class ProfileEndpoints
             var profileDto = new ReturnProfileDto
             (
                 profile.Id,
-                profile.UserId!,
+                profile.AuthId!,
                 profile.AnimationType!
             );
 
