@@ -3,39 +3,16 @@ import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { faFolder } from "@fortawesome/free-solid-svg-icons";
 import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import styles from "../Styles/Navbar.module.css";
-import { UserAuth } from "../AuthContext";
 
 function Navbar() {
     const [menuHidden, setMenuHidden] = useState(true);
-    const [error, setError] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const {session, signOutUser}: any = UserAuth();
-    const navigate = useNavigate();
 
     function showMenu() {
         setMenuHidden(!menuHidden);
     }
-
-    const handleSignOut = async (e: any) => {
-        e.preventDefault();
-        setLoading(true);
-        try {
-            const response = await signOutUser();
-            if (!response.success) {
-                throw new Error("Invalid signout request.");
-            }
-            setLoading(false);
-            navigate("/");
-        } catch (error: any) {
-            setLoading(false);
-            setError(true);
-            console.log(error.message);
-        }
-    };
-
 
     return (
         <div id={styles.navbar}>
@@ -51,14 +28,10 @@ function Navbar() {
                 <span><FontAwesomeIcon icon={faCircleUser} /></span>
                 <span style={{display: menuHidden ? "none" : "block"}}>Profile</span>
             </Link>
-            <button
-                type="button"
-                className={styles.navOption}
-                onClick={handleSignOut}
-            >
+            <Link className={styles.navOption} to="/">
                 <span><FontAwesomeIcon icon={faRightFromBracket} /></span>
                 <span style={{display: menuHidden ? "none" : "block"}}>Logout</span>
-            </button>
+            </Link>
         </div>
     );
 }
