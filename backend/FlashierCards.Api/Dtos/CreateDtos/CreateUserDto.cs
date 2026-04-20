@@ -5,5 +5,6 @@ namespace FlashierCards.Api.Dtos.CreateDtos;
 public record CreateUserDto (
     string Email,
     string Password,
+    string ConfirmPassword,
     string SqAnswer
 );
