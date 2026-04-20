@@ -9,7 +9,7 @@ public static class ProfileEndpoints
 {
     public static void MapProfileEndpoints(this WebApplication app)
     {
-        // GET /users/{id}/profiles
+        // GET /users/{id}/profiles to get user profile information
         app.MapGet("/users/{id}/profiles", async(int id, Supabase.Client supabase) =>
         {
             // find user profile with given id
@@ -22,7 +22,7 @@ public static class ProfileEndpoints
 
             if (profile is null)
             {
-                return Results.NotFound();
+                return Results.NotFound(new { message = "USER PROFILE NOT FOUND"});
             }
 
             // create a profile record to return
@@ -36,12 +36,38 @@ public static class ProfileEndpoints
             return Results.Ok(profileDto);
         });
 
-        // POST /users/{id}/profiles
+        // POST /users/{id}/profiles/create
         app.MapPost("/users/{id}/profiles/create", async(int id, CreateProfileDto request, Supabase.Client supabase) =>
         {
+            // check if user id violates foreign key property
+            var userResponse = await supabase
+                .From<User>()
+                .Where(u => u.Id == id)
+                .Get();
+
+            var user = userResponse.Models.FirstOrDefault();
+
+            if (user is null)
+            {
+                return Results.NotFound(new { message = "USER NOT FOUND" });
+            }
+
+            // check if user profile already exist
+            var profileResponse = await supabase
+                .From<Profile>()
+                .Where(p => p.UserId == id)
+                .Get();
+
+            var userProfile = profileResponse.Models.FirstOrDefault();
+
+            if (userProfile is not null)
+            {
+                return Results.NotFound(new { message = "USER ALREADY HAS A PROFILE" });
+            }
+
             var profile = new Profile
             {
-                UserId = request.UserId,
+                UserId = id,
                 BackgroundColor = request.BackgroundColor,
                 AnimationType = request.AnimationType
             };
@@ -55,7 +81,7 @@ public static class ProfileEndpoints
 
             if (profile is null)
             {
-                return Results.NotFound();
+                return Results.NotFound(new { message = "USER PROFILE NOT CREATED" });
             }
 
             // create a profile record to return
@@ -70,12 +96,18 @@ public static class ProfileEndpoints
         });
 
         // PUT /users/{id}/profiles
-        app.MapPut("/users/{id}/profiles/update", async(int id, UpdateProfileDto request, Supabase.Client supabase) =>
+        app.MapPut("/users/{userId}/profiles/{id}/update", async(int userId, int id, UpdateProfileDto request, Supabase.Client supabase) =>
         {
+            // check if an input field is empty
+            if (string.IsNullOrWhiteSpace(request.AnimationType))
+            {
+                return Results.BadRequest(new { message = "FIELDS ARE INCOMPLETE" });
+            }
+
             // update animation type in profile table
             var response = await supabase
                 .From<Profile>()
-                .Where(p => p.UserId == id)
+                .Where(p => p.UserId == userId && p.Id == id)
                 .Set(p => p.AnimationType!, request.AnimationType)
                 .Update();
 
@@ -83,7 +115,7 @@ public static class ProfileEndpoints
 
             if (profile is null)
             {
-                return Results.NotFound();
+                return Results.NotFound(new { message = "USER PROFILE NOT UPDATED" });
             }
 
             // create a profile record to return

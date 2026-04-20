@@ -77,17 +77,20 @@ Content-Type: application/json
 DELETE http://localhost:5159/users/1/decks/1/delete
 
 ###
-POST http://localhost:5159/users/4/profiles/create
+GET http://localhost:5159/users/11/profiles
+
+###
+POST http://localhost:5159/users/5/profiles/create
 Content-Type: application/json
 
 {
-    "userId": 4,
+    "userId": 5,
     "backgroundColor": "none",
-    "animationType": "animationOne"
+    "animationType": "animationTwo"
 }
 
 ###
-PUT http://localhost:5159/users/8d2832b0-93b8-42c5-8153-aa4145ede53d/profiles/update
+PUT http://localhost:5159/users/5/profiles/12/update
 Content-Type: application/json
 
 {
