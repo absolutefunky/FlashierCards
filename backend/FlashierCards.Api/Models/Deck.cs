@@ -12,7 +12,7 @@ public class Deck : BaseModel
     public int Id { get; set; }
 
     [Column("user_id")]
-    public string? UserId { get; set; }
+    public int UserId { get; set; }
 
     [Column("name")]
     public string? Name { get; set; }

@@ -1,6 +1,5 @@
-using FlashierCards.Api.Dtos.CreateDtos;
 using FlashierCards.Api.Dtos.ReturnDtos;
-using FlashierCards.Api.Dtos.VerifyDtos;
+using FlashierCards.Api.Dtos.UpdateDtos;
 using FlashierCards.Api.Models;
 
 namespace FlashierCards.Api.Endpoints;
@@ -10,12 +9,12 @@ public static class UserEndpoints
     public static void MapUserEndpoints(this WebApplication app)
     {
         // GET /users/{id}
-        app.MapGet("/users/{id}", async(string id, Supabase.Client supabase) =>
+        app.MapGet("/users/{id}", async(int id, Supabase.Client supabase) =>
         {
             // find user who has the given id
             var response = await supabase
                 .From<User>()
-                .Where(u => u.AuthId == id)
+                .Where(u => u.Id == id)
                 .Get();
             
             var user = response.Models.FirstOrDefault();
@@ -28,93 +27,46 @@ public static class UserEndpoints
             // create a user record to return
             var userDto = new ReturnUserDto
             (
-                user.AuthId!,
-                user.Username!,
-                user.Email!
+                user.Id,
+                user.Email!,
+                user.DateAccountCreated
             );
 
             return Results.Ok(userDto);
         });
 
-        //  POST /users/register
-        app.MapPost("/users/register", async (CreateUserDto newUser, Supabase.Client supabase) =>
+        //  POST /users/signup to create a new user
+        // use CreateUserDto record for request data
+        // use ReturnUserDto record to return data
+        // create password hash before inserting data into db
+
+        // POST /users/login to authenticate user
+        // use VerifyLoginDto record for request data
+        // use ReturnUserDto record to get and return data
+
+        // POST /users/forgotPassword to authenticate user
+        // use VerifyForgotPasswordDto record for request data
+        // just return Request.ok or something else depending on status
+
+        // PUT /users/updatePassword
+        // use UpdateUserDto record for request data
+        // use ReturnUserDto record to get and return data 
+        // create password hash before updating data into db
+
+        // PUT /users/{id}/changePassword
+        // implement this for changePassword component
+        // expect currentpassword and new password as input
+        // return ok or not found
+        app.MapPut("/users/{id}/changePassword", async(int id, UpdateUserDto request, Supabase.Client supabase) =>
         {
-            var userToInsert = new User
-            {
-                AuthId = newUser.AuthId,
-                Username = newUser.Username,
-                Email = newUser.Email,
-                SqAnswer = newUser.SqAnswer
-            };
-
-            var insertResponse = await supabase
-                .From<User>()
-                .Insert(userToInsert);
-
-            var insertedUser = insertResponse.Models.FirstOrDefault();
-
-            if (insertedUser is null)
-            {
-                return Results.BadRequest(new { message = "ACCOUNT COULD NOT BE CREATED" });
-            }
-
-            var userDto = new ReturnUserDto
-            (
-                insertedUser.AuthId!,
-                insertedUser.Username!,
-                insertedUser.Email!
-            );
-
-            return Results.Ok(userDto);
-        });
-
-        // POST /users/{id}/forgotPassword
-        app.MapPost("/users/forgotPassword", async (VerifyUserDto verifyRequest, Supabase.Client supabase) =>
-        {
-            var response = await supabase
-                .From<User>()
-                .Where(u => u.Email == verifyRequest.Email)
-                .Where(u => u.SqAnswer == verifyRequest.SqAnswer)
-                .Get();
-
-            var user = response.Models.FirstOrDefault();
-
-            if (user is null)
-            {
-                return Results.NotFound(new { message = "USER NOT FOUND." });
-            }
-
-            var userDto = new ReturnUserDto
-            (
-                user.AuthId!,
-                user.Username!,
-                user.Email!
-            );
-
-            return Results.Ok(userDto);
+            return Results.Ok();
         });
 
         // DELETE /users/{id}/delete
-        app.MapDelete("/users/{id}/delete", async(string id, Supabase.Client supabase) =>
+        // return request.ok or something else depending on status
+        app.MapDelete("/users/{id}/delete", async(int id, Supabase.Client supabase) =>
         {
-            await supabase
-                .From<User>()
-                .Where(u => u.AuthId == id)
-                .Delete();
-
-            var response = await supabase
-                .From<User>()
-                .Where(u => u.AuthId == id)
-                .Get();
-
-            var user = response.Models.FirstOrDefault();
-
-            if (user is null)
-            {
-                return Results.Ok(new { message = "Bye bye... :(" });
-            }
-
-            return Results.NotFound(new { message = "USER NOT FOUND" });          
+            return Results.Ok();
         });
     }
 }

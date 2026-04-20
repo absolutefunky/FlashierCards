@@ -11,8 +11,8 @@ public class Profile : BaseModel
     [PrimaryKey("id", false)]
     public int Id { get; set; }
 
-    [Column("auth_id")]
-    public string? AuthId { get; set; }
+    [Column("user_id")]
+    public int UserId { get; set; }
 
     [Column("background_color")]
     public string? BackgroundColor { get; set; }

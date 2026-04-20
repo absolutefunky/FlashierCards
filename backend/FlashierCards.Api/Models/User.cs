@@ -11,15 +11,15 @@ public class User : BaseModel
     [PrimaryKey("id", false)]
     public int Id { get; set; }
 
-    [Column("auth_id")]
-    public string? AuthId { get; set; }
-
-    [Column("username")]
-    public string? Username { get; set; }
-
     [Column("email")]
     public string? Email { get; set; }
 
+    [Column("password_hash")]
+    public string? PasswordHash { get; set; }
+
     [Column("sq_answer")]
     public string? SqAnswer { get; set; }
+
+    [Column("date_account_created")]
+    public DateOnly DateAccountCreated { get; set; }
 }
