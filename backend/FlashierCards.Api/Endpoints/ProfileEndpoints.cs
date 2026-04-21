@@ -22,7 +22,7 @@ public static class ProfileEndpoints
 
             if (profile is null)
             {
-                return Results.NotFound(new { message = "USER PROFILE NOT FOUND"});
+                return Results.NotFound(new { message = "User profile does not exist."});
             }
 
             // create a profile record to return
@@ -101,7 +101,7 @@ public static class ProfileEndpoints
             // check if an input field is empty
             if (string.IsNullOrWhiteSpace(request.AnimationType))
             {
-                return Results.BadRequest(new { message = "FIELDS ARE INCOMPLETE" });
+                return Results.BadRequest(new { message = "Please properly complete the form." });
             }
 
             // update animation type in profile table
@@ -115,7 +115,7 @@ public static class ProfileEndpoints
 
             if (profile is null)
             {
-                return Results.NotFound(new { message = "USER PROFILE NOT UPDATED" });
+                return Results.NotFound(new { message = "User profile was not updated." });
             }
 
             // create a profile record to return
