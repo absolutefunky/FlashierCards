@@ -61,6 +61,7 @@ function Login() {
             navigate("/dashboard");
         } catch (error) {
             console.error("Login error:", error);
+            alert("Login error has occurred, try again!");
         } finally {
             setLoading(false);
         }
@@ -97,7 +98,7 @@ function Login() {
             </form>
 
 
-            <Link id="blue-btn" to="/forgot-password">
+            <Link id="blue-btn" to="/login/forgot-password">
                 Forgot password?
             </Link>
         </div>

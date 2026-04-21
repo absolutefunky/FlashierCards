@@ -234,37 +234,112 @@ public static class UserEndpoints
         return Results.Ok(new { message = "PASSWORD SUCCESSFULLY UPDATED." });
     });
 
-        // DELETE /users/delete
-        app.MapDelete("/users/delete", async ([FromBody] DeleteUserDto deleteDto,[FromServices] Supabase.Client supabase) =>
+        // POST /users/verify-forgot-password
+    app.MapPost("/users/verify-forgot-password", async (VerifyForgotPasswordDto verifyDto, Supabase.Client supabase) =>
+    {
+        if (string.IsNullOrWhiteSpace(verifyDto.Email) ||
+            string.IsNullOrWhiteSpace(verifyDto.SQAnswer))
         {
-            if (string.IsNullOrWhiteSpace(deleteDto.Email) ||
-                string.IsNullOrWhiteSpace(deleteDto.Password))
-            {
-                return Results.BadRequest(new { message = "FIELDS ARE MISSING" });
-            }
+            return Results.BadRequest(new { message = "FIELDS ARE INCOMPLETE" });
+        }
 
-            var response = await supabase
-                .From<User>()
-                .Where(u => u.Email == deleteDto.Email)
-                .Get();
+        var response = await supabase
+            .From<User>()
+            .Where(u => u.Email == verifyDto.Email)
+            .Get();
 
-            var user = response.Models.FirstOrDefault();
+        var user = response.Models.FirstOrDefault();
 
-            if (user is null)
-            {
-                return Results.NotFound(new { message = "USER NOT FOUND" });
-            }
+        if (user is null)
+        {
+            return Results.BadRequest(new { message = "EMAIL NOT FOUND" });
+        }
 
-            bool samePasswords = BCrypt.Net.BCrypt.Verify(deleteDto.Password, user.PasswordHash);
+        var submittedAnswer = verifyDto.SQAnswer.Trim().ToLower();
+        var savedAnswer = user.SQAnswer?.Trim().ToLower();
 
-            if (!samePasswords)
-            {
-                return Results.BadRequest(new { message = "PASSWORD INCORRECT" });
-            }
+        if (submittedAnswer != savedAnswer)
+        {
+            return Results.BadRequest(new { message = "SECURITY ANSWER INCORRECT" });
+        }
 
-            await user.Delete<User>();
+        return Results.Ok(new { message = "VERIFIED :D" });
+    });
 
-            return Results.Ok(new { message = "Bye bye... :(" });
-        });
+        // PUT /users/forgot-password
+    app.MapPut("/users/forgot-password", async (ForgotPasswordDto forgotDto, Supabase.Client supabase) =>
+    {
+        if (string.IsNullOrWhiteSpace(forgotDto.Email) ||
+            string.IsNullOrWhiteSpace(forgotDto.SQAnswer) ||
+            string.IsNullOrWhiteSpace(forgotDto.NewPassword) ||
+            string.IsNullOrWhiteSpace(forgotDto.ConfirmNewPassword))
+        {
+            return Results.BadRequest(new { message = "FIELDS ARE INCOMPLETE" });
+        }
+
+        if (forgotDto.NewPassword != forgotDto.ConfirmNewPassword)
+        {
+            return Results.BadRequest(new { message = "PASSWORDS DO NOT MATCH" });
+        }
+
+        var response = await supabase
+            .From<User>()
+            .Where(u => u.Email == forgotDto.Email)
+            .Get();
+
+        var user = response.Models.FirstOrDefault();
+
+        if (user is null)
+        {
+            return Results.NotFound(new { message = "USER NOT FOUND" });
+        }
+
+        var submittedAnswer = forgotDto.SQAnswer.Trim().ToLower();
+        var savedAnswer = user.SQAnswer?.Trim().ToLower();
+
+        if (submittedAnswer != savedAnswer)
+        {
+            return Results.BadRequest(new { message = "SECURITY ANSWER INCORRECT" });
+        }
+
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(forgotDto.NewPassword);
+
+        await user.Update<User>();
+
+        return Results.Ok(new { message = "PASSWORD RESET SUCCESSFUL" });
+    });
+
+        // DELETE /users/delete
+    app.MapDelete("/users/delete", async ([FromBody] DeleteUserDto deleteDto,[FromServices] Supabase.Client supabase) =>
+    {
+        if (string.IsNullOrWhiteSpace(deleteDto.Email) ||
+            string.IsNullOrWhiteSpace(deleteDto.Password))
+        {
+            return Results.BadRequest(new { message = "FIELDS ARE MISSING" });
+        }
+
+        var response = await supabase
+            .From<User>()
+            .Where(u => u.Email == deleteDto.Email)
+            .Get();
+
+        var user = response.Models.FirstOrDefault();
+
+        if (user is null)
+        {
+            return Results.NotFound(new { message = "USER NOT FOUND" });
+        }
+
+        bool samePasswords = BCrypt.Net.BCrypt.Verify(deleteDto.Password, user.PasswordHash);
+
+        if (!samePasswords)
+        {
+            return Results.BadRequest(new { message = "PASSWORD INCORRECT" });
+        }
+
+        await user.Delete<User>();
+
+        return Results.Ok(new { message = "Bye bye... :(" });
+    });
 }
 }

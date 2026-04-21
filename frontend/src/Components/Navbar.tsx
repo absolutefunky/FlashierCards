@@ -5,6 +5,7 @@ import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import styles from "../Styles/Navbar.module.css";
 
 function Navbar() {
     const [menuHidden, setMenuHidden] = useState(true);
@@ -14,20 +15,20 @@ function Navbar() {
     }
 
     return (
-        <div id="navbar">
-            <button className="nav-option" onClick={() => {showMenu()}}>
+        <div id={styles.navbar}>
+            <button className={styles.navOption} onClick={() => {showMenu()}}>
                 <span><FontAwesomeIcon icon={faBars} /></span>
                 <span style={{display: menuHidden ? "none" : "block"}}>Menu</span>
             </button>
-            <Link className="nav-option" to="/dashboard">
+            <Link className={styles.navOption} to="/dashboard">
                 <span><FontAwesomeIcon icon={faFolder} /></span>
                 <span style={{display: menuHidden ? "none" : "block"}}>Decks</span>
             </Link>
-            <Link className="nav-option" to="/profile">
+            <Link className={styles.navOption} to="/profile/account-information">
                 <span><FontAwesomeIcon icon={faCircleUser} /></span>
                 <span style={{display: menuHidden ? "none" : "block"}}>Profile</span>
             </Link>
-            <Link className="nav-option" to="/">
+            <Link className={styles.navOption} to="/">
                 <span><FontAwesomeIcon icon={faRightFromBracket} /></span>
                 <span style={{display: menuHidden ? "none" : "block"}}>Logout</span>
             </Link>

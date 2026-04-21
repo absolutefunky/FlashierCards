@@ -52,6 +52,7 @@ function Signup() {
             
         } catch (error) {
             console.error("Signup error:", error);
+            alert("Sign up error, try again!")
         } finally {
 
         }
