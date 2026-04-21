@@ -152,7 +152,7 @@ public static class UserEndpoints
                 string.IsNullOrWhiteSpace(passwordDto.NewPassword) ||
                 string.IsNullOrWhiteSpace(passwordDto.ConfirmNewPassword))
             {
-                return Results.BadRequest(new { message = "FIELDS ARE INCOMPLETE" });
+                return Results.BadRequest(new { message = "Please properly complete the form." });
             }
 
             // check if passwords match
@@ -195,7 +195,7 @@ public static class UserEndpoints
             if (string.IsNullOrWhiteSpace(forgetfulUser.Email) ||
                 string.IsNullOrWhiteSpace(forgetfulUser.SqAnswer))
             {
-                return Results.BadRequest(new { message = "A FIELD IS MISSING..." });
+                return Results.BadRequest(new { message = "Please properly complete the form." });
             }
 
             // check if user exists
@@ -208,7 +208,7 @@ public static class UserEndpoints
 
             if (user is null)
             {
-                return Results.NotFound(new { message = "USER NOT FOUND." });
+                return Results.BadRequest(new { message = "Invalid email. User does not exist." });
             }
 
             var submittedAnswer = forgetfulUser.SqAnswer.Trim().ToLower();
@@ -217,7 +217,7 @@ public static class UserEndpoints
             // check if security question answer match
             if (submittedAnswer != savedAnswer)
             {
-                return Results.BadRequest(new { message = "ANSWER INCORRECT." });
+                return Results.BadRequest(new { message = "Invalid request. Please enter the correct name." });
             }
 
             var userDto = new ReturnUserDto(
@@ -232,34 +232,33 @@ public static class UserEndpoints
             });
         });
 
-        // PUT /users/updatePassword when user forgot password
-        app.MapPut("/users/updatePassword", async (UpdateUserDto passwordDto, Supabase.Client supabase) =>
+        // PUT /users/createNewPassword when user forgot password
+        app.MapPut("/users/{id}/createNewPassword", async (int id, UpdateUserDto passwordDto, Supabase.Client supabase) =>
         {
             // check if an input field is empty
-            if (string.IsNullOrWhiteSpace(passwordDto.Email) ||
-                string.IsNullOrWhiteSpace(passwordDto.NewPassword) ||
+            if (string.IsNullOrWhiteSpace(passwordDto.NewPassword) ||
                 string.IsNullOrWhiteSpace(passwordDto.ConfirmNewPassword))
             {
-                return Results.BadRequest(new { message = "FIELDS ARE INCOMPLETE" });
+                return Results.BadRequest(new { message = "Please properly complete the form." });
             }
 
             // check if passwords match
             if (passwordDto.NewPassword != passwordDto.ConfirmNewPassword)
             {
-                return Results.BadRequest(new { message = "PASSWORDS DO NOT MATCH" });
+                return Results.BadRequest(new { message = "Password and Confirm password do not match." });
             }
 
             // get user to create new password
             var response = await supabase
                 .From<User>()
-                .Where(u => u.Email == passwordDto.Email)
+                .Where(u => u.Id == id)
                 .Get();
 
             var user = response.Models.FirstOrDefault();
 
             if (user is null)
             {
-                return Results.NotFound(new { message = "USER NOT FOUND." });
+                return Results.NotFound(new { message = "Invalid request. User does not exist." });
             }
 
             // check if new password same as old password
@@ -267,7 +266,7 @@ public static class UserEndpoints
 
             if (sameNewPasswords)
             {
-                return Results.BadRequest(new { message = "NEW PASSWORD MATCHES OLD PASSWORD" });
+                return Results.BadRequest(new { message = "Invalid request. Please choose a different password." });
             }
 
             // create new password for forgetful user

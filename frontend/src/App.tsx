@@ -19,11 +19,15 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
+                {/* public routes */}
                 <Route path="/" element={<Home />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/forgotPassword" element={<ForgotPassword />} />
 
+                {/* private routes */}
                 <Route path="/dashboard/:userId" element={<Dashboard />} />
+                <Route path="/forgotPassword/:userId/createNewPassword" element={<CreateNewPassword />} />
 
 
 
@@ -35,7 +39,7 @@ function App() {
                 
                 {/* login routes */}
                 
-                <Route path="/login/forgot-password" element={<ForgotPassword />} />
+                
                 <Route path="/login/forgot-password/verify" element={<Verify location="/login/forgot-password/create-new-password" />} /> 
                 <Route path="/login/forgot-password/create-new-password" element={<CreateNewPassword />} />
                 

@@ -22,7 +22,7 @@ function Login() {
         setLoading(true);
 
         try {
-            // create user account
+            // find user account
             const userResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/login`, {
                 method: "POST",
                 headers: {
@@ -96,7 +96,7 @@ function Login() {
                     <span className={styles.loginFront}>Log in</span>
                 </button>
                 <Link
-                    to="/login/forgot-password"
+                    to="/forgotPassword"
                     className={styles.homeBtn}
                 >
                     <span className={styles.signupShadow}></span>
