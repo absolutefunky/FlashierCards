@@ -1,5 +1,5 @@
 import Navbar from "./Navbar";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import styles from "../Styles/Profile.module.css";
 import { useEffect, useState } from 'react';
 import type UserModel from "../Interfaces/User";
@@ -8,6 +8,7 @@ function AccountInformation() {
     const [user, setUser] = useState<UserModel>();
     const [error, setError] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const { userId } = useParams();
 
     const fetchUserData = async () => {
         setIsLoading(true);
@@ -32,7 +33,7 @@ function AccountInformation() {
 
     return (
         <div id={styles.dashboardContent}>
-            <Navbar />
+            <Navbar userId={userId} />
             <div>
                 <div id={styles.title}>Flashier Cards</div>
                 <div id={styles.profileContent}>

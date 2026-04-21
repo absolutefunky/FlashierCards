@@ -28,11 +28,11 @@ function Dashboard() {
     });
 
     function handleStudyView() {
-        navigate(`/study/${deckId}`, {replace: true});
+        navigate(`/user/${userId}/study/${deckId}`, {replace: true});
     }
 
     function handleEditView() {
-        navigate(`/edit/${deckId}`, {replace: true});
+        navigate(`/user/${userId}/edit/${deckId}`, {replace: true});
     }
 
     function handleToolbar(request: boolean, key: any) {
@@ -46,6 +46,7 @@ function Dashboard() {
         }
         if (!request) {
             setFormData({name: "", newName: ""});
+            handleToolbar(false, 0);
         }
         setCreateOverlay(request);
     }
@@ -194,7 +195,7 @@ function Dashboard() {
 
     return (
         <div id={styles.dashboardContent} style={{pointerEvents: createOverlay || renameOverlay ? "none" : "auto"}}>
-            <Navbar />
+            <Navbar userId={userId} />
             <div>
                 <div>
                     <div id={styles.title}>Flashier Cards</div>

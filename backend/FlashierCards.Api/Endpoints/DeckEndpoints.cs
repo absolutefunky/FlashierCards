@@ -36,6 +36,32 @@ public static class DeckEndpoints
             return Results.Ok(deckList);
         });
 
+        // GET /users/{userId}/decks{id} to get a specific deck
+        app.MapGet("/users/{userId}/decks/{id}", async (int userId, int id, Supabase.Client supabase) =>
+        {
+            var response = await supabase
+                .From<Deck>()
+                .Where(d => d.UserId == userId && d.Id == id)
+                .Get();
+
+            var deck = response.Models.FirstOrDefault();
+
+            // check if decks exist
+            if (deck is null)
+            {
+                return Results.BadRequest(new {message = "Deck does not exist."});
+            }
+           
+            var deckDto = new ReturnDeckDto
+            (
+                deck.Id,
+                deck.UserId,
+                deck.Name!
+            );
+
+            return Results.Ok(deckDto);
+        });
+
         // POST /users/{id}/decks/create to create a new a deck
         app.MapPost("/users/{id}/decks/create", async (int id, CreateDeckDto request, Supabase.Client supabase) =>
         {

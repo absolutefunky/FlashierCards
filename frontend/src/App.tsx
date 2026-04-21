@@ -28,8 +28,8 @@ function App() {
                 {/* private routes */}
                 <Route path="/dashboard/:userId" element={<Dashboard />} />
                 <Route path="/forgotPassword/:userId/createNewPassword" element={<CreateNewPassword />} />
-                <Route path="/study/:deckId" element={<Study />} />
-                <Route path="/edit/:deckId" element={<Edit />} />
+                <Route path="/user/:userId/study/:deckId" element={<Study />} />
+                <Route path="user/:userId/edit/:deckId" element={<Edit />} />
 
 
 
@@ -48,7 +48,7 @@ function App() {
                 
 
                 {/* profile routes */}
-                <Route path="/profile/account-information" element={<AccountInformation />} />
+                <Route path="/profile/:userId/account-information" element={<AccountInformation />} />
                 <Route path="/profile/theme" element={<Theme />} />
                 <Route path="/profile/change-password" element={<ChangePassword />} />
                 <Route path="/profile/delete-account" element={<DeleteAccount />} />

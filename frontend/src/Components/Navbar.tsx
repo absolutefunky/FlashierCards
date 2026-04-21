@@ -3,15 +3,28 @@ import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { faFolder } from "@fortawesome/free-solid-svg-icons";
 import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import styles from "../Styles/Navbar.module.css";
 
-function Navbar() {
+function Navbar({userId}: any) {
     const [menuHidden, setMenuHidden] = useState(true);
+    const navigate = useNavigate();
 
     function showMenu() {
         setMenuHidden(!menuHidden);
+    }
+
+    function handleDeck() {
+        navigate(`/dashboard/${userId}`);
+    }
+
+    function handleProfile() {
+        navigate(`/profile/${userId}/account-information`);
+    }
+
+    function handleLogout() {
+        navigate(`/`, {replace: true});
     }
 
     return (
@@ -20,18 +33,18 @@ function Navbar() {
                 <span><FontAwesomeIcon icon={faBars} /></span>
                 <span style={{display: menuHidden ? "none" : "block"}}>Menu</span>
             </button>
-            <Link className={styles.navOption} to="/dashboard">
+            <button className={styles.navOption} onClick={handleDeck}>
                 <span><FontAwesomeIcon icon={faFolder} /></span>
                 <span style={{display: menuHidden ? "none" : "block"}}>Decks</span>
-            </Link>
-            <Link className={styles.navOption} to="/profile/account-information">
+            </button>
+            <button className={styles.navOption} onClick={handleProfile}>
                 <span><FontAwesomeIcon icon={faCircleUser} /></span>
                 <span style={{display: menuHidden ? "none" : "block"}}>Profile</span>
-            </Link>
-            <Link className={styles.navOption} to="/">
+            </button>
+            <button className={styles.navOption} onClick={handleLogout}>
                 <span><FontAwesomeIcon icon={faRightFromBracket} /></span>
                 <span style={{display: menuHidden ? "none" : "block"}}>Logout</span>
-            </Link>
+            </button>
         </div>
     );
 }

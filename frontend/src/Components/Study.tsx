@@ -2,12 +2,15 @@ import Navbar from "./Navbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons/faChevronRight";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "../Styles/Deck.module.css";
 import { useParams } from "react-router-dom";
 
 function Study() {
-    const { deckId } = useParams();
+    const [error, setError] = useState({status: false, message: ""});
+    const [loading, setLoading] = useState(false);
+    const [deckName, setDeckName] = useState();
+    const { userId, deckId } = useParams();
     const cardRef = useRef<HTMLDivElement>(null);
     const [cardNum, setCardNum] = useState(1);
     const total = 5;
@@ -30,12 +33,47 @@ function Study() {
         }
     }
 
+    const fetchDeckData = async () => {
+        setLoading(true);
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/decks/${deckId}`);
+
+            // get message and deck data
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message);
+            }
+
+            setDeckName(data.name);
+            setLoading(false);
+
+        } catch(error: any) {
+            setLoading(false);
+            setError({status: true, message: error.message});
+        }
+    }
+
+    useEffect(() => {
+        fetchDeckData()
+    }, []);
+
     return (
         <div className={styles.dashboardContent}>
-            <Navbar />
+            <Navbar userId={userId} />
             <div>
-                <div className={styles.title}>Flashier Cards</div>
-                <div>{deckId}</div>
+                <div className={styles.title}>{deckName}</div>
+                { (loading) ?
+                    <div className={styles.invalidRequest}>
+                        Loading request...
+                    </div>
+                :
+                    (error.status) ?
+                        <div className={styles.invalidRequest}>{error.message}</div>
+                    :
+                        <div></div>
+                }
                 <div className={styles.deck}>
                     <div className={styles.card} onClick={() => flipCard()} ref={cardRef}>
                         <div className={styles.cardInner}>
@@ -58,4 +96,4 @@ function Study() {
     );
 }
 
-export default Study
+export default Study;

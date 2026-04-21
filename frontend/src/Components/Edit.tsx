@@ -1,6 +1,5 @@
 import Navbar from "./Navbar";
 import TextObject from "./TextObject";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { faT } from "@fortawesome/free-solid-svg-icons";
@@ -12,11 +11,15 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons/faChevronRight";
 import { faRightLeft } from "@fortawesome/free-solid-svg-icons";
-
-import React, { useRef, useState, type JSX } from "react";
+import { useEffect, useRef, useState, type JSX } from "react";
 import styles from "../Styles/Deck.module.css";
+import { useParams } from "react-router-dom";
 
 function Edit() {
+    const [error, setError] = useState({status: false, message: ""});
+    const [loading, setLoading] = useState(false);
+    const [deckName, setDeckName] = useState();
+    const { userId, deckId } = useParams();
     const [textTool, setTextTool] = useState(false);
     const [textObjects, setTextObjects] = useState<JSX.Element[]>([]);
 
@@ -50,11 +53,47 @@ function Edit() {
         setTextObjects(prev => [...prev, <TextObject key={prev.length} />]);
     }
 
+    const fetchDeckData = async () => {
+        setLoading(true);
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/decks/${deckId}`);
+
+            // get message and deck data
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message);
+            }
+
+            setDeckName(data.name);
+            setLoading(false);
+
+        } catch(error: any) {
+            setLoading(false);
+            setError({status: true, message: error.message});
+        }
+    }
+    
+    useEffect(() => {
+        fetchDeckData()
+    }, []);
+
     return (
         <div className={styles.dashboardContent}>
-            <Navbar />
+            <Navbar userId={userId} />
             <div>
-                <div className={styles.title}>Flashier Cards</div>
+                <div className={styles.title}>{deckName}</div>
+                { (loading) ?
+                    <div className={styles.invalidRequest}>
+                        Loading request...
+                    </div>
+                :
+                    (error.status) ?
+                        <div className={styles.invalidRequest}>{error.message}</div>
+                    :
+                        <div></div>
+                }
                 <div className={styles.toolbar}>
                     <button
                         type="button"
