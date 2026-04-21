@@ -46,13 +46,13 @@ public static class UserEndpoints
                 string.IsNullOrWhiteSpace(newUser.ConfirmPassword) ||
                 string.IsNullOrWhiteSpace(newUser.SqAnswer))
             {
-                return Results.BadRequest(new { message = "NO INCOMPLETE FIELDS ALLOWED" });
+                return Results.BadRequest(new { message = "Please properly complete the form." });
             }
 
             // check if passwords match
             if (newUser.Password != newUser.ConfirmPassword)
             {
-                return Results.BadRequest(new { message = "PASSWORDS DO NOT MATCH" });
+                return Results.BadRequest(new { message = "Password and Confirm password do not match." });
             }
 
             var existingUser = await supabase
@@ -63,7 +63,7 @@ public static class UserEndpoints
             // check if user already exists
             if (existingUser.Models.Any())
             {
-                return Results.BadRequest(new { message = "THIS EMAIL IS CURRENTLY BEING USED BY A PREVIOUS ACCOUNT" });
+                return Results.BadRequest(new { message = "User with this email already has an account. Please login instead." });
             }
 
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(newUser.Password);
@@ -85,7 +85,7 @@ public static class UserEndpoints
 
             if (insertedUser is null)
             {
-                return Results.BadRequest(new { message = "ACCOUNT COULD NOT BE CREATED" });
+                return Results.BadRequest(new { message = "Invalid request. User account could not be created." });
             }
 
             var userDto = new ReturnUserDto(
@@ -108,7 +108,7 @@ public static class UserEndpoints
             if (string.IsNullOrWhiteSpace(loginUser.Email) ||
                 string.IsNullOrWhiteSpace(loginUser.Password))
             {
-                return Results.BadRequest(new { message = "A FIELD IS MISSING..." });
+                return Results.BadRequest(new { message = "Please properly complete the form." });
             }
 
             // check if user exists
@@ -121,7 +121,7 @@ public static class UserEndpoints
 
             if (user is null)
             {
-                return Results.Unauthorized();
+                return Results.BadRequest(new { message = "Invalid email. User does not exist." });
             }
 
             // check if password match
@@ -129,7 +129,7 @@ public static class UserEndpoints
 
             if (!samePassword)
             {
-                return Results.Unauthorized();
+                return Results.BadRequest(new { message = "Invalid password. Please enter the correct password." });
             }
 
             var userDto = new ReturnUserDto(

@@ -1,5 +1,5 @@
 import Navbar from "./Navbar";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -9,12 +9,12 @@ import { faICursor } from "@fortawesome/free-solid-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useState } from 'react';
 import styles from "../Styles/Dashboard.module.css";
-import { UserAuth } from "../AuthContext";
 
 function Dashboard() {
     const [toolVisible, setToolVisible] = useState(false);
     const [createOverlay, setCreateOverlay] = useState(false);
     const [renameOverlay, setRenameOverlay] = useState(false);
+    const { userId } = useParams();
 
     function handleToolbar(request: boolean) {
         setToolVisible(request);
@@ -34,6 +34,7 @@ function Dashboard() {
             <div>
                 <div>
                     <div id={styles.title}>Flashier Cards</div>
+                    <div>User: {userId}</div>
                     <div id={styles.toolbar}>
                         <button
                             type="button"

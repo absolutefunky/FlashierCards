@@ -49,7 +49,7 @@ public static class ProfileEndpoints
 
             if (user is null)
             {
-                return Results.NotFound(new { message = "USER NOT FOUND" });
+                return Results.NotFound(new { message = "User does not exist." });
             }
 
             // check if user profile already exist
@@ -62,7 +62,7 @@ public static class ProfileEndpoints
 
             if (userProfile is not null)
             {
-                return Results.NotFound(new { message = "USER ALREADY HAS A PROFILE" });
+                return Results.BadRequest(new { message = "User already has a profile." });
             }
 
             var profile = new Profile
@@ -81,7 +81,7 @@ public static class ProfileEndpoints
 
             if (profile is null)
             {
-                return Results.NotFound(new { message = "USER PROFILE NOT CREATED" });
+                return Results.BadRequest(new { message = "Invalid request. User profile was not created." });
             }
 
             // create a profile record to return
