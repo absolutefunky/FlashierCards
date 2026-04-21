@@ -23,7 +23,7 @@ public static class DeckEndpoints
             // check if decks exist
             if (decks.Count == 0)
             {
-                return Results.NotFound(new {message = "NO DECKS FOUND"});
+                return Results.BadRequest(new {message = "User has not created any decks."});
             }
            
             var deckList = decks.Select(d => new ReturnDeckDto
@@ -42,7 +42,7 @@ public static class DeckEndpoints
             // check if an input field is empty
             if (string.IsNullOrWhiteSpace(request.Name))
             {
-                return Results.BadRequest(new { message = "FIELDS ARE INCOMPLETE" });
+                return Results.BadRequest(new { message = "Please properly complete the form." });
             }
 
             // check if user id violates foregin key constraint
@@ -55,7 +55,7 @@ public static class DeckEndpoints
 
             if (userFound is null)
             {
-                return Results.BadRequest(new {message = "USER DOES NOT EXIST"});
+                return Results.BadRequest(new {message = "Invalid request. User does not exist."});
             }
 
             // check if deck with given name for user already exist
@@ -68,7 +68,7 @@ public static class DeckEndpoints
 
             if (deckFound is not null)
             {
-                return Results.BadRequest(new {message = "PLEASE CHOOSE A DIFFERENT NAME"});
+                return Results.BadRequest(new {message = "Please choose a different name."});
             }
 
             var deck = new Deck
@@ -87,7 +87,7 @@ public static class DeckEndpoints
             // check if deck was created
             if (created is null)
             {
-                return Results.BadRequest(new {message = "DECK WAS NOT CREATED"});
+                return Results.BadRequest(new {message = "Deck was not created."});
             }
 
             var deckDto = new ReturnDeckDto
@@ -97,7 +97,7 @@ public static class DeckEndpoints
                 created.Name!
             );
 
-            return Results.Ok(new {message = "DECK WAS SUCCESSFULLY INSERTED", deckDto});
+            return Results.Ok(new {message = "Deck was successfully created.", deckDto});
         });
 
         // PUT /users/{userId}/decks/{id}/rename to rename a deck
@@ -106,7 +106,7 @@ public static class DeckEndpoints
             // check if an input field is empty
             if (string.IsNullOrWhiteSpace(request.Name))
             {
-                return Results.BadRequest(new { message = "FIELDS ARE INCOMPLETE" });
+                return Results.BadRequest(new { message = "Please properly complete the form." });
             }
 
             // check if user id violates foregin key constraint
@@ -119,7 +119,7 @@ public static class DeckEndpoints
 
             if (userFound is null)
             {
-                return Results.BadRequest(new {message = "USER DOES NOT EXIST"});
+                return Results.BadRequest(new {message = "Invalid request. User does not exist."});
             }
 
             // check if deck with given name for user already exist
@@ -132,7 +132,7 @@ public static class DeckEndpoints
 
             if (deckFound is not null)
             {
-                return Results.BadRequest(new {message = "PLEASE CHOOSE A DIFFERENT NAME"});
+                return Results.BadRequest(new {message = "Please choose a different name."});
             }
 
             // update deck name
@@ -146,7 +146,7 @@ public static class DeckEndpoints
 
             if (deck is null)
             {
-                return Results.NotFound(new {message = "DECK WAS NOT FOUND"});
+                return Results.NotFound(new {message = "Deck was not updated."});
             }
 
             var deckDto = new ReturnDeckDto(
@@ -155,7 +155,7 @@ public static class DeckEndpoints
                 deck.Name!
             );
 
-            return Results.Ok(new {message = "DECK WAS SUCCESSFULLY RENAMED", deckDto});
+            return Results.Ok(new {message = "Deck was successfully renamed.", deckDto});
         });
 
         // DELETE /users/{userId}/decks/{id}/delete to delete a deck
@@ -171,7 +171,7 @@ public static class DeckEndpoints
 
             if (userFound is null)
             {
-                return Results.BadRequest(new {message = "USER DOES NOT EXIST"});
+                return Results.BadRequest(new {message = "Invalid request. User does not exist."});
             }
 
             // check if deck exist
@@ -184,7 +184,7 @@ public static class DeckEndpoints
 
             if (deckFound is null)
             {
-                return Results.BadRequest(new {message = "DECK WAS NOT FOUND"});
+                return Results.BadRequest(new {message = "Deck does not exist."});
             }
 
             // delete the deck
@@ -203,10 +203,10 @@ public static class DeckEndpoints
 
             if (deckFound is null)
             {
-                return Results.Ok(new {message = "DECK SUCCESSFULLY DELETED"});
+                return Results.Ok(new {message = "Deck was successfully deleted."});
             }
 
-            return Results.BadRequest(new {message = "DECK WAS NOT DELETED"});
+            return Results.BadRequest(new {message = "Deck was not deleted."});
         });
     }
 }

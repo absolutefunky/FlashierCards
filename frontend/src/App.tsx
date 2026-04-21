@@ -28,7 +28,8 @@ function App() {
                 {/* private routes */}
                 <Route path="/dashboard/:userId" element={<Dashboard />} />
                 <Route path="/forgotPassword/:userId/createNewPassword" element={<CreateNewPassword />} />
-
+                <Route path="/study/:deckId" element={<Study />} />
+                <Route path="/edit/:deckId" element={<Edit />} />
 
 
 
@@ -41,11 +42,10 @@ function App() {
                 
                 
                 <Route path="/login/forgot-password/verify" element={<Verify location="/login/forgot-password/create-new-password" />} /> 
-                <Route path="/login/forgot-password/create-new-password" element={<CreateNewPassword />} />
+               
                 
                 
-                <Route path="/study" element={<Study />} />
-                <Route path="/edit" element={<Edit />} />
+                
 
                 {/* profile routes */}
                 <Route path="/profile/account-information" element={<AccountInformation />} />

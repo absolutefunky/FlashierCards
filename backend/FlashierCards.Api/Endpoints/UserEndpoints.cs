@@ -23,7 +23,7 @@ public static class UserEndpoints
 
             if (user is null)
             {
-                return Results.NotFound();
+                return Results.BadRequest(new { message = "User does not exist." });
             }
 
             // create a user record to return
@@ -96,7 +96,7 @@ public static class UserEndpoints
 
             return Results.Ok(new
             {
-                message = "ACCOUNT SUCCESSFULLY CREATED",
+                message = "User account was successfully created.",
                 user = userDto
             });
         });
@@ -158,7 +158,7 @@ public static class UserEndpoints
             // check if passwords match
             if (passwordDto.NewPassword != passwordDto.ConfirmNewPassword)
             {
-                return Results.BadRequest(new { message = "PASSWORDS DO NOT MATCH" });
+                return Results.BadRequest(new { message = "New password and Confirm new password do not match." });
             }
 
             // check if current password is real
@@ -171,21 +171,21 @@ public static class UserEndpoints
 
             if (user is null)
             {
-                return Results.NotFound(new { message = "USER NOT FOUND." });
+                return Results.BadRequest(new { message = "Invalid request. User does not exist." });
             }
 
             bool sameNewPasswords = BCrypt.Net.BCrypt.Verify(passwordDto.CurrentPassword, user.PasswordHash);
 
             if (!sameNewPasswords)
             {
-                return Results.BadRequest(new { message = "CURRENT PASSWORD INCORRECT" });
+                return Results.BadRequest(new { message = "Invalid password. Please enter the correct password." });
             }
 
             // change password
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(passwordDto.NewPassword);
             await user.Update<User>();
 
-            return Results.Ok(new { message = "PASSWORD SUCCESSFULLY UPDATED." });
+            return Results.Ok(new { message = "Password was successfully changed." });
         });
 
         // POST /users/forgotPassword to authenticate user when they forget password
@@ -273,7 +273,7 @@ public static class UserEndpoints
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(passwordDto.NewPassword);
             await user.Update<User>();
 
-            return Results.Ok(new { message = "PASSWORD SUCCESSFULLY CREATED." });
+            return Results.Ok(new { message = "Password was successfully created." });
         });
 
         // DELETE /users/{id}/delete
@@ -289,7 +289,7 @@ public static class UserEndpoints
 
             if (user is null)
             {
-                return Results.NotFound(new { message = "USER NOT FOUND" });
+                return Results.BadRequest(new { message = "User does not exist." });
             }
 
             await supabase

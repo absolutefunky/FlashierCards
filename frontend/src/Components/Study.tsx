@@ -4,8 +4,10 @@ import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons/faChevronRight";
 import { useRef, useState } from "react";
 import styles from "../Styles/Deck.module.css";
+import { useParams } from "react-router-dom";
 
 function Study() {
+    const { deckId } = useParams();
     const cardRef = useRef<HTMLDivElement>(null);
     const [cardNum, setCardNum] = useState(1);
     const total = 5;
@@ -33,6 +35,7 @@ function Study() {
             <Navbar />
             <div>
                 <div className={styles.title}>Flashier Cards</div>
+                <div>{deckId}</div>
                 <div className={styles.deck}>
                     <div className={styles.card} onClick={() => flipCard()} ref={cardRef}>
                         <div className={styles.cardInner}>
