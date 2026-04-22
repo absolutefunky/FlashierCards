@@ -17,7 +17,7 @@ import {
 import type Konva from "konva";
 import styles from "../Styles/Deck.module.css";
 
-type StickerType = "star" | "heart" | "badge" | "arrow" | "diamond" | "flower";
+type StickerType = "star" | "heart" | "badge" | "arrow" ;
 
 type Sticker = {
   id: string;
@@ -244,33 +244,6 @@ function Edit() {
       );
     }
 
-    if (item.type === "diamond") {
-      return (
-        <Rect
-          {...commonProps}
-          width={45}
-          height={45}
-          fill="#9B5DE5"
-          offsetX={22.5}
-          offsetY={22.5}
-          rotation={item.rotation + 45}
-        />
-      );
-    }
-
-    if (item.type === "flower") {
-      return (
-        <RegularPolygon
-          {...commonProps}
-          sides={8}
-          radius={28}
-          fill="#FF9F1C"
-          stroke="#fff"
-          strokeWidth={3}
-        />
-      );
-    }
-
     return null;
   }
 
@@ -278,9 +251,7 @@ function Edit() {
     { emoji: "⭐", name: "Star", type: "star" },
     { emoji: "❤️", name: "Heart", type: "heart" },
     { emoji: "🔴", name: "Badge", type: "badge" },
-    { emoji: "➡️", name: "Arrow", type: "arrow" },
-    { emoji: "💎", name: "Diamond", type: "diamond" },
-    { emoji: "🌸", name: "Flower", type: "flower" },
+    { emoji: "➡️", name: "Arrow", type: "arrow" }
   ];
 
   return (
