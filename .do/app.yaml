@@ -1,13 +1,19 @@
 name: flashiercards
 region: nyc
+features:
+- buildpack-stack=ubuntu-22
 
 services:
-  - name: flashiercards-backend
-    source_dir: backend
-    dockerfile_path: backend/Dockerfile
+  - name: flashiercards-backend-flashier-c
+    github:
+      branch: maheen
+      deploy_on_push: true
+      repo: absolutefunky/FlashierCards
+    source_dir: backend/FlashierCards.Api
+    environment_slug: dotnet
     http_port: 8080
     instance_count: 1
-    instance_size_slug: apps-s-1vcpu-0.5gb
+    instance_size_slug: apps-s-1vcpu-1gb
     envs:
       - key: SUPABASE_URL
         scope: RUN_TIME
@@ -21,6 +27,10 @@ services:
 
 static_sites:
   - name: flashiercards-frontend
+    github:
+      branch: maheen
+      deploy_on_push: true
+      repo: absolutefunky/FlashierCards
     source_dir: frontend
     build_command: npm run build
     output_dir: dist
@@ -29,4 +39,4 @@ static_sites:
     envs:
       - key: VITE_API_URL
         scope: BUILD_TIME
-        value: ${flashiercards-backend.PUBLIC_URL}
+        value: ${flashiercards-backend-flashier-c.PUBLIC_URL}
