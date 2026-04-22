@@ -1,5 +1,4 @@
 import Navbar from "./Navbar";
-import TextObject from "./TextObject";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { faT } from "@fortawesome/free-solid-svg-icons";
@@ -11,7 +10,7 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons/faChevronRight";
 import { faRightLeft } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useRef, useState, type JSX } from "react";
+import { useEffect, useRef, useState, } from "react";
 import styles from "../Styles/Deck.module.css";
 import { useParams } from "react-router-dom";
 
@@ -20,8 +19,6 @@ function Edit() {
     const [loading, setLoading] = useState(false);
     const [deckName, setDeckName] = useState();
     const { userId, deckId } = useParams();
-    const [textTool, setTextTool] = useState(false);
-    const [textObjects, setTextObjects] = useState<JSX.Element[]>([]);
 
     const cardRef = useRef<HTMLDivElement>(null);
     const [cardSide, setCardSide] = useState("Front");
@@ -46,11 +43,6 @@ function Edit() {
         if ((cardNum - 1) >= 1) {
             setCardNum(cardNum - 1);
         }
-    }
-
-    function addTextObject() {
-        setTextTool(true);
-        setTextObjects(prev => [...prev, <TextObject key={prev.length} />]);
     }
 
     const fetchDeckData = async () => {

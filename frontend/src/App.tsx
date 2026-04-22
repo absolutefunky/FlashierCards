@@ -9,10 +9,8 @@ import Theme from "./Components/Theme";
 import ChangePassword from "./Components/ChangePassword";
 import DeleteAccount from "./Components/DeleteAccount";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Verify from "./Components/Verify";
 import ForgotPassword from "./Components/ForgotPassword";
 import CreateNewPassword from "./Components/CreateNewPassword";
-import Canvas from "./Components/Canvas";
 
 function App() {
    
@@ -30,22 +28,6 @@ function App() {
                 <Route path="/forgotPassword/:userId/createNewPassword" element={<CreateNewPassword />} />
                 <Route path="/user/:userId/study/:deckId" element={<Study />} />
                 <Route path="user/:userId/edit/:deckId" element={<Edit />} />
-
-
-
-                {/* signup routes */}
-                <Route path="/canvas" element={<Canvas />} />
-                
-                <Route path="/signup/verify" element={<Verify location="/dashboard" />} /> 
-                
-                {/* login routes */}
-                
-                
-                <Route path="/login/forgot-password/verify" element={<Verify location="/login/forgot-password/create-new-password" />} /> 
-               
-                
-                
-                
 
                 {/* profile routes */}
                 <Route path="/profile/:userId/account-information" element={<AccountInformation />} />
