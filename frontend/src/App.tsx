@@ -31,9 +31,9 @@ function App() {
 
                 {/* profile routes */}
                 <Route path="/profile/:userId/account-information" element={<AccountInformation />} />
-                <Route path="/profile/theme" element={<Theme />} />
-                <Route path="/profile/change-password" element={<ChangePassword />} />
-                <Route path="/profile/delete-account" element={<DeleteAccount />} />
+                <Route path="/profile/:userId/theme" element={<Theme />} />
+                <Route path="/profile/:userId/change-password" element={<ChangePassword />} />
+                <Route path="/profile/:userId/delete-account" element={<DeleteAccount />} />
             </Routes>
         </BrowserRouter>
     );
