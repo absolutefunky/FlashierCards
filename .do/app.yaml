@@ -3,6 +3,19 @@ region: nyc
 features:
 - buildpack-stack=ubuntu-22
 
+ingress:
+  rules:
+    - component:
+        name: flashiercards-backend-flashier-c
+      match:
+        path:
+          prefix: /api
+    - component:
+        name: flashiercards-frontend
+      match:
+        path:
+          prefix: /
+
 services:
   - name: flashiercards-backend-flashier-c
     github:
@@ -21,9 +34,6 @@ services:
       - key: SUPABASE_KEY
         scope: RUN_TIME
         type: SECRET
-      - key: AllowedOrigins
-        scope: RUN_TIME
-        value: ${flashiercards-frontend.PUBLIC_URL}
 
 static_sites:
   - name: flashiercards-frontend
@@ -39,4 +49,4 @@ static_sites:
     envs:
       - key: VITE_API_URL
         scope: BUILD_TIME
-        value: ${flashiercards-backend-flashier-c.PUBLIC_URL}
+        value: /api
