@@ -50,7 +50,7 @@ function Edit() {
   const [backStickers, setBackStickers] = useState<Sticker[]>([]);
 
     const stageWidth = 750;
-    const stageHeight = 320;
+    const stageHeight = 380;
 
   const currentStickers = cardSide === "Front" ? frontStickers : backStickers;
   const setCurrentStickers =
@@ -345,7 +345,7 @@ function Edit() {
 
             {displayStickerMenu && (
               <div
-                style={{ position: "absolute", top: "110%", left: 0, zIndex: 20, display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0.5rem", padding: "0.75rem", minWidth: "180px", borderRadius: "12px", background: "white", boxShadow: "0 8px 18px rgba(0,0,0,0.15)", }}>
+                style={{ position: "absolute", top: "110%", left: 0, zIndex: 20, display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0.5rem", padding: "0.75rem", minWidth: "180px", borderRadius: "12px", background: " #D9EDF8", boxShadow: "0 8px 18px rgba(0,0,0,0.15)", }}>
                 {stickerButtons.map((s) => (
                   <button
                     key={s.type}
