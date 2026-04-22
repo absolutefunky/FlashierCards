@@ -1,4 +1,4 @@
-GET http://localhost:5159/users/1
+GET http://localhost:5159/users/22
 
 ###
 POST http://localhost:5159/users/register
