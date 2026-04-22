@@ -1,3 +1,4 @@
+using System.Threading.Tasks.Dataflow;
 using FlashierCards.Api.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,19 +23,22 @@ await supabase.InitializeAsync();
 builder.Services.AddSingleton(supabase);
 
 // configure CORS to establish connection with frontend
-var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
+//var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
 
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(optionsCORS =>
+    options.AddPolicy("AllowSpecificOrigin", policy =>
     {
-        optionsCORS.WithOrigins(allowedOrigins!).AllowAnyMethod().AllowAnyHeader();   
+        policy.WithOrigins("https://flashiercards-frontend-b974443ea474.herokuapp.com")
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+            
     });
 });
 
 var app = builder.Build();
 
-app.UseCors();
+app.UseCors("AllowSpecificOrigin");
 
 // endpoints
 app.MapUserEndpoints();
