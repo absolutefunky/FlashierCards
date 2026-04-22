@@ -1,0 +1,32 @@
+name: flashiercards
+region: nyc
+
+services:
+  - name: flashiercards-backend
+    source_dir: backend
+    dockerfile_path: backend/Dockerfile
+    http_port: 8080
+    instance_count: 1
+    instance_size_slug: apps-s-1vcpu-0.5gb
+    envs:
+      - key: SUPABASE_URL
+        scope: RUN_TIME
+        type: SECRET
+      - key: SUPABASE_KEY
+        scope: RUN_TIME
+        type: SECRET
+      - key: AllowedOrigins
+        scope: RUN_TIME
+        value: ${flashiercards-frontend.PUBLIC_URL}
+
+static_sites:
+  - name: flashiercards-frontend
+    source_dir: frontend
+    build_command: npm run build
+    output_dir: dist
+    index_document: index.html
+    error_document: index.html
+    envs:
+      - key: VITE_API_URL
+        scope: BUILD_TIME
+        value: ${flashiercards-backend.PUBLIC_URL}
