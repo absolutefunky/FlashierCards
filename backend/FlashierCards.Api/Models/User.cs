@@ -18,7 +18,7 @@ public class User : BaseModel
     public string? PasswordHash { get; set; }
 
     [Column("sq_answer")]
-    public string? SQAnswer { get; set; }
+    public string? SqAnswer { get; set; }
 
     [Column("date_account_created")]
     public DateOnly DateAccountCreated { get; set; }

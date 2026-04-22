@@ -1,6 +1,6 @@
 #dashboardContent {
     display: flex;
-    position: relative;
+    
 }
 
 #dashboardContent > div:last-of-type {
@@ -8,6 +8,10 @@
     display: flex;
     flex-direction: column;
     padding: 2rem 1rem;
+}
+
+#dashboardContent > div:last-of-type > div:first-of-type {
+    position: relative;
 }
 
 #title {
@@ -174,6 +178,10 @@
     min-width: 250px;
 }
 
+.formField input:focus {
+    outline: none;
+}
+
 .homeBtn {
     position: relative;
     display: inline-block;
@@ -228,4 +236,16 @@
 
 .homeBtn:active .loginShadow {
     transform: translateY(2px);
+}
+
+.invalidRequest {
+    color: #004A94;
+    font-size: 18px;
+    font-family: "Imprima", sans-serif;
+    font-style: normal;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    background-color: #D9EDF8;
+    border-radius: 5px;
+    padding: 1rem;
 }

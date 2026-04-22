@@ -1,5 +1,5 @@
 import Navbar from "./Navbar";
-import { Link } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -7,165 +7,353 @@ import { faFolderOpen } from "@fortawesome/free-solid-svg-icons";
 import { faPencil } from "@fortawesome/free-solid-svg-icons";
 import { faICursor } from "@fortawesome/free-solid-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { useState } from 'react';
-import type User from "../Interfaces/User";
+import { useEffect, useState, type ChangeEvent } from 'react';
+import type Deck from "../Interfaces/Deck";
+import styles from "../Styles/Dashboard.module.css";
 
 function Dashboard() {
-    const storedUser = sessionStorage.getItem("user");
-    const user: User | null = storedUser ? JSON.parse(storedUser) : null;
-    const [toolbar, setToolbar] = useState(false);
-    const [deck, setDeck] = useState("");
-    const [toolOptionHidden, setToolOptionHidden] = useState(true);
-
+    const [toolVisible, setToolVisible] = useState(false);
     const [createOverlay, setCreateOverlay] = useState(false);
     const [renameOverlay, setRenameOverlay] = useState(false);
-    const [checkedDeck, setCheckedDeck] = useState<string | null>(null);
-   
-    function handleToolbarChange(event: boolean) {
-        setToolbar(event);
-    }
-    function showToolOptions(request: boolean) {
-        setToolOptionHidden(request);
+    const { userId } = useParams();
+    const [error, setError] = useState({status: false, message: ""});
+    const [loading, setLoading] = useState(false);
+    const [decks, setDecks] = useState<Deck[]>([]);
+    const [deckId, setDeckId] = useState<any>();
+    const navigate = useNavigate();
+
+    const [formData, setFormData] = useState({
+        name: "",
+        newName: ""
+    });
+
+    function handleStudyView() {
+        navigate(`/user/${userId}/study/${deckId}`, {replace: true});
     }
 
-
-    function handleDeckChange(event: any) {
-        setDeck(event.target.value);
-        handleToolbarChange(true);
+    function handleEditView() {
+        navigate(`/user/${userId}/edit/${deckId}`, {replace: true});
     }
 
-    function showCreateOverlay(request: boolean){
+    function handleToolbar(request: boolean, key: any) {
+        setDeckId(key);
+        setToolVisible(request);
+    }
+
+    function handleCreateOverlay(request: boolean) {
+        if (request) {
+            setError({status: false, message: ""});
+        }
+        if (!request) {
+            setFormData({name: "", newName: ""});
+            handleToolbar(false, 0);
+        }
         setCreateOverlay(request);
     }
-    function showRenameOverlay(request: boolean){
+    
+    function handleRenameOverlay(request: boolean) {
+        if (request) {
+            setError({status: false, message: ""});
+        }
+         if (!request) {
+            setFormData({name: "", newName: ""});
+            handleToolbar(false, 0);
+        }
         setRenameOverlay(request);
     }
 
-    
+    function handleFormData(e: ChangeEvent<HTMLInputElement>) {
+        const {name, value} = e.target;
+        setFormData((prev) => ({...prev, [name]: value}));
+    }
 
- return (
-        <div id="dashboard-content">
-            <Navbar />
-            <div>
-                <div id="signup-title">Flashier Cards</div>
-                {user && <p>Ello, {user.email}</p>}
+    const fetchDeckData = async () => {
+        setLoading(true);
 
-                <div id="toolbar">
-                    <button
-                        type="button"
-                        onClick={() => showToolOptions(true)}
-                        style={{ display: toolOptionHidden ? "none" : "inline-block" }}
-                        className="tool-option"
-                    >
-                        <span className="shadow"></span>
-                        <span className="edge"></span>
-                        <span className="front">
-                            <FontAwesomeIcon icon={faCircleXmark} />
-                        </span>
-                    </button>
+        try {
+            // get list of decks
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/decks`);
 
-                    <button className="tool-option"
-                    onClick={() => showCreateOverlay(true)} >
-                        <span className="shadow"></span>
-                        <span className="edge"></span>
-                        <span className="front">
-                            <FontAwesomeIcon icon={faPlus} />
-                        </span>
-                    </button>
+            // get message and deck data
+            const data = await response.json();
 
-                    <Link
-                        style={{ display: toolOptionHidden ? "none" : "inline-block" }}
-                        className="tool-option"
-                        to="/study"
-                    >
-                        <span className="shadow"></span>
-                        <span className="edge"></span>
-                        <span className="front">
-                            <FontAwesomeIcon icon={faFolderOpen} />
-                        </span>
-                    </Link>
+            if (!response.ok) {
+                throw new Error(data.message);
+            }
 
-                    <Link
-                        style={{ display: toolOptionHidden ? "none" : "inline-block" }}
-                        className="tool-option"
-                        to="/edit"
-                    >
-                        <span className="shadow"></span>
-                        <span className="edge"></span>
-                        <span className="front">
-                            <FontAwesomeIcon icon={faPencil} />
-                        </span>
-                    </Link>
+            setDecks(data);
+            setLoading(false);
 
-                    <button
-                        style={{ display: toolOptionHidden ? "none" : "inline-block" }}
-                        className="tool-option"
-                        onClick={() => showRenameOverlay(true)}
-                    >
-                        <span className="shadow"></span>
-                        <span className="edge"></span>
-                        <span className="front">
-                            <FontAwesomeIcon icon={faICursor} />
-                        </span>
-                    </button>
+        } catch(error: any) {
+            setLoading(false);
+            setError({status: true, message: error.message});
+        }
+    }
 
-                    <button
-                        type="button"
-                        style={{ display: toolOptionHidden ? "none" : "inline-block" }}
-                        className="tool-option"
-                    >
-                        <span className="shadow"></span>
-                        <span className="edge"></span>
-                        <span className="front">
-                            <FontAwesomeIcon icon={faTrash} />
-                        </span>
-                    </button>
-                </div>
+    useEffect(() => {
+        fetchDeckData()
+    }, []);
 
-                <form className="decks-list" action="">
-                <input type="radio" id="deck-1" name="deck" checked={checkedDeck === "deck-1"}onChange={() => setCheckedDeck("deck-1")} />
-                    <label onClick={() => showToolOptions(false)} htmlFor="deck-1">SENG 645 Exam 1 Review</label>
+    const submitCreateForm = async (e: any) => {
+        e.preventDefault();
+        handleCreateOverlay(false);
+        setLoading(true);
 
-                <input type="radio" id="deck-2" name="deck"checked={checkedDeck === "deck-2"} onChange={() => setCheckedDeck("deck-2")} />
-                    <label onClick={() => showToolOptions(false)} htmlFor="deck-2">SENG 645 Exam 2 Review</label>
+        try {
+            // create a deck
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/decks/create`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    name: formData.name.trim()
+                })
+            });
 
-                <input type="radio" id="deck-3" name="deck"checked={checkedDeck === "deck-3"}onChange={() => setCheckedDeck("deck-3")} />
-                    <label onClick={() => showToolOptions(false)} htmlFor="deck-3">SENG 645 Exam 3 Review</label>
-                </form>
+            // get message and deck data
+            const data = await response.json();
 
-            </div>
-            {
-                createOverlay && (
-                    <div className="overlay">
-                        <div className="cancel-action">
-                                <FontAwesomeIcon icon={faCircleXmark} onClick={() => showCreateOverlay(false)} />
-                        </div>
-                        <div className="signup-subtitle"> Create a New Deck</div>
-                            <input type="text"/>
-                            <button className="input-button">
-                                <span className="shadow-input"></span>
-                                <span className="edge-input"></span>
-                                <span className="front-input">CREATE</span>
-                            </button>
-                    </div>
+            if (!response.ok) {
+                throw new Error(data.message);
+            }
+
+            setDecks(prev => [...prev, data.deckDto]);
+            setLoading(false);
+
+        } catch(error: any) {
+            setLoading(false);
+            setError({status: true, message: error.message});
+        }
+    }
+
+    const submitRenameForm = async (e: any) => {
+        e.preventDefault();
+        handleRenameOverlay(false);
+        handleToolbar(false, 0);
+        setLoading(true);
+
+        try {
+            // rename a deck
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/decks/${deckId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    name: formData.newName.trim()
+                })
+            });
+
+            // get message and deck data
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message);
+            }
+
+            // update deck name
+            setDecks(prev => 
+                prev.map(deck => 
+                    deck.id === data.deckDto.id ? data.deckDto : deck
                 )
+            );
+            setLoading(false);
+
+        } catch(error: any) {
+            setLoading(false);
+            setError({status: true, message: error.message});
+        }
+    }
+
+    const deleteDeck = async () => {
+        handleToolbar(false, 0);
+        setLoading(true);
+
+        try {
+            // delete a deck
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/decks/${deckId}/delete`, {
+                method: "DELETE"
+            });
+
+            // get message and deck data
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message);
             }
-            {
-             renameOverlay && (
-                <div className="overlay">
-                        <div className="cancel-action">
-                                <FontAwesomeIcon icon={faCircleXmark} onClick={() => showRenameOverlay(false)} />
-                        </div>
-                        <div className="signup-subtitle"> Rename the Deck</div>
-                            <input type="text"/>
-                            <button className="input-button">
-                                <span className="shadow-input"></span>
-                                <span className="edge-input"></span>
-                                <span className="front-input">ENTER</span>
-                            </button>
+
+            // update deck list
+            setDecks(prev => prev.filter(deck => deck.id !== deckId));
+            setLoading(false);
+
+        } catch(error: any) {
+            setLoading(false);
+            setError({status: true, message: error.message});
+        }
+    }
+
+    return (
+        <div id={styles.dashboardContent} style={{pointerEvents: createOverlay || renameOverlay ? "none" : "auto"}}>
+            <Navbar userId={userId} />
+            <div>
+                <div>
+                    <div id={styles.title}>Flashier Cards</div>
+                    <div id={styles.toolbar}>
+                        <button
+                            type="button"
+                            className={styles.toolOption}
+                            onClick={() => handleCreateOverlay(true)} 
+                        >
+                            <span className={styles.shadow}></span>
+                            <span className={styles.edge}></span>
+                            <span className={styles.front}>
+                                <FontAwesomeIcon icon={faPlus} />
+                            </span>
+                        </button>
+                        <button
+                            type="button"
+                            style={{ display: toolVisible ? "inline-block" : "none" }}
+                            className={styles.toolOption}
+                            onClick={handleStudyView}
+                        >
+                            <span className={styles.shadow}></span>
+                            <span className={styles.edge}></span>
+                            <span className={styles.front}>
+                                <FontAwesomeIcon icon={faFolderOpen} />
+                            </span>
+                        </button>
+                        <button
+                            type="button"
+                            style={{ display: toolVisible ? "inline-block" : "none" }}
+                            className={styles.toolOption}
+                            onClick={handleEditView}
+                        >
+                            <span className={styles.shadow}></span>
+                            <span className={styles.edge}></span>
+                            <span className={styles.front}>
+                                <FontAwesomeIcon icon={faPencil} />
+                            </span>
+                        </button>
+                        <button
+                            type="button"
+                            style={{ display: toolVisible ? "inline-block" : "none" }}
+                            className={styles.toolOption}
+                            onClick={() => handleRenameOverlay(true)}
+                        >
+                            <span className={styles.shadow}></span>
+                            <span className={styles.edge}></span>
+                            <span className={styles.front}>
+                                <FontAwesomeIcon icon={faICursor} />
+                            </span>
+                        </button>
+                        <button
+                            type="button"
+                            style={{ display: toolVisible ? "inline-block" : "none" }}
+                            className={styles.toolOption}
+                            onClick={deleteDeck}
+                        >
+                            <span className={styles.shadow}></span>
+                            <span className={styles.edge}></span>
+                            <span className={styles.front}>
+                                <FontAwesomeIcon icon={faTrash} />
+                            </span>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => handleToolbar(false, 0)}
+                            style={{ display: toolVisible ? "inline-block" : "none" }}
+                            className={styles.toolOption}
+                        >
+                            <span className={styles.shadow}></span>
+                            <span className={styles.edge}></span>
+                            <span className={styles.front}>
+                                <FontAwesomeIcon icon={faCircleXmark} />
+                            </span>
+                        </button>
                     </div>
-             )   
-            }
+                    { (loading) ?
+                        <div className={styles.invalidRequest}>
+                            Loading request...
+                        </div>
+                    :
+                        (error.status) ?
+                            <div className={styles.invalidRequest}>{error.message}</div>
+                        :
+                            <div></div>
+                    }
+                    <div className={styles.deckList}>
+                        {
+                            decks.map(deck => 
+                                <div key={deck.id.toString()} className={styles.deck} onClick={() => handleToolbar(true, deck.id)}>{deck.name}</div>
+                            )
+                        }
+                    </div>
+                  
+                </div>
+                <div style={{display: createOverlay ? "flex" : "none"}}  className={styles.overlay}>
+                    <div className={styles.exitOverlay}>
+                        <FontAwesomeIcon 
+                            icon={faCircleXmark} 
+                            onClick={() => handleCreateOverlay(false)}
+                            style={{cursor: "pointer"}}
+                        />
+                    </div>
+                    <form className={styles.signupForm} onSubmit={submitCreateForm}>
+                        <div className={styles.formHeading}>Create a New Deck</div>
+                        <div className={styles.formField}>
+                            <div className={styles.subtitle}>Name</div>
+                            <input 
+                                type="text"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleFormData}
+                                required={true}
+                            />
+                        </div>
+                        <button
+                            type="submit"
+                            className={styles.homeBtn}
+                            style={{marginTop: "0.5rem"}}
+                        >
+                            <span className={styles.loginShadow}></span>
+                            <span className={styles.loginEdge}></span>
+                            <span className={styles.loginFront}>Create</span>
+                        </button>
+                    </form>
+                </div>
+                <div style={{display: renameOverlay ? "flex" : "none"}}  className={styles.overlay}>
+                    <div className={styles.exitOverlay}>
+                        <FontAwesomeIcon 
+                            icon={faCircleXmark} 
+                            onClick={() => handleRenameOverlay(false)}
+                            style={{cursor: "pointer"}}
+                        />
+                    </div>
+                    <form className={styles.signupForm} onSubmit={submitRenameForm}>
+                        <div className={styles.formHeading}>Rename the Deck</div>
+                        <div className={styles.formField}>
+                            <div className={styles.subtitle}>New name</div>
+                            <input 
+                                type="text"
+                                name="newName"
+                                value={formData.newName}
+                                onChange={handleFormData}
+                                required={true}
+                            />
+                        </div>
+                        <button
+                            type="submit"
+                            className={styles.homeBtn}
+                            style={{marginTop: "0.5rem"}}
+                        >
+                            <span className={styles.loginShadow}></span>
+                            <span className={styles.loginEdge}></span>
+                            <span className={styles.loginFront}>Rename</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
     );
 }

@@ -1,16 +1,16 @@
-#dashboardContent {
+.dashboardContent {
     display: flex;
-    position: relative;
+    min-height: 100%;
 }
 
-#dashboardContent > div:last-of-type {
+.dashboardContent > div:last-of-type {
     flex: 1;
     display: flex;
     flex-direction: column;
     padding: 2rem 1rem;
 }
 
-#title {
+.title {
     font-size: 45px;
     font-family: "Rampart One", sans-serif;
     font-weight: 400;
@@ -20,7 +20,75 @@
     margin-bottom: 2rem;
 }
 
-#toolbar {
+.deck {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card {
+    perspective: 1000px;
+    width: 800px;
+    height: 400px;
+    margin-bottom: 1.5rem;
+}
+
+.cardInner {
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 1s;
+}
+
+.card.flip .cardInner {
+    transform: rotateY(180deg);
+}
+
+.cardFront, .cardBack {
+    width: 800px;
+    height: 400px;
+    position: absolute;
+    backface-visibility: hidden;
+    background-color: white;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.cardFront {
+    z-index: 2;
+    transform: rotateY(0deg);
+}
+
+.cardBack {
+    transform: rotateY(180deg);
+}
+
+.deckNav {
+    display: flex;
+    gap: 10px;
+}
+
+.deckNav button, span {
+    display: flex;
+    align-items: center;
+    font-size: 22px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #004A94;
+}
+
+.deckNav button {
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.deckNav button:disabled {
+    color: #D9EDF8;
+    cursor: auto;
+}
+
+.toolbar {
     margin-bottom: 1.5rem;
     display: flex;
     gap: 15px;
@@ -82,150 +150,14 @@
     transform: translateY(2px);
 }
 
-.deckList {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 40px;
-}
-
-.deck {
-    background-color: #D9EDF8;
-    border: 2px solid #D9EDF8;
-    box-shadow: 10px 10px 5px rgba(18, 31, 50, 0.234);
-    width: 350px;
-    height: 200px;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    font-weight: 600;
-    font-family: "Imprima", sans-serif;
+.invalidRequest {
     color: #004A94;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.deck:hover {
-    background-color: #B3DEF4;
-    border: 2px solid #B3DEF4;
-    transform: translateY(5px);
-}
-
-.overlay {
-    width: 300px;
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    background-color: white;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 10px;
-    border: 2px solid #004A94;
-    pointer-events: auto;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-.exitOverlay {
-    display: flex;
-    justify-content: flex-end;
-    font-size: 20px;
-    color: #004A94;
-}
-
-.formHeading {
-    font-size: 22px;
-    font-family: "Imprima", sans-serif;
-    font-weight: 600;
-    font-style: normal;
-    color: #004A94;
-    margin-top: 0.5rem;
-    margin-bottom: 1rem;
-}
-
-.subtitle {
-    font-size: 20px;
-    font-family: "Imprima", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    color: #004A94;
-    margin-bottom: 0.2rem;
-}
-
-.signupForm {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.formField  {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 1.3rem;
-}
-
-.formField input {
-    border: 2px solid #004A94;
-    border-radius: 5px;
     font-size: 18px;
-    padding: 0.5rem;
-    min-width: 250px;
-}
-
-.homeBtn {
-    position: relative;
-    display: inline-block;
-    background: transparent;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    text-decoration: none;
-    outline-offset: 4px;
-}
-
-.loginShadow {
-    position: absolute;
-    inset: 0;
-    border-radius: 5px;
-    background: rgba(0, 0, 0, 0.2);
-    transform: translateY(6px);
-}
-
-.loginEdge {
-    position: absolute;
-    inset: 0;
-    border-radius: 5px;
-    background-color: #01162b;
-}
-
-.loginFront {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 160px;
-    min-height: 50px;
-    border-radius: 5px;
-    transform: translateY(-6px);
-    transition: transform 0.1s ease;
-    font-size: 20px;
     font-family: "Imprima", sans-serif;
-    font-weight: 400;
     font-style: normal;
-    color: white;
-    background-color: #004A94;
-}
-
-.homeBtn:hover .loginFront {
-    transform: translateY(-8px);
-}
-
-.homeBtn:active .loginFront {
-    transform: translateY(-2px);
-}
-
-.homeBtn:active .loginShadow {
-    transform: translateY(2px);
+    margin-bottom: 1rem;
+    font-weight: 600;
+    background-color: #D9EDF8;
+    border-radius: 5px;
+    padding: 1rem;
 }

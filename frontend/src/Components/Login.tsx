@@ -1,45 +1,32 @@
-import { useState } from "react";
-import type { ChangeEvent, FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import type User from "../Interfaces/User";
-
-type LoginResponse = {
-    message?: string;
-    user: User;
-};
+import styles from "../Styles/HomeForms.module.css";
+import { useState, type ChangeEvent } from "react";
 
 function Login() {
     const navigate = useNavigate();
+    const [error, setError] = useState({status: false, message: ""});
+    const [loading, setLoading] = useState(false);
 
     const [formData, setFormData] = useState({
         email: "",
         password: ""
     });
-    const [loading, setLoading] = useState(false);
 
-    function inputData(e: ChangeEvent<HTMLInputElement>) {
-        const { name, value } = e.target;
-
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value
-        }));
+    function handleFormData(e: ChangeEvent<HTMLInputElement>) {
+        const {name, value} = e.target;
+        setFormData((prev) => ({...prev, [name]: value}));
     }
 
-    async function submitData(e: FormEvent<HTMLFormElement>) {
+    const submitForm = async (e: any) => {
         e.preventDefault();
-
-        if (!formData.email.trim() || !formData.password.trim()) {
-            return;
-        }
+        setLoading(true);
 
         try {
-            setLoading(true);
-
-            const response = await fetch("http://localhost:5204/users/login", {
+            // find user account
+            const userResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/login`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
                     email: formData.email.trim(),
@@ -47,60 +34,76 @@ function Login() {
                 })
             });
 
-            const data: LoginResponse | { message?: string } = await response.json();
+            // get message and user data
+            const userData = await userResponse.json();
 
-            if (!response.ok) {
-                return;
+            if (!userResponse.ok) {
+                throw new Error(userData.message);
             }
 
-            const user = (data as LoginResponse).user;
-
-            sessionStorage.setItem("user", JSON.stringify(user));
-            sessionStorage.setItem("isLoggedIn", "true");
-
-            navigate("/dashboard");
-        } catch (error) {
-            console.error("Login error:", error);
-            alert("Login error has occurred, try again!");
-        } finally {
             setLoading(false);
+
+            // go to dashboard after user account is created
+            navigate(`/dashboard/${userData.user.id}`, {replace: true});
+
+        } catch(error: any) {
+            setLoading(false);
+            setError({status: true, message: error.message});
         }
     }
 
     return (
-        <div id="signup-content">
-            <div id="signup-title">Flashier Cards</div>
-
-            <form id="signup-form" onSubmit={submitData}>
+        <div id={styles.content}>
+            <div id={styles.title}>Flashier Cards</div>
+            { (loading) ?
+                <div className={styles.invalidRequest}>
+                    Loading request...
+                </div>
+            :
+                (error.status) ?
+                    <div className={styles.invalidRequest}>{error.message}</div>
+                :
+                    <div></div>
+            }
+            <form id={styles.signupForm} onSubmit={submitForm}>
                 <div>
-                    <div className="signup-subtitle">Email</div>
+                    <div className={styles.subtitle}>Email</div>
                     <input
                         type="email"
                         name="email"
                         value={formData.email}
-                        onChange={inputData}
+                        onChange={handleFormData}
+                        required={true}
                     />
                 </div>
-
                 <div>
-                    <div className="signup-subtitle">Password</div>
+                    <div className={styles.subtitle}>Password</div>
                     <input
                         type="password"
                         name="password"
                         value={formData.password}
-                        onChange={inputData}
+                        onChange={handleFormData}
+                        required={true}
                     />
                 </div>
-
-                <button id="blue-btn" type="submit" disabled={loading}>
-                    {loading ? "Logging in..." : "Log in"}
+                <button
+                    type="submit"
+                    className={styles.homeBtn}
+                    style={{marginTop: "0.5rem"}}
+                >
+                    <span className={styles.loginShadow}></span>
+                    <span className={styles.loginEdge}></span>
+                    <span className={styles.loginFront}>Log in</span>
                 </button>
+                <Link
+                    to="/forgotPassword"
+                    className={styles.homeBtn}
+                >
+                    <span className={styles.signupShadow}></span>
+                    <span className={styles.signupEdge}></span>
+                    <span className={styles.signupFront}>Forgot password?</span>
+                </Link>
             </form>
-
-
-            <Link id="blue-btn" to="/login/forgot-password">
-                Forgot password?
-            </Link>
         </div>
     );
 }

@@ -1,103 +1,101 @@
-import { useState } from "react";
-import type { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../Styles/HomeForms.module.css";
-
-type VerifyForgotPasswordResponse = {
-  message?: string;
-};
+import { useState, type ChangeEvent } from "react";
 
 function ForgotPassword() {
-  const [email, setEmail] = useState<string>("");
-  const [sqAnswer, setSqAnswer] = useState<string>("");
-  const [Loading, setLoading] = useState<boolean>(false);
+    const navigate = useNavigate();
+    const [error, setError] = useState({status: false, message: ""});
+    const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        email: "",
+        sqAnswer: ""
+    });
 
-  async function handleContinue(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-    if (!email || !sqAnswer) {
-      alert("Please fill in all fields.");
-      return;
+    function handleFormData(e: ChangeEvent<HTMLInputElement>) {
+        const {name, value} = e.target;
+        setFormData((prev) => ({...prev, [name]: value}));
     }
 
-    setLoading(true);
+    const submitForm = async (e: any) => {
+        e.preventDefault();
+        setLoading(true);
 
-    try {
-      const response = await fetch("http://localhost:5204/users/verify-forgot-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          sqAnswer,
-        }),
-      });
+        try {
+            // find user account
+            const userResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/forgotPassword`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: formData.email.trim(),
+                    sqAnswer: formData.sqAnswer
+                })
+            });
 
-      const data: VerifyForgotPasswordResponse = await response.json();
+            // get message and user data
+            const userData = await userResponse.json();
 
-      if (!response.ok) {
-        alert(data.message || "Could not verify your information.");
-        return;
-      }
+            if (!userResponse.ok) {
+                throw new Error(userData.message);
+            }
 
-      navigate("/login/forgot-password/create-new-password", {
-        state: { email, sqAnswer },
-      });
-    } catch (error) {
-      console.error("Verification error:", error);
-      alert("Something went wrong.");
-    } finally {
-      setLoading(false);
+            setLoading(false);
+            navigate(`/forgotPassword/${userData.user.id}/createNewPassword`, {replace: true});
+
+        } catch(error: any) {
+            setLoading(false);
+            setError({status: true, message: error.message});
+        }
     }
-  }
 
-  return (
-    <div id={styles.content}>
-      <div id={styles.title}>Flashier Cards</div>
-
-      <form id={styles.signupForm} onSubmit={handleContinue}>
-        <div>
-          <div className={styles.subtitle}>Email</div>
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setEmail(e.target.value)
+    return (
+        <div id={styles.content}>
+            <div id={styles.title}>Flashier Cards</div>
+            { (loading) ?
+                <div className={styles.invalidRequest}>
+                    Loading request...
+                </div>
+            :
+                (error.status) ?
+                    <div className={styles.invalidRequest}>{error.message}</div>
+                :
+                    <div></div>
             }
-          />
+            <form id={styles.signupForm} onSubmit={submitForm}>
+                <div>
+                    <div className={styles.subtitle}>Email</div>
+                    <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleFormData}
+                        required={true}
+                    />
+                </div>
+                <div>
+                    <div className={styles.subtitle}>Name of your best friend</div>
+                    <input
+                        type="text"
+                        name="sqAnswer"
+                        value={formData.sqAnswer}
+                        onChange={handleFormData}
+                        required={true}
+                    />
+                </div>
+                <button
+                    type="submit"
+                    className={styles.homeBtn}
+                    style={{marginTop: "0.5rem"}}
+                >
+                    <span className={styles.loginShadow}></span>
+                    <span className={styles.loginEdge}></span>
+                    <span className={styles.loginFront}>Continue</span>
+                </button>
+            </form>
         </div>
-
-        <div>
-          <div className={styles.subtitle}>Name of your best friend</div>
-          <input
-            type="text"
-            required
-            value={sqAnswer}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setSqAnswer(e.target.value)
-            }
-          />
-        </div>
-
-        <button
-          type="submit"
-          className={styles.homeBtn}
-          style={{ marginTop: "0.5rem" }}
-          disabled={Loading}
-        >
-          <span className={styles.loginShadow}></span>
-          <span className={styles.loginEdge}></span>
-          <span className={styles.loginFront}>
-            {Loading ? "Checking..." : "Continue"}
-          </span>
-        </button>
-      </form>
-    </div>
-  );
+    );
 }
 
 export default ForgotPassword;

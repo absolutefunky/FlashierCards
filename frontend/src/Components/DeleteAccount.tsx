@@ -1,128 +1,114 @@
-import { useState } from "react";
-import type { ChangeEvent, FormEvent } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router-dom";
-import type User from "../Interfaces/User";
+import Navbar from "./Navbar";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { faX } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
+import { useState } from 'react';
+import styles from "../Styles/Profile.module.css";
 
 function DeleteAccount() {
-    const [showOverlay, setShowOverlay] = useState(false);
-    const [password, setPassword] = useState("");
-    const [modalMessage, setModalMessage] = useState("");
+	const [showOverlay, setShowOverlay] = useState(false);
+	const [error, setError] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+	const [success, setSuccess] = useState(false);
 
-    const navigate = useNavigate();
-
-    function showProfileOverlay(request: boolean) {
+	function showProfileOverlay(request: boolean) {
         setShowOverlay(request);
-        if (!request) {
-            setPassword("");
-            setModalMessage("");
-        }
     }
 
-    function inputPassword(e: ChangeEvent<HTMLInputElement>) {
-        setPassword(e.target.value);
-    }
-
-    async function handleDeleteAccount(e: FormEvent<HTMLFormElement>) {
-        e.preventDefault();
-        setModalMessage("");
-
-        const storedUser = sessionStorage.getItem("user");
-        const user: User | null = storedUser ? JSON.parse(storedUser) : null;
-
-        if (!user) {
-            setModalMessage("No user found.");
-            return;
-        }
-
-        if (!password.trim()) {
-            setModalMessage("Please enter your password.");
-            return;
-        }
-
+	const deleteUserData = async () => {
+		showProfileOverlay(false);
+        setIsLoading(true);
         try {
-
-            const response = await fetch("http://localhost:5204/users/delete", {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/1/delete`, {
                 method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    email: user.email,
-                    password: password
-                })
             });
-
-            const data: { message?: string } = await response.json();
-
             if (!response.ok) {
-                setModalMessage(data.message || "Could not delete account.");
-                return;
+                throw new Error("Invalid request.");
             }
-
-            sessionStorage.removeItem("user");
-            sessionStorage.removeItem("isLoggedIn");
-
-            navigate("/");
-        } catch (error) {
-            console.error("Delete account error:", error);
-            setModalMessage("Could not connect to the server.");
-        } 
-    }
-
+			setSuccess(true);
+            setIsLoading(false);
+        } catch (error: any) {
+            setIsLoading(false);
+            setError(true);
+            console.log(error.message);
+        }
+    };
+	
     return (
-        <>
-            <div id="profile-content">
-                <div className="signup-subtitle">Delete Account</div>
-                <div className="profile-text">
-                    If you no longer wish to use Flashier Cards, you can permanently delete your account.
-                </div>
-                <button id="blue-btn" onClick={() => showProfileOverlay(true)}>
-                    Delete My Account
-                </button>
-            </div>
-
-            <div
-                style={{ display: showOverlay ? "flex" : "none" }}
-                className="overlay"
-            >
-                <div className="cancel-action">
-                    <FontAwesomeIcon
-                        icon={faCircleXmark}
-                        onClick={() => showProfileOverlay(false)}
-                    />
-                </div>
-
-                <div className="signup-subtitle" style={{ fontWeight: 600 }}>
-                    Delete My Account
-                </div>
-
-                <div className="profile-text">
-                    Are you sure you want to delete your account? This action cannot be undone.
-                </div>
-
-                <form onSubmit={handleDeleteAccount}>
+		<div id={styles.dashboardContent} style={{pointerEvents: showOverlay ? "none" : "auto"}}>
+            <Navbar />
+            <div>
+                <div id={styles.title}>Flashier Cards</div>
+                <div id={styles.profileContent}>
                     <div>
-                        <div className="signup-subtitle">
-                            Please enter your password to confirm.
-                        </div>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={inputPassword}
-                        />
+                        <Link className={styles.profileOption} to="/profile/account-information">Account Information</Link>
+                        <Link className={styles.profileOption} to="/profile/theme">Theme</Link>
+                        <Link className={styles.profileOption} to="/profile/change-password">Change Password</Link>
+                        <Link style={{backgroundColor: "#003971"}} className={styles.profileOption} to="/profile/delete-account">Delete Account</Link>
                     </div>
-
-                    <button id="blue-btn" type="submit">
-                        Delete
-                    </button>
-                </form>
-
-                {modalMessage && <p>{modalMessage}</p>}
+                    <div>
+						<div>
+							{ (isLoading) ?
+								<div className={styles.invalidRequest}>
+									Loading request...
+								</div>
+							:
+								(error) ?
+									<div className={styles.invalidRequest}>
+										Invalid request.
+									</div>
+								:
+									(success) ?
+										<div className={styles.invalidRequest}>
+											Your account has been deleted. Please log out.
+										</div>
+									:
+										<div></div>
+							}
+							<div className={styles.profileText}>If you no longer wish to use Flashier Cards, you can permanently delete your account.</div>
+							<button
+								className={styles.homeBtn}
+								onClick={() => showProfileOverlay(true)}
+								style={{marginTop: "0.5rem"}}
+							>
+								<span className={styles.loginShadow}></span>
+								<span className={styles.loginEdge}></span>
+								<span className={styles.loginFront}>Delete account</span>
+							</button>
+						</div>
+						<div style={{display: showOverlay ? "flex" : "none"}}  className={styles.overlay}>
+							<div className={styles.subtitle} style={{fontWeight: "600"}}>Delete My Account</div>
+							<div className={styles.profileText}>
+								Are you sure you want to delete your account? This action cannot be undone.
+							</div>
+							<div style={{marginTop: "0.5rem"}}>
+								<button
+									className={styles.homeBtn}
+									style={{marginRight: "1rem"}}
+									type="button"
+									onClick={deleteUserData}
+								>
+									<span className={styles.signupShadow}></span>
+									<span className={styles.signupEdge}></span>
+									<span className={styles.signupFront}><FontAwesomeIcon icon={faCheck} /></span>
+								</button>
+								<button
+									className={styles.homeBtn}
+									type="button"
+									onClick={() => showProfileOverlay(false)}
+								>
+									<span className={styles.loginShadow}></span>
+									<span className={styles.loginEdge}></span>
+									<span className={styles.xFront}><FontAwesomeIcon icon={faX} /></span>
+								</button>
+							</div>
+						</div>
+                    </div>
+                </div>
             </div>
-        </>
+        </div>
     );
 }
 
-export default DeleteAccount;
+export default DeleteAccount
