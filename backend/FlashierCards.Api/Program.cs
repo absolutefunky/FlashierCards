@@ -22,7 +22,7 @@ await supabase.InitializeAsync();
 builder.Services.AddSingleton(supabase);
 
 // configure CORS to establish connection with frontend
-var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string>();
+var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
 
 builder.Services.AddCors(options =>
 {
