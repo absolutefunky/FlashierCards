@@ -39,7 +39,7 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 app.UseCors("AllowSpecificOrigin");
-
+app.UseHttpsRedirection();
 // endpoints
 app.MapUserEndpoints();
 app.MapDeckEndpoints();
