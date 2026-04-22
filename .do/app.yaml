@@ -1,0 +1,52 @@
+name: flashiercards
+region: nyc
+features:
+- buildpack-stack=ubuntu-22
+
+ingress:
+  rules:
+    - component:
+        name: flashiercards-backend-flashier-c
+      match:
+        path:
+          prefix: /api
+    - component:
+        name: flashiercards-frontend
+      match:
+        path:
+          prefix: /
+
+services:
+  - name: flashiercards-backend-flashier-c
+    github:
+      branch: maheen
+      deploy_on_push: true
+      repo: absolutefunky/FlashierCards
+    source_dir: backend/FlashierCards.Api
+    environment_slug: dotnet
+    http_port: 8080
+    instance_count: 1
+    instance_size_slug: apps-s-1vcpu-1gb
+    envs:
+      - key: SUPABASE_URL
+        scope: RUN_TIME
+        type: SECRET
+      - key: SUPABASE_KEY
+        scope: RUN_TIME
+        type: SECRET
+
+static_sites:
+  - name: flashiercards-frontend
+    github:
+      branch: maheen
+      deploy_on_push: true
+      repo: absolutefunky/FlashierCards
+    source_dir: frontend
+    build_command: npm run build
+    output_dir: dist
+    index_document: index.html
+    error_document: index.html
+    envs:
+      - key: VITE_API_URL
+        scope: BUILD_TIME
+        value: /api

@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "heroku-postbuild": "npm run build",
+    "start": "npx serve -s dist -l $PORT"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.2.0",
