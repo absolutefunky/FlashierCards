@@ -13,6 +13,7 @@ public static class UserEndpoints
         // GET /users/{id} to get user data
         app.MapGet("/users/{id}", async(int id, Supabase.Client supabase) =>
         {
+            Console.WriteLine("Ok I know I at least ented this finc");
             // find user who has the given id
             var response = await supabase
                 .From<User>()

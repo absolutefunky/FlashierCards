@@ -64,6 +64,6 @@ app.UseCors();
 app.MapUserEndpoints();
 app.MapDeckEndpoints();
 app.MapProfileEndpoints();
-app.MapDeckContentEndpoints();
+app.MapCardEndpoints();
 
 app.Run();
