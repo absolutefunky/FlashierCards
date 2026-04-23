@@ -20,6 +20,16 @@
     margin-bottom: 2rem;
 }
 
+.panel {
+    display: flex;
+    gap: 30px;
+}
+
+.sidePanel {
+    background-color: red;
+    flex: 1;
+}
+
 .deck {
     display: flex;
     flex-direction: column;

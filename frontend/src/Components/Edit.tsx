@@ -2,11 +2,9 @@ import Navbar from "./Navbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { faT } from "@fortawesome/free-solid-svg-icons";
-import { faPen } from "@fortawesome/free-solid-svg-icons";
-import { faCircle } from "@fortawesome/free-solid-svg-icons";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
-import { faFill } from "@fortawesome/free-solid-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons/faChevronRight";
 import { faRightLeft } from "@fortawesome/free-solid-svg-icons";
@@ -19,12 +17,10 @@ function Edit() {
     const [loading, setLoading] = useState(false);
     const [deckName, setDeckName] = useState();
     const { userId, deckId } = useParams();
-
     const cardRef = useRef<HTMLDivElement>(null);
     const [cardSide, setCardSide] = useState("Front");
     const [cardNum, setCardNum] = useState(1);
-    const total = 5;
-
+    const total = 1;
 
     function flipCard() {
         if (cardRef.current) {
@@ -75,7 +71,7 @@ function Edit() {
         <div className={styles.dashboardContent}>
             <Navbar userId={userId} />
             <div>
-                <div className={styles.title}>{deckName}</div>
+                <div className={styles.title}>{deckName || "Flashier Cards"}</div>
                 { (loading) ?
                     <div className={styles.invalidRequest}>
                         Loading request...
@@ -104,16 +100,6 @@ function Edit() {
                         <span className={styles.shadow}></span>
                         <span className={styles.edge}></span>
                         <span className={styles.front}>
-                            <FontAwesomeIcon icon={faCircle} />
-                        </span>
-                    </button>
-                    <button
-                        type="button"
-                        className={styles.toolOption}
-                    >
-                        <span className={styles.shadow}></span>
-                        <span className={styles.edge}></span>
-                        <span className={styles.front}>
                             <FontAwesomeIcon icon={faT} />
                         </span>
                     </button>
@@ -124,27 +110,7 @@ function Edit() {
                         <span className={styles.shadow}></span>
                         <span className={styles.edge}></span>
                         <span className={styles.front}>
-                            <FontAwesomeIcon icon={faPen} />
-                        </span>
-                    </button>
-                    <button
-                        type="button"
-                        className={styles.toolOption}
-                    >
-                        <span className={styles.shadow}></span>
-                        <span className={styles.edge}></span>
-                        <span className={styles.front}>
                             <FontAwesomeIcon icon={faHeart} />
-                        </span>
-                    </button>
-                    <button
-                        type="button"
-                        className={styles.toolOption}
-                    >
-                        <span className={styles.shadow}></span>
-                        <span className={styles.edge}></span>
-                        <span className={styles.front}>
-                            <FontAwesomeIcon icon={faFill} />
                         </span>
                     </button>
                     <button
@@ -168,22 +134,43 @@ function Edit() {
                             <FontAwesomeIcon icon={faRightLeft} />
                         </span>
                     </button>
+                    <button
+                        type="button"
+                        className={styles.toolOption}
+                        onClick={() => flipCard()}
+                    >
+                        <span className={styles.shadow}></span>
+                        <span className={styles.edge}></span>
+                        <span className={styles.front}>
+                            <FontAwesomeIcon icon={faFloppyDisk} />
+                        </span>
+                    </button>
                 </div>
-                <div className={styles.deck}>
-                    <div className={styles.card} ref={cardRef}>
-                        <div className={styles.cardInner}>
-                            <div className={styles.cardFront}>Front of card</div>
-                            <div className={styles.cardBack}>Back of card</div>
+                <div className={styles.panel}>
+                    <div className={styles.deck}>
+                        <div className={styles.card} ref={cardRef}>
+                            <div className={styles.cardInner}>
+                                <div className={styles.cardFront}>Front of card</div>
+                                <div className={styles.cardBack}>Back of card</div>
+                            </div>
+                        </div>
+                        <div className={styles.deckNav}>
+                            <button disabled={cardNum === 1} onClick={showPrevCard}>
+                                <FontAwesomeIcon icon={faChevronLeft} />
+                            </button>
+                            <span>{cardSide} of Card {cardNum}/{total}</span>
+                            <button disabled={cardNum === total} onClick={showNextCard}>
+                                <FontAwesomeIcon icon={faChevronRight} />
+                            </button>
                         </div>
                     </div>
-                    <div className={styles.deckNav}>
-                        <button disabled={cardNum === 1} onClick={showPrevCard}>
-                            <FontAwesomeIcon icon={faChevronLeft} />
-                        </button>
-                        <span>{cardSide} of Card {cardNum}/{total}</span>
-                        <button disabled={cardNum === total} onClick={showNextCard}>
-                            <FontAwesomeIcon icon={faChevronRight} />
-                        </button>
+                    <div className={styles.sidePanel}>
+                        <button>Text</button>
+                        <div>
+                            <button>Size 1</button>
+                            <button>Size 2</button>
+                            <button>Size 3</button>
+                        </div>
                     </div>
                 </div>
             </div>
