@@ -1,5 +1,4 @@
 using FlashierCards.Api.Dtos.CreateDtos;
-using FlashierCards.Api.Dtos.ReturnDtos;
 using FlashierCards.Api.Dtos.UpdateDtos;
 using FlashierCards.Api.Models;
 using MongoDB.Driver;
@@ -24,7 +23,7 @@ public static class CardEndpoints
 
             if (cardDoc is null || cardDoc.Cards.Count == 0)
             {
-                return Results.NotFound(new { message = "DECK HAS 0 CARDS..." });
+                return Results.NotFound(new { message = "NO CARDS HAVE BEEN ADDED YET." });
             }
 
             return Results.Ok(cardDoc.Cards);
@@ -45,7 +44,7 @@ public static class CardEndpoints
 
             if (cardDoc is null)
             {
-                return Results.NotFound(new { message = "DECK CONTENT DOES NOT EXIST YET." });
+                return Results.NotFound(new { message = "CARD CONTENT DOES NOT EXIST." });
             }
 
             var card = cardDoc.Cards
@@ -53,7 +52,7 @@ public static class CardEndpoints
 
             if (card is null)
             {
-                return Results.NotFound(new { message = "THIS CARD DOES NOT EXIST" });
+                return Results.NotFound(new { message = "CARD DOES NOT EXIST." });
             }
 
             return Results.Ok(card);
@@ -72,7 +71,7 @@ public static class CardEndpoints
                 .Find(c => c.UserId == userId && c.DeckId == deckId)
                 .FirstOrDefaultAsync();
 
-            var nextCardNumber = cardDoc?.Cards.Count + 1 ?? 1;    
+            int nextCardNumber = cardDoc?.Cards.Count + 1 ?? 1;
 
             var newCard = new CardList
             {
@@ -95,7 +94,7 @@ public static class CardEndpoints
 
                 return Results.Ok(new
                 {
-                    message = "Deck content document and card were successfully created.",
+                    message = "Card were successfully created :).",
                     card = newCard
                 });
             }
@@ -109,7 +108,7 @@ public static class CardEndpoints
 
             return Results.Ok(new
             {
-                message = "Card was successfully created :)",
+                message = "Card was successfully created :).",
                 card = newCard
             });
         });
@@ -130,20 +129,20 @@ public static class CardEndpoints
 
             if (cardDoc is null)
             {
-                return Results.NotFound(new { message = "CARD CONTENT YET TO BE CREATED" });
+                return Results.NotFound(new { message = "CARD CONTENT DOES NOT EXIST." });
             }
 
-            var cardIndex = cardDoc.Cards
+            int cardIndex = cardDoc.Cards
                 .FindIndex(c => c.CardNumber == cardNumber);
 
             if (cardIndex == -1)
             {
-                return Results.NotFound(new { message = "CARD DOES NOT EXIST" });
+                return Results.NotFound(new { message = "CARD DOES NOT EXIST." });
             }
 
             cardDoc.Cards[cardIndex] = new CardList
             {
-                CardNumber = request.CardNumber,
+                CardNumber = cardNumber,
                 CardFront = request.CardFront,
                 CardBack = request.CardBack
             };
@@ -175,7 +174,7 @@ public static class CardEndpoints
 
             if (cardDoc is null)
             {
-                return Results.NotFound(new { message = "CARD CONTENT YET TO BE CREATED." });
+                return Results.NotFound(new { message = "CARD CONTENT DOES NOT EXIST." });
             }
 
             var byeCard = cardDoc.Cards
@@ -183,12 +182,11 @@ public static class CardEndpoints
 
             if (byeCard is null)
             {
-                return Results.NotFound(new { message = "CARD DOES NOT EXIST" });
+                return Results.NotFound(new { message = "CARD DOES NOT EXIST." });
             }
 
             cardDoc.Cards.Remove(byeCard);
 
-        // hopefully this renumber attempt works, if not it'll have to wait until RC tehe
             for (int i = 0; i < cardDoc.Cards.Count; i++)
             {
                 cardDoc.Cards[i].CardNumber = i + 1;

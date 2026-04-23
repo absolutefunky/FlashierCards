@@ -34,11 +34,9 @@ public class CardList
     public CardSide CardBack { get; set; } = new();
 }
 
+[BsonIgnoreExtraElements]
 public class CardSide
 {
-    [BsonElement("background_color")]
-    public int BackgroundColor { get; set; } = 16777215;
-
     [BsonElement("text")]
     public List<CardText> Text { get; set; } = new();
 
@@ -46,35 +44,33 @@ public class CardSide
     public List<CardSticker> Stickers { get; set; } = new();
 }
 
+[BsonIgnoreExtraElements]
 public class CardText
 {
     [BsonElement("input")]
     public string Input { get; set; } = string.Empty;
 
-    [BsonElement("color")]
-    public int Color { get; set; }
+    [BsonElement("width")]
 
-    [BsonElement("bold")]
-    public bool Bold { get; set; }
+    public double Width {get; set; }
 
-    [BsonElement("italic")]
-    public bool Italic { get; set; }
+    [BsonElement("x")]
+    public double X { get; set; }
 
-    [BsonElement("highlight")]
-    public int Highlight { get; set; }
+    [BsonElement("y")]
+    public double Y { get; set; }
 
-    [BsonElement("position")]
-    public string Position { get; set; } = string.Empty;
-
-    [BsonElement("text_type")]
-    public string TextType { get; set; } = string.Empty;
 }
 
+[BsonIgnoreExtraElements]
 public class CardSticker
 {
-    [BsonElement("input")]
-    public string Input { get; set; } = string.Empty;
+    [BsonElement("name")]
+    public string Name { get; set; } = string.Empty;
 
-    [BsonElement("position")]
-    public string Position { get; set; } = string.Empty;
+    [BsonElement("x")]
+    public double X { get; set; }
+
+    [BsonElement("y")]
+    public double Y { get; set; }
 }
