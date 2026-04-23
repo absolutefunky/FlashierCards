@@ -171,14 +171,14 @@ public static class UserEndpoints
 
             if (user is null)
             {
-                return Results.BadRequest(new { message = "Invalid request. User does not exist." });
+                return Results.BadRequest(new { message = "Invalid current password." });
             }
 
             bool sameNewPasswords = BCrypt.Net.BCrypt.Verify(passwordDto.CurrentPassword, user.PasswordHash);
 
             if (!sameNewPasswords)
             {
-                return Results.BadRequest(new { message = "Invalid password. Please enter the correct password." });
+                return Results.BadRequest(new { message = "Please choose a different password." });
             }
 
             // change password
