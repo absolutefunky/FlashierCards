@@ -1,29 +1,64 @@
 import Navbar from "./Navbar";
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styles from "../Styles/Profile.module.css";
 import { useEffect, useState } from 'react';
 import type UserModel from "../Interfaces/User";
 
 function AccountInformation() {
-    const [user, setUser] = useState<UserModel>();
-    const [error, setError] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
     const { userId } = useParams();
+    const [error, setError] = useState({status: false, message: ""});
+    const [loading, setLoading] = useState(false);
+    const [user, setUser] = useState<UserModel>();
+    const [totalDecks, setTotalDecks] = useState();
+    const navigate = useNavigate();
+
+    function handleAccountInformation() {
+        navigate(`/profile/${userId}/accountInformation`);
+    }
+
+    function handleTheme() {
+        navigate(`/profile/${userId}/theme`);
+    }
+
+    function handleChangePassword() {
+        navigate(`/profile/${userId}/changePassword`);
+    }
+
+    function handleDeleteAccount() {
+        navigate(`/profile/${userId}/deleteAccount`);
+    }
 
     const fetchUserData = async () => {
-        setIsLoading(true);
+        setLoading(true);
+
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/1`);
-            if (!response.ok) {
-                throw new Error("Invalid request.");
-            }
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}`);
+
+            // get message and user data
             const data = await response.json();
-            setIsLoading(false);
+
+            if (!response.ok) {
+                throw new Error(data.message);
+            }
+
             setUser(data);
+
+            // get list of decks to count
+            const deckResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/decks`);
+
+            // get message and deck data
+            const deckData = await deckResponse.json();
+
+            if (!deckResponse.ok) {
+                throw new Error(deckData.message);
+            }
+
+            setTotalDecks(deckData.length);
+            setLoading(false);
+            
         } catch (error: any) {
-            setIsLoading(false);
-            setError(true);
-            console.log(error.message);
+            setLoading(false);
+            setError({status: true, message: error.message});
         }
     };
 
@@ -38,22 +73,43 @@ function AccountInformation() {
                 <div id={styles.title}>Flashier Cards</div>
                 <div id={styles.profileContent}>
                     <div>
-                        <Link style={{backgroundColor: "#003971"}} className={styles.profileOption} to="/profile/account-information">Account Information</Link>
-                        <Link className={styles.profileOption} to="/profile/theme">Theme</Link>
-                        <Link className={styles.profileOption} to="/profile/change-password">Change Password</Link>
-                        <Link className={styles.profileOption} to="/profile/delete-account">Delete Account</Link>
+                        <button
+                            style={{backgroundColor: "#003971"}}
+                            className={styles.profileOption}
+                            onClick={handleAccountInformation}
+                        >
+                            Account Information
+                        </button>
+                        <button
+                            className={styles.profileOption}
+                            onClick={handleTheme}
+                        >
+                            Theme
+                        </button>
+                        <button
+                            className={styles.profileOption}
+                            onClick={handleChangePassword}
+                        >
+                            Change Password
+                        </button>
+                        <button
+                            className={styles.profileOption}
+                            onClick={handleDeleteAccount}
+                        >
+                            Delete Account
+                        </button>
                     </div>
-                    { (isLoading) ? 
+                    { (loading) ? 
                         <div>
                             <div className={styles.invalidRequest}>
                                 Loading request...
                             </div>
                         </div>
                     :
-                        (error) ?
+                        (error.status) ?
                             <div>
                                 <div className={styles.invalidRequest}>
-                                    Invalid request.
+                                    {error.message}
                                 </div>
                             </div>
                         :
@@ -74,7 +130,7 @@ function AccountInformation() {
                                 Total Number of Decks
                             </div>
                             <div className={styles.profileText}>
-                                enter number here
+                                {totalDecks}
                             </div>
                         </div>
                     }
