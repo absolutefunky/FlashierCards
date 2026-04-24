@@ -90,8 +90,6 @@ export default function Dashboard() {
         <FlatList
           data={decks}
           keyExtractor={(item) => item.id}
-          numColumns={2}
-          columnWrapperStyle={styles.deckRow}
           contentContainerStyle={styles.deckList}
           renderItem={({ item }) => {
             const selected = checkedDeck === item.id;
@@ -202,6 +200,7 @@ const styles = StyleSheet.create({
   },
 
   toolbar: {
+    justifyContent: "center",
     marginBottom: 24,
     flexDirection: "row",
     flexWrap: "wrap",
@@ -254,18 +253,12 @@ const styles = StyleSheet.create({
     gap: 20,
   },
 
-  deckRow: {
-    gap: 20,
-    marginBottom: 20,
-  },
-
   deck: {
     backgroundColor: "#D9EDF8",
     borderWidth: 2,
     borderColor: "#D9EDF8",
-    width: 350,
-    maxWidth: "47%",
-    minHeight: 200,
+    width: "100%",
+    minHeight: 300,
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",

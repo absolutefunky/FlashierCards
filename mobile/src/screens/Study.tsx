@@ -1,16 +1,23 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { faChevronLeft, faChevronRight, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 
 type Flashcard = {
   front: string;
   back: string;
 };
+type RootStackParamList = {
+  Dashboard: undefined;
+  Study: undefined;
+};
 
 export default function Study() {
   const [cardNum, setCardNum] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const cards: Flashcard[] = [
     { front: "Front of card 1", back: "Back of card 1" },
@@ -44,7 +51,10 @@ export default function Study() {
     <View style={styles.dashboardContent}>
       <View style={styles.mainSection}>
         <Text style={styles.title}>Flashier Cards</Text>
-
+          <Pressable
+            onPress={() =>navigation.navigate("Dashboard")}>
+              <FontAwesomeIcon icon={faCircleXmark} size={20} color= "#004A94" />
+          </Pressable>
         <View style={styles.deck}>
           <Pressable style={styles.card} onPress={flipCard}>
             <View style={styles.cardInner}>
@@ -80,6 +90,7 @@ export default function Study() {
             >
               <FontAwesomeIcon icon={faChevronRight} size={20} color="white" />
             </Pressable>
+
           </View>
         </View>
       </View>
@@ -117,19 +128,17 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    width: 320,
-    height: 420,
-    backgroundColor: "#D9EDF8",
+    width: 350,
+    height: 300,
+    backgroundColor: "white",
     borderRadius: 12,
-    borderWidth: 2,
-    borderColor: "#B3DEF4",
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
-    shadowColor: "rgba(18, 31, 50, 0.234)",
+    shadowColor: "rgba(28, 31, 40, 0.234)",
     shadowOffset: { width: 10, height: 10 },
     shadowOpacity: 1,
-    shadowRadius: 5,
+    shadowRadius: 20,
     elevation: 5,
     marginBottom: 30,
   },

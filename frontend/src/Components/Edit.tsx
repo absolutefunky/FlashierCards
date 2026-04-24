@@ -12,8 +12,7 @@ import { faChevronRight } from "@fortawesome/free-solid-svg-icons/faChevronRight
 import { faRightLeft } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import {
-  Stage, Layer, Star, Circle as KonvaCircle, Arrow, Path, Transformer, Rect, RegularPolygon } from "react-konva";
+import { Stage, Layer, Star, Circle as KonvaCircle, Arrow, Path, Transformer, Rect } from "react-konva";
 import type Konva from "konva";
 import styles from "../Styles/Deck.module.css";
 
