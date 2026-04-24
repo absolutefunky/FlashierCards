@@ -4,6 +4,8 @@ import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { View,Text,StyleSheet,Pressable,Modal,TextInput,FlatList } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCircleXmark, faPlus, faFolderOpen, faPencil, faICursor, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { useFonts, Imprima_400Regular } from "@expo-google-fonts/imprima";
+import { RampartOne_400Regular } from "@expo-google-fonts/rampart-one";
 
 type Deck = {
   id: string;
@@ -20,6 +22,8 @@ export default function Dashboard() {
   const [renameOverlay, setRenameOverlay] = useState(false);
   const [checkedDeck, setCheckedDeck] = useState<string | null>(null);
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  
 
   const [decks, setDecks] = useState<Deck[]>([
     { id: "deck-1", title: "SENG 645 Exam 1 Review" },
@@ -50,6 +54,16 @@ export default function Dashboard() {
       </Pressable>
     );
   }
+
+  const [fontsLoaded] = useFonts({
+          Imprima_400Regular,
+          RampartOne_400Regular,
+    });
+
+    if (!fontsLoaded) {
+        return null; 
+    }
+      
 
   return (
     <View style={styles.dashboardContent}>
@@ -188,15 +202,17 @@ const styles = StyleSheet.create({
     paddingTop: 32,
     paddingHorizontal: 16,
     paddingBottom: 16,
+
   },
 
   title: {
     fontSize: 45,
-    fontFamily: "System",
+    fontFamily: "RampartOne_400Regular",
     fontWeight: "400",
     color: "#004A94",
     textAlign: "center",
     marginBottom: 32,
+
   },
 
   toolbar: {
