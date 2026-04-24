@@ -2,111 +2,136 @@ import Navbar from "./Navbar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { faX } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
-import { useState } from 'react';
+import { useNavigate, useParams } from "react-router-dom";
+import { useState, type ChangeEvent } from 'react';
 import styles from "../Styles/Profile.module.css";
 
 function ChangePassword() {
-    const [showOverlay, setShowOverlay] = useState(false);
-    const [inputs, setInputs] = useState({currentPassword: "", newPassword: "", confirmNewPassword: ""});
-    const [isComplete, setComplete] = useState(true);
-    const [passwordMatch, setPasswordMatch] = useState(true);
-    const [error, setError] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    const { userId } = useParams();
+    const [error, setError] = useState({status: false, message: ""});
+    const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
+    const [showOverlay, setShowOverlay] = useState(false);
+    const navigate = useNavigate();
+
+    const [formData, setFormData] = useState({
+        currentPassword: "",
+        newPassword: "",
+        confirmNewPassword: ""
+    });
 
     function showProfileOverlay(request: boolean) {
-        if (request === true && (inputs.currentPassword.length > 0 && inputs.newPassword.length > 0 && inputs.confirmNewPassword.length > 0)) {
-            if (inputs.newPassword === inputs.confirmNewPassword) {
-                setComplete(true);
-                setPasswordMatch(true);
-                setShowOverlay(request);
-            } else {
-                setComplete(true);
-                setPasswordMatch(false);
-            }
-        } else if (request === false) {
+        if (request === true && (formData.currentPassword.length > 0 && formData.newPassword.length > 0 && formData.confirmNewPassword.length > 0)) {
+            setError({status: false, message: ""});
             setShowOverlay(request);
-            setInputs({currentPassword: "", newPassword: "", confirmNewPassword: ""});
+        } else if (request == false) {
+            setFormData({currentPassword: "", newPassword: "", confirmNewPassword: ""});
+            setShowOverlay(request);
         } else {
-            setComplete(false);
+            setError({status: true, message: "Please properly complete the form."});
         }
     }
 
-    const handleChange = (e: any) => {
-        const name = e.target.name;
-        const value = e.target.value;
-        setInputs(values => ({...values, [name]: value}));
+    function handleFormData(e: ChangeEvent<HTMLInputElement>) {
+        const {name, value} = e.target;
+        setFormData((prev) => ({...prev, [name]: value}));
     }
 
-    function handleSubmit(e: any) {
+    const submitForm = async (e: any) => {
         e.preventDefault();
-        showProfileOverlay(false);
-        updateUserData();
-    }
+        setLoading(true);
 
-    const updateUserData = async () => {
-        setIsLoading(true);
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/1/changePassword`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/changePassword`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({currentPassword: `${inputs.currentPassword}`, newPassword: `${inputs.newPassword}`})
+                body: JSON.stringify({
+                    currentPassword: formData.currentPassword,
+                    newPassword: formData.newPassword,
+                    confirmNewPassword: formData.confirmNewPassword
+                })
             });
+
+            const data = await response.json();
+
             if (!response.ok) {
-                throw new Error("Invalid request.");
+                throw new Error(data.message);
             }
+
+            setLoading(false);
             setSuccess(true);
-            setIsLoading(false);
-        } catch (error: any) {
-            setIsLoading(false);
-            setError(true);
-            console.log(error.message);
+            showProfileOverlay(false);
+
+        } catch(error: any) {
+            setLoading(false);
+            showProfileOverlay(false);
+            setError({status: true, message: error.message});
         }
-    };
+    }
+
+    function handleAccountInformation() {
+        navigate(`/profile/${userId}/accountInformation`);
+    }
+
+    function handleTheme() {
+        navigate(`/profile/${userId}/theme`);
+    }
+
+    function handleChangePassword() {
+        navigate(`/profile/${userId}/changePassword`);
+    }
+
+    function handleDeleteAccount() {
+        navigate(`/profile/${userId}/deleteAccount`);
+    }
 
     return (
         <div id={styles.dashboardContent} style={{pointerEvents: showOverlay ? "none" : "auto"}}>
-            <Navbar />
+            <Navbar userId={userId} />
             <div>
                 <div id={styles.title}>Flashier Cards</div>
                 <div id={styles.profileContent}>
                     <div>
-                        <Link className={styles.profileOption} to="/profile/account-information">Account Information</Link>
-                        <Link className={styles.profileOption} to="/profile/theme">Theme</Link>
-                        <Link style={{backgroundColor: "#003971"}} className={styles.profileOption} to="/profile/change-password">Change Password</Link>
-                        <Link className={styles.profileOption} to="/profile/delete-account">Delete Account</Link>
+                        <button
+                            className={styles.profileOption}
+                            onClick={handleAccountInformation}
+                        >
+                            Account Information
+                        </button>
+                        <button
+                            className={styles.profileOption}
+                            onClick={handleTheme}
+                        >
+                            Theme
+                        </button>
+                        <button
+                            style={{backgroundColor: "#003971"}}
+                            className={styles.profileOption}
+                            onClick={handleChangePassword}
+                        >
+                            Change Password
+                        </button>
+                        <button
+                            className={styles.profileOption}
+                            onClick={handleDeleteAccount}
+                        >
+                            Delete Account
+                        </button>
                     </div>
                     <div>
-                        { (!isComplete) ? 
-                            <div className={styles.invalidRequest}>
-                                Please complete the form.
-                            </div>
-                        :
-                            <div></div>
-                        }
-                        { (!passwordMatch) ? 
-                            <div className={styles.invalidRequest}>
-                                New password and Confirm new Password inputs do not match.
-                            </div>
-                        :
-                            <div></div>
-                        }
-                        { (isLoading) ?
+                        { (loading) ?
                             <div className={styles.invalidRequest}>
                                 Loading request...
                             </div>
                         :
-                            (error) ?
-                                <div className={styles.invalidRequest}>
-                                    Invalid request.
-                                </div>
+                            (error.status) ?
+                                <div className={styles.invalidRequest}>{error.message}</div>
                             :
                                 (success) ?
                                     <div className={styles.invalidRequest}>
-                                        Password has been changed.
+                                        Your password has been changed.
                                     </div>
                                 :
                                     <div></div>
@@ -114,14 +139,14 @@ function ChangePassword() {
                         <div className={styles.profileText}>
                             Enter the information below to confirm password change.
                         </div>
-                        <form id={styles.signupForm} onSubmit={handleSubmit}>
+                        <form id={styles.signupForm} onSubmit={submitForm}>
                             <div className={styles.formField}>
                                 <div className={styles.subtitle}>Current password</div>
                                 <input 
                                     type="password"
                                     name="currentPassword"
-                                    value={inputs.currentPassword}
-                                    onChange={handleChange}
+                                    value={formData.currentPassword}
+                                    onChange={handleFormData}
                                     required={true}
                                 />
                             </div>
@@ -130,8 +155,8 @@ function ChangePassword() {
                                 <input 
                                     type="password"
                                     name="newPassword"
-                                    value={inputs.newPassword}
-                                    onChange={handleChange}
+                                    value={formData.newPassword}
+                                    onChange={handleFormData}
                                     required={true}
                                 />
                             </div>
@@ -140,16 +165,16 @@ function ChangePassword() {
                                 <input 
                                     type="password"
                                     name="confirmNewPassword"
-                                    value={inputs.confirmNewPassword}
-                                    onChange={handleChange}
+                                    value={formData.confirmNewPassword}
+                                    onChange={handleFormData}
                                     required={true}
                                 />
                             </div>
                             <button
                                 type="button"
                                 className={styles.homeBtn}
-                                onClick={() => showProfileOverlay(true)}
                                 style={{marginTop: "0.5rem"}}
+                                onClick={() => showProfileOverlay(true)}
                             >
                                 <span className={styles.loginShadow}></span>
                                 <span className={styles.loginEdge}></span>
@@ -189,4 +214,4 @@ function ChangePassword() {
     );
 }
 
-export default ChangePassword
+export default ChangePassword;

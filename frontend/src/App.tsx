@@ -27,13 +27,13 @@ function App() {
                 <Route path="/dashboard/:userId" element={<Dashboard />} />
                 <Route path="/forgotPassword/:userId/createNewPassword" element={<CreateNewPassword />} />
                 <Route path="/user/:userId/study/:deckId" element={<Study />} />
-                <Route path="user/:userId/edit/:deckId" element={<Edit />} />
+                <Route path="/user/:userId/edit/:deckId" element={<Edit />} />
 
                 {/* profile routes */}
-                <Route path="/profile/:userId/account-information" element={<AccountInformation />} />
+                <Route path="/profile/:userId/accountInformation" element={<AccountInformation />} />
                 <Route path="/profile/:userId/theme" element={<Theme />} />
-                <Route path="/profile/:userId/change-password" element={<ChangePassword />} />
-                <Route path="/profile/:userId/delete-account" element={<DeleteAccount />} />
+                <Route path="/profile/:userId/changePassword" element={<ChangePassword />} />
+                <Route path="/profile/:userId/deleteAccount" element={<DeleteAccount />} />
             </Routes>
         </BrowserRouter>
     );

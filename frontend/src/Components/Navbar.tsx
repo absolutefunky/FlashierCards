@@ -20,7 +20,7 @@ function Navbar({userId}: any) {
     }
 
     function handleProfile() {
-        navigate(`/profile/${userId}/account-information`);
+        navigate(`/profile/${userId}/accountInformation`);
     }
 
     function handleLogout() {
