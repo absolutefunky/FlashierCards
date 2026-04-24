@@ -57,7 +57,7 @@ function Edit() {
     console.log(frontCard);
 
     function createMediumText() {
-        let textTmp = {input: "Enter text in the text area", width: 300, x: 30, y: 30, fontSize: 20};
+        let textTmp = {input: "Enter text in the text area", width: 300, x: 30, y: 30, fontSize: 28};
         if (cardSide == "Front") {
             setFrontCard(prev =>
                 prev.map((card, index) =>
@@ -74,7 +74,7 @@ function Edit() {
     }
 
     function createLargeText() {
-        let textTmp = {input: "Enter text in the text area", width: 300, x: 30, y: 30, fontSize: 22};
+        let textTmp = {input: "Enter text in the text area", width: 300, x: 30, y: 30, fontSize: 38};
         if (cardSide == "Front") {
             setFrontCard(prev =>
                 prev.map((card, index) =>
@@ -130,6 +130,11 @@ function Edit() {
             setTotal(total - 1);
             setFrontCard(prev => prev.filter((_, index) => index != (cardNum - 1)));
             setBackCard(prev => prev.filter((_, index) => index != (cardNum - 1)));
+            if (cardNum > 1) {
+                setCardNum(cardNum - 1);
+            } else {
+                setCardNum(1);
+            }
         }
     }
 
@@ -355,6 +360,19 @@ function Edit() {
                                                     fontSize={text.fontSize}
                                                     draggable
                                                     onDblClick={() => showTextArea(true, textIndex, text.input)}
+                                                    onDragEnd={(e) => {
+                                                        const { x, y } = e.target.position();
+                                                        setBackCard(prev =>
+                                                            prev.map((card, cardIndex) =>
+                                                                cardIndex === (cardNum - 1) ? {
+                                                                    ...card,
+                                                                    text: card.text.map((tmp, i) =>
+                                                                        i === textIndex ? {...tmp, x: x, y: y} : tmp
+                                                                    )
+                                                                } : card
+                                                            )
+                                                        );
+                                                    }}
                                                 />
                                             )}
                                         </Layer>
