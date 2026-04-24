@@ -1,26 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "/home/mgul1/projects/FlashierCards/backend/backend.csproj": {}
+    "/Users/amalgamation/Documents/GitHub/FlashierCards/backend/backend.csproj": {}
   },
   "projects": {
-    "/home/mgul1/projects/FlashierCards/backend/backend.csproj": {
+    "/Users/amalgamation/Documents/GitHub/FlashierCards/backend/backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/mgul1/projects/FlashierCards/backend/backend.csproj",
+        "projectUniqueName": "/Users/amalgamation/Documents/GitHub/FlashierCards/backend/backend.csproj",
         "projectName": "backend",
-        "projectPath": "/home/mgul1/projects/FlashierCards/backend/backend.csproj",
-        "packagesPath": "/home/mgul1/.nuget/packages/",
-        "outputPath": "/home/mgul1/projects/FlashierCards/backend/obj/",
+        "projectPath": "/Users/amalgamation/Documents/GitHub/FlashierCards/backend/backend.csproj",
+        "packagesPath": "/Users/amalgamation/.nuget/packages/",
+        "outputPath": "/Users/amalgamation/Documents/GitHub/FlashierCards/backend/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/mgul1/.nuget/NuGet/NuGet.Config"
+          "/Users/amalgamation/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
         ],
         "sources": {
-          "/usr/lib/dotnet/library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -39,7 +38,7 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.100"
+        "SdkAnalysisLevel": "10.0.200"
       },
       "frameworks": {
         "net10.0": {
@@ -56,6 +55,10 @@
             "NSwag.AspNetCore": {
               "target": "Package",
               "version": "[14.6.3, )"
+            },
+            "Supabase": {
+              "target": "Package",
+              "version": "[1.1.1, )"
             }
           },
           "imports": [
@@ -77,7 +80,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.105/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.201/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

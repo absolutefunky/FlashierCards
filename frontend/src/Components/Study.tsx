@@ -1,5 +1,5 @@
 import Navbar from "./Navbar";
-import Deck from "./Deck";
+import DeckViewer from "./Deck";
 
 function Study() {
     return (
@@ -7,10 +7,10 @@ function Study() {
             <Navbar />
             <div>
                 <div id="signup-title">Flashier Cards</div>
-                <Deck />
+                <DeckViewer />
             </div>
         </div>
     );
 }
 
-export default Study
+export default Study;
