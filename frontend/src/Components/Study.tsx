@@ -63,7 +63,7 @@ function Study() {
         <div className={styles.dashboardContent}>
             <Navbar userId={userId} />
             <div>
-                <div className={styles.title}>{deckName}</div>
+                <div className={styles.title}>{deckName || "Flashier Cards"}</div>
                 { (loading) ?
                     <div className={styles.invalidRequest}>
                         Loading request...

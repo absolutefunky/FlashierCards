@@ -2,71 +2,110 @@ import Navbar from "./Navbar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { faX } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState } from 'react';
 import styles from "../Styles/Profile.module.css";
 
 function DeleteAccount() {
+	const { userId } = useParams();
+    const [error, setError] = useState({status: false, message: ""});
+    const [loading, setLoading] = useState(false);
 	const [showOverlay, setShowOverlay] = useState(false);
-	const [error, setError] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-	const [success, setSuccess] = useState(false);
-
+    const navigate = useNavigate();
+	
 	function showProfileOverlay(request: boolean) {
         setShowOverlay(request);
     }
 
 	const deleteUserData = async () => {
-		showProfileOverlay(false);
-        setIsLoading(true);
+        setLoading(true);
+
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/1/delete`, {
-                method: "DELETE",
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/delete`, {
+                method: "DELETE"
             });
+
+            const data = await response.json();
+
             if (!response.ok) {
-                throw new Error("Invalid request.");
+                throw new Error(data.message);
             }
-			setSuccess(true);
-            setIsLoading(false);
-        } catch (error: any) {
-            setIsLoading(false);
-            setError(true);
-            console.log(error.message);
+
+            setLoading(false);
+            showProfileOverlay(false);
+			navigate(`/`, {replace: true});
+
+        } catch(error: any) {
+            setLoading(false);
+            showProfileOverlay(false);
+            setError({status: true, message: error.message});
         }
-    };
+    }
+
+	function handleAccountInformation() {
+        navigate(`/profile/${userId}/accountInformation`);
+    }
+
+    function handleTheme() {
+        navigate(`/profile/${userId}/theme`);
+    }
+
+    function handleChangePassword() {
+        navigate(`/profile/${userId}/changePassword`);
+    }
+
+    function handleDeleteAccount() {
+        navigate(`/profile/${userId}/deleteAccount`);
+    }
 	
     return (
 		<div id={styles.dashboardContent} style={{pointerEvents: showOverlay ? "none" : "auto"}}>
-            <Navbar />
+            <Navbar userId={userId} />
             <div>
                 <div id={styles.title}>Flashier Cards</div>
                 <div id={styles.profileContent}>
                     <div>
-                        <Link className={styles.profileOption} to="/profile/account-information">Account Information</Link>
-                        <Link className={styles.profileOption} to="/profile/theme">Theme</Link>
-                        <Link className={styles.profileOption} to="/profile/change-password">Change Password</Link>
-                        <Link style={{backgroundColor: "#003971"}} className={styles.profileOption} to="/profile/delete-account">Delete Account</Link>
+						<button
+                            className={styles.profileOption}
+                            onClick={handleAccountInformation}
+                        >
+                            Account Information
+                        </button>
+                        <button
+                            className={styles.profileOption}
+                            onClick={handleTheme}
+                        >
+                            Theme
+                        </button>
+                        <button
+                            className={styles.profileOption}
+                            onClick={handleChangePassword}
+                        >
+                            Change Password
+                        </button>
+                        <button
+							style={{backgroundColor: "#003971"}}
+                            className={styles.profileOption}
+                            onClick={handleDeleteAccount}
+                        >
+                            Delete Account
+                        </button>
                     </div>
                     <div>
 						<div>
-							{ (isLoading) ?
+							{ (loading) ?
 								<div className={styles.invalidRequest}>
 									Loading request...
 								</div>
 							:
-								(error) ?
-									<div className={styles.invalidRequest}>
-										Invalid request.
-									</div>
+								(error.status) ?
+									<div className={styles.invalidRequest}>{error.message}</div>
 								:
-									(success) ?
-										<div className={styles.invalidRequest}>
-											Your account has been deleted. Please log out.
-										</div>
-									:
-										<div></div>
+									<div></div>
 							}
-							<div className={styles.profileText}>If you no longer wish to use Flashier Cards, you can permanently delete your account.</div>
+							<div className={styles.profileText}>
+								If you no longer wish to use Flashier Cards, you can permanently delete your account.
+							</div>
 							<button
 								className={styles.homeBtn}
 								onClick={() => showProfileOverlay(true)}
@@ -111,4 +150,4 @@ function DeleteAccount() {
     );
 }
 
-export default DeleteAccount
+export default DeleteAccount;

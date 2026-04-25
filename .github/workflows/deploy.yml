@@ -1,0 +1,45 @@
+name: Deploy to Heroku
+
+on:
+  push:
+    branches:
+      - Production
+
+jobs:
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    if: |
+      contains(join(github.event.commits.*.modified, ','), 'frontend/') ||
+      contains(join(github.event.commits.*.added, ','), 'frontend/')
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Deploy frontend to Heroku
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          git config user.email "github-actions@github.com"
+          git config user.name "GitHub Actions"
+          git remote add heroku-frontend https://heroku:$HEROKU_API_KEY@git.heroku.com/flashiercards-frontend.git
+          git subtree push --prefix frontend heroku-frontend main
+
+  deploy-backend:
+    runs-on: ubuntu-latest
+    if: |
+      contains(join(github.event.commits.*.modified, ','), 'backend/') ||
+      contains(join(github.event.commits.*.added, ','), 'backend/')
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Deploy backend to Heroku
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          git config user.email "github-actions@github.com"
+          git config user.name "GitHub Actions"
+          git remote add heroku-backend https://heroku:$HEROKU_API_KEY@git.heroku.com/flashiercards-backend.git
+          git subtree push --prefix backend heroku-backend main
