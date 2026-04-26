@@ -1,11 +1,13 @@
 using FlashierCards.Api.Endpoints;
-using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // database url and public key from Supabase
-var url = builder.Configuration["SUPABASE_URL"];
-var key = builder.Configuration["SUPABASE_KEY"];
+//var url = builder.Configuration.GetConnectionString("SUPABASE_URL");
+//var key = builder.Configuration.GetConnectionString("SUPABASE_KEY");
+
+var url = builder.Configuration.GetSection("SUPABASE_URL").Get<string>();
+var key = builder.Configuration.GetSection("SUPABASE_KEY").Get<string>();
 
 var options = new Supabase.SupabaseOptions
 {
@@ -13,37 +15,34 @@ var options = new Supabase.SupabaseOptions
     AutoConnectRealtime = true
 };
 
-// creating supabase client
+// creating supabase client to establish connection with database
 var supabase = new Supabase.Client(url!, key, options);
 await supabase.InitializeAsync();
 
 builder.Services.AddSingleton(supabase);
 
-// creating mongodb client
-var mongoUri = builder.Configuration["MONGODB_URI"];
-var mongoClient = new MongoClient(mongoUri);
-var mongodb = mongoClient.GetDatabase("flashiercards");
+// configure CORS to establish connection with frontend
+//var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
 
-builder.Services.AddSingleton(mongodb);
-
-var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();                                         
-                                                                                                                                   
-  builder.Services.AddCors(options =>                                                                                              
-  {                                                                                                                                
-      options.AddDefaultPolicy(optionsCORS =>                                                                                      
-      {                                                                                                                            
-          optionsCORS.WithOrigins(allowedOrigins!).AllowAnyMethod().AllowAnyHeader();                                              
-      });                                                                                                                          
-  });      
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin", policy =>
+    {
+        policy.WithOrigins("https://flashiercards-frontend-b974443ea474.herokuapp.com")
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+            
+    });
+});
 
 var app = builder.Build();
 
-app.UseCors();           
+app.UseCors("AllowSpecificOrigin");
+app.UseHttpsRedirection();
 
 // endpoints
 app.MapUserEndpoints();
 app.MapDeckEndpoints();
 app.MapProfileEndpoints();
-app.MapCardEndpoints();
 
 app.Run();

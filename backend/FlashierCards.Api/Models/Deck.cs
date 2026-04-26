@@ -15,6 +15,5 @@ public class Deck : BaseModel
     public int UserId { get; set; }
 
     [Column("name")]
-    public string Name { get; set; } = string.Empty;
-
+    public string? Name { get; set; }
 }

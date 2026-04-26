@@ -3,8 +3,8 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
-appsettings.json
-appsettings.Development.json
+# testing files
+flashiercards.http
 
 # dotenv files
 .env
@@ -67,8 +67,6 @@ BenchmarkDotNet.Artifacts/
 project.lock.json
 project.fragment.lock.json
 artifacts/
-appsettings.Development.json
-appsettings.json
 appsettings.Development.json
 
 # Tye

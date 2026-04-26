@@ -25,4 +25,6 @@ dist-ssr
 *.sln
 *.sw?
 *.idea
-
+.env
+.env.local
+.env.production

@@ -1,32 +1,14 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons/faChevronRight";
-import { useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { getCards } from "../api/client";
-import type { Card, Deck } from "../api/types";
+import { useRef, useState } from "react";
 
-function DeckViewer() {
-    const location = useLocation();
-    const deck = location.state?.deck as Deck | undefined;
-
+function Deck() {
     const cardRef = useRef<HTMLDivElement>(null);
-    const [cardIndex, setCardIndex] = useState(0);
-    const [cards, setCards] = useState<Card[]>([]);
-    const [loading, setLoading] = useState(false);
-
-    const total = cards.length;
-    const currentCard = cards[cardIndex] ?? null;
-
-    useEffect(() => {
-        if (!deck) return;
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setLoading(true);
-        getCards(deck.id).then(fetched => {
-            setCards(fetched);
-            setLoading(false);
-        });
-    }, [deck]);
+    let [card, setCard] = useState(1);
+    const total = 5;
+    let frontText = "Front of card " + card;
+    let backText = "Back of card " + card;
 
     function flipCard() {
         if (cardRef.current) {
@@ -34,32 +16,34 @@ function DeckViewer() {
         }
     }
 
-    if (!deck) return <p>No deck selected.</p>;
-    if (loading) return <p>Loading cards...</p>;
-    if (total === 0) return <p>This deck has no cards yet.</p>;
+    function showNextCard() {
+        if ((card + 1) <= total) {
+            card += 1;
+            setCard(card);
+        }
+    }
+
+    function showPrevCard() {
+        if ((card - 1) >= 1) {
+            card -= 1;
+            setCard(card);
+        }
+    }
 
     return (
         <div className="deck">
-            <div id="card" onClick={flipCard} ref={cardRef}>
+            <div id="card" onClick={() => flipCard()} ref={cardRef}>
                 <div id="card-inner">
-                    <div id="card-front">
-                        {currentCard?.cardFront.text.map((t, i) => (
-                            <span key={i} style={{ fontWeight: t.bold ? "bold" : "normal", fontStyle: t.italic ? "italic" : "normal" }}>{t.input}</span>
-                        ))}
-                    </div>
-                    <div id="card-back">
-                        {currentCard?.cardBack.text.map((t, i) => (
-                            <span key={i} style={{ fontWeight: t.bold ? "bold" : "normal", fontStyle: t.italic ? "italic" : "normal" }}>{t.input}</span>
-                        ))}
-                    </div>
+                    <div id="card-front">{frontText}</div>
+                    <div id="card-back">{backText}</div>
                 </div>
             </div>
             <div id="deck-nav">
-                <button disabled={cardIndex === 0} onClick={() => setCardIndex(i => i - 1)}>
+                <button disabled={card === 1} onClick={showPrevCard}>
                     <FontAwesomeIcon icon={faChevronLeft} />
                 </button>
-                <span>{cardIndex + 1}/{total}</span>
-                <button disabled={cardIndex === total - 1} onClick={() => setCardIndex(i => i + 1)}>
+                <span>{card}/{total}</span>
+                <button disabled={card === total} onClick={showNextCard}>
                     <FontAwesomeIcon icon={faChevronRight} />
                 </button>
             </div>
@@ -67,4 +51,4 @@ function DeckViewer() {
     );
 }
 
-export default DeckViewer;
+export default Deck;
