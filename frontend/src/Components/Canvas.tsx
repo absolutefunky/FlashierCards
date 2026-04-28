@@ -17,7 +17,7 @@ function Canvas() {
         setLoading(true);
 
         try {
-            const response = await fetch(`https://api.giphy.com/v1/gifs/search?api_key=${import.meta.env.VITE_GIPHY_API_KEY}&q=${query}&limit=${queryLimit}&rating=${rating}`);
+            const response = await fetch(`https://api.giphy.com/v1/stickers/search?api_key=${import.meta.env.VITE_GIPHY_API_KEY}&q=${query}&limit=${queryLimit}&rating=${rating}`);
 
             const data = await response.json();
 

@@ -38,6 +38,14 @@ function Edit() {
     const [frontCard, setFrontCard] = useState<Card[]>([{text: [], gif: [], sticker: []}]);
     const [backCard, setBackCard] = useState<Card[]>([{text: [], gif: [], sticker: []}]);
 
+    function fetchGiphs() {
+        // implement fetch calls to gips api
+    }
+
+    function fetchStickers() {
+         // implement fetch calls to stickers api
+    }
+
     function changeTextColor(color: string) {
         if (cardSide === "Front") {
             setFrontCard(prev =>
@@ -498,11 +506,15 @@ function Edit() {
                     <div className={styles.sidePanel} style={{display: gifPanel ? "flex" : "none"}}>
                         <div>
                             <div className={styles.sidePanelTitle}>Gifs</div>
+                            {/* add input form */}
+                            {/* 2x4 grid to dispaly 8 giphs */}
                         </div>
                     </div>
                     <div className={styles.sidePanel} style={{display: stickerPanel ? "flex" : "none"}}>
                         <div>
                             <div className={styles.sidePanelTitle}>Stickers</div>
+                            {/* add input form */}
+                            {/* 2x4 grid to dispaly 8 stickers */}
                         </div>
                     </div>
                 </div>
