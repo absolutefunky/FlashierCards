@@ -11,6 +11,7 @@ import DeleteAccount from "./Components/DeleteAccount";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ForgotPassword from "./Components/ForgotPassword";
 import CreateNewPassword from "./Components/CreateNewPassword";
+import Canvas from "./Components/Canvas";
 
 function App() {
    
@@ -22,6 +23,8 @@ function App() {
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/forgotPassword" element={<ForgotPassword />} />
+
+                <Route path="/canvas" element={<Canvas />} />
 
                 {/* private routes */}
                 <Route path="/dashboard/:userId" element={<Dashboard />} />

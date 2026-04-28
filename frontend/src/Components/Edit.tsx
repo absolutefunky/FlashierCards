@@ -24,6 +24,7 @@ function Edit() {
 
     // side panel related variables
     const [textPanel, setTextPanel] = useState(false);
+    const [gifPanel, setGifPanel] = useState(false);
     const [stickerPanel, setStickerPanel] = useState(false);
     const [text, setText] = useState("");
     const [textArea, setTextArea] = useState(false);
@@ -34,11 +35,31 @@ function Edit() {
     const [cardSide, setCardSide] = useState("Front");
     const [cardNum, setCardNum] = useState(1);
     const [total, setTotal] = useState(1);
-    const [frontCard, setFrontCard] = useState<Card[]>([{text: [], sticker: []}]);
-    const [backCard, setBackCard] = useState<Card[]>([{text: [], sticker: []}]);
-    
+    const [frontCard, setFrontCard] = useState<Card[]>([{text: [], gif: [], sticker: []}]);
+    const [backCard, setBackCard] = useState<Card[]>([{text: [], gif: [], sticker: []}]);
+
+    function changeTextColor(color: string) {
+        if (cardSide === "Front") {
+            setFrontCard(prev =>
+                prev.map((card, index) =>
+                    index === (cardNum - 1) ? {...card, text: card.text.map((cardText, i) =>
+                        i === textIndex ? {...cardText, color: color} : cardText
+                    )} : card
+                )
+            );
+        } else if (cardSide == "Back") {
+            setBackCard(prev =>
+                prev.map((card, index) =>
+                    index === (cardNum - 1) ? {...card, text: card.text.map((cardText, i) =>
+                        i === textIndex ? {...cardText, color: color} : cardText
+                    )} : card
+                )
+            );
+        }
+    }
+
     function createSmallText() {
-        let textTmp = {input: "Enter text in the text area", width: 300, x: 30, y: 30, fontSize: 18};
+        let textTmp = {input: "Enter text in the text area", width: 300, x: 30, y: 30, fontSize: 18, color: "#201002"};
         if (cardSide == "Front") {
             setFrontCard(prev =>
                 prev.map((card, index) =>
@@ -54,10 +75,8 @@ function Edit() {
         }
     }
 
-    console.log(frontCard);
-
     function createMediumText() {
-        let textTmp = {input: "Enter text in the text area", width: 300, x: 30, y: 30, fontSize: 28};
+        let textTmp = {input: "Enter text in the text area", width: 400, x: 30, y: 30, fontSize: 28, color: "#201002"};
         if (cardSide == "Front") {
             setFrontCard(prev =>
                 prev.map((card, index) =>
@@ -74,7 +93,7 @@ function Edit() {
     }
 
     function createLargeText() {
-        let textTmp = {input: "Enter text in the text area", width: 300, x: 30, y: 30, fontSize: 38};
+        let textTmp = {input: "Enter text in the text area", width: 600, x: 30, y: 30, fontSize: 38, color: "#201002"};
         if (cardSide == "Front") {
             setFrontCard(prev =>
                 prev.map((card, index) =>
@@ -88,6 +107,27 @@ function Edit() {
                 )
             );
         }
+    }
+
+    function deleteText() {
+        if (cardSide === "Front") {
+            setFrontCard(prev =>
+                prev.map((card, index) =>
+                    index === (cardNum - 1) ? {...card, text: card.text.filter((_, index) =>
+                        index != textIndex
+                    )} : card
+                )
+            );
+        } else if (cardSide == "Back") {
+            setBackCard(prev =>
+                prev.map((card, index) =>
+                    index === (cardNum - 1) ? {...card, text: card.text.filter((_, index) =>
+                        index != textIndex
+                    )} : card
+                )
+            );
+        }
+        setTextArea(false);
     }
 
     function showTextArea(request: boolean, textIndex: number, input: string) {
@@ -120,8 +160,8 @@ function Edit() {
     function addCard() {
         if ((total + 1) <= 20) {
             setTotal(total + 1);
-            setFrontCard([...frontCard, {text: [], sticker: []}]);
-            setBackCard([...backCard, {text: [], sticker: []}]);
+            setFrontCard([...frontCard, {text: [], gif: [], sticker: []}]);
+            setBackCard([...backCard, {text: [], gif: [], sticker: []}]);
         }
     }
 
@@ -160,13 +200,26 @@ function Edit() {
     function showTextPanel() {
         if (stickerPanel) {
             setStickerPanel(false);
+        } else if (gifPanel) {
+            setGifPanel(false);
         }
         setTextPanel(true);
+    }
+
+    function showGifPanel() {
+        if (textPanel) {
+            setTextPanel(false);
+        } else if (stickerPanel) {
+            setStickerPanel(false);
+        }
+        setGifPanel(true);
     }
 
     function showStickerPanel() {
         if (textPanel) {
             setTextPanel(false);
+        } else if (gifPanel) {
+            setGifPanel(false);
         }
         setStickerPanel(true);
     }
@@ -176,6 +229,8 @@ function Edit() {
             setTextPanel(false);
         } else if (stickerPanel) {
             setStickerPanel(false);
+        } else if (gifPanel) {
+            setGifPanel(false);
         }
     }
     
@@ -241,6 +296,17 @@ function Edit() {
                         <span className={styles.edge}></span>
                         <span className={styles.front}>
                             <FontAwesomeIcon icon={faT} />
+                        </span>
+                    </button>
+                    <button
+                        type="button"
+                        className={styles.toolOption}
+                        onClick={showGifPanel}
+                    >
+                        <span className={styles.shadow}></span>
+                        <span className={styles.edge}></span>
+                        <span className={styles.front} style={{fontWeight: "600"}}>
+                            GIF
                         </span>
                     </button>
                     <button
@@ -319,9 +385,13 @@ function Edit() {
                                                     y={text.y}
                                                     width={text.width}
                                                     text={text.input}
+                                                    fontFamily="Imprima"
                                                     fontSize={text.fontSize}
+                                                    fill={text.color}
                                                     draggable
-                                                    onDblClick={() => showTextArea(true, textIndex, text.input)}
+                                                    onDblClick={() => {
+                                                        showTextArea(true, textIndex, text.input)
+                                                    }}
                                                     onDragEnd={(e) => {
                                                         const { x, y } = e.target.position();
                                                         setFrontCard(prev =>
@@ -357,6 +427,7 @@ function Edit() {
                                                     y={text.y}
                                                     width={text.width}
                                                     text={text.input}
+                                                    fontFamily="Imprima"
                                                     fontSize={text.fontSize}
                                                     draggable
                                                     onDblClick={() => showTextArea(true, textIndex, text.input)}
@@ -391,6 +462,30 @@ function Edit() {
                         </div>
                     </div>
                     <div className={styles.sidePanel} style={{display: textPanel ? "flex" : "none"}}>
+                        <div style={{display: (textArea) ? "flex" : "none"}}>
+                            <div className={styles.sidePanelTitle}>Text Input</div>
+                            <div className={styles.textInput}>
+                                <textarea placeholder="Enter text here" value={text} onChange={changeTextInput} />
+                            </div>
+                        </div>
+                        <div style={{display: (textArea) ? "flex" : "none"}}>
+                            <div className={styles.sidePanelTitle}>Text Deletion</div>
+                            <div className={styles.textOptions}>
+                                <button onClick={deleteText}>Delete</button>
+                            </div>
+                        </div>
+                        <div style={{display: (textArea) ? "flex" : "none"}}>
+                            <div className={styles.sidePanelTitle}>Text Color</div>
+                            <div className={styles.textOptions}>
+                                <div style={{backgroundColor: "#201002"}} onClick={() => changeTextColor("#201002")}></div>
+                                <div style={{backgroundColor: "#FF2511"}} onClick={() => changeTextColor("#FF2511")}></div>
+                                <div style={{backgroundColor: "#FED43F"}} onClick={() => changeTextColor("#FED43F")}></div>
+                                <div style={{backgroundColor: "#016236"}} onClick={() => changeTextColor("#016236")}></div>
+                                <div style={{backgroundColor: "#E43480"}} onClick={() => changeTextColor("#E43480")}></div>
+                                <div style={{backgroundColor: "#621590"}} onClick={() => changeTextColor("#621590")}></div>
+                                <div style={{backgroundColor: "#1F6CB0"}} onClick={() => changeTextColor("#1F6CB0")}></div>
+                            </div>
+                        </div>
                         <div>
                             <div className={styles.sidePanelTitle}>Text Size</div>
                             <div className={styles.textOptions}>
@@ -399,11 +494,10 @@ function Edit() {
                                 <button onClick={createLargeText}>Large</button>
                             </div>
                         </div>
-                        <div style={{display: (textArea) ? "flex" : "none"}}>
-                            <div className={styles.sidePanelTitle}>Text Input</div>
-                            <div className={styles.textInput}>
-                                <textarea placeholder="Enter text here" value={text} onChange={changeTextInput} />
-                            </div>
+                    </div>
+                    <div className={styles.sidePanel} style={{display: gifPanel ? "flex" : "none"}}>
+                        <div>
+                            <div className={styles.sidePanelTitle}>Gifs</div>
                         </div>
                     </div>
                     <div className={styles.sidePanel} style={{display: stickerPanel ? "flex" : "none"}}>
