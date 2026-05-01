@@ -8,6 +8,9 @@ import CreateNewPasswordScreen from './src/screens/CreateNewPassword';
 import AccountInformationScreen from './src/screens/AccountInformation';
 import ThemeScreen from './src/screens/Theme';
 import DeleteAccountScreen from './src/screens/DeleteAccount';
+import { useFonts } from 'expo-font';
+import { RampartOne_400Regular } from "@expo-google-fonts/rampart-one";
+import { Imprima_400Regular } from "@expo-google-fonts/imprima";
 
 export type RootStackParamList = {
     Login: undefined;
@@ -23,18 +26,27 @@ export type RootStackParamList = {
 const RootStack = createStackNavigator<RootStackParamList>();
 
 export default function App() {
-  return (
-    <NavigationContainer>
-        <RootStack.Navigator initialRouteName="Login">
-            <RootStack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-            <RootStack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ headerShown: false }} />
-            <RootStack.Screen name="CreateNewPassword" component={CreateNewPasswordScreen} options={{ headerShown: false }} />
-            <RootStack.Screen name="Dashboard" component={DashboardScreen} options={{ headerShown: false }} />
-            <RootStack.Screen name="Study" component={StudyScreen} options={{ headerShown: false }} />
-            <RootStack.Screen name="AccountInformation" component={AccountInformationScreen} options={{ headerShown: false }} />
-            <RootStack.Screen name="Theme" component={ThemeScreen} options={{ headerShown: false }} />
-            <RootStack.Screen name="DeleteAccount" component={DeleteAccountScreen} options={{ headerShown: false }} />
-        </RootStack.Navigator>
-    </NavigationContainer>
-  );
+    const [fontsLoaded] = useFonts({
+        RampartOne_400Regular,
+        Imprima_400Regular
+    });
+
+    if (!fontsLoaded) {
+        return null; 
+    }
+    
+    return (
+      <NavigationContainer>
+          <RootStack.Navigator initialRouteName="Login">
+              <RootStack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+              <RootStack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ headerShown: false }} />
+              <RootStack.Screen name="CreateNewPassword" component={CreateNewPasswordScreen} options={{ headerShown: false }} />
+              <RootStack.Screen name="Dashboard" component={DashboardScreen} options={{ headerShown: false }} />
+              <RootStack.Screen name="Study" component={StudyScreen} options={{ headerShown: false }} />
+              <RootStack.Screen name="AccountInformation" component={AccountInformationScreen} options={{ headerShown: false }} />
+              <RootStack.Screen name="Theme" component={ThemeScreen} options={{ headerShown: false }} />
+              <RootStack.Screen name="DeleteAccount" component={DeleteAccountScreen} options={{ headerShown: false }} />
+          </RootStack.Navigator>
+      </NavigationContainer>
+    );
 }
