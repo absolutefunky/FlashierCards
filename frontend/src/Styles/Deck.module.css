@@ -58,6 +58,13 @@
     margin-bottom: 1.5rem;
 }
 
+.textOptions > div {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
 .textOptions button {
     font-size: 18px;
     font-family: "Imprima", sans-serif;
@@ -77,6 +84,7 @@
 .textInput {
     display: flex;
     height: 150px;
+    margin-bottom: 1.5rem;
 }
 
 .textInput textarea {

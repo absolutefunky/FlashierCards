@@ -4,10 +4,20 @@ export default interface Card {
         width: number,
         x: number,
         y: number,
-        fontSize: number
+        fontSize: number,
+        color: string
+    }[],
+    gif: {
+        url: string,
+        width: number,
+        height: number,
+        x: number,
+        y: number
     }[],
     sticker: {
-        name: string,
+        url: string,
+        width: number,
+        height: number,
         x: number,
         y: number
     }[]

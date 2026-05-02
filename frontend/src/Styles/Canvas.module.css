@@ -1,0 +1,17 @@
+.box {
+    background-color: rgb(18, 180, 234);
+    display: flex;
+}
+
+.textInput {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    resize: none;
+    overflow: hidden;
+}
+
+.textInput:hover {
+    cursor: move;
+}
