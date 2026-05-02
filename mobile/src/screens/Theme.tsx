@@ -22,22 +22,22 @@ export default function ThemeScreen() {
                     style={styles.profileNavButton}
                     onPress={() => navigation.navigate("AccountInformation")}
                 >
-                    <FontAwesomeIcon icon={faHouseUser} size={40} color="#004A94" />
+                    <Text style={styles.profileNavText}>Account</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.profileNavButton}
                     onPress={() => navigation.navigate("Theme")}
                 >
-                    <FontAwesomeIcon icon={faPalette} size={40} color="#004A94" />
+                    <Text style={styles.profileNavText}>Theme</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.profileNavButton}
                     onPress={() => navigation.navigate("DeleteAccount")}
                 >
-                    <FontAwesomeIcon icon={faTrash} size={40} color="#004A94" />
+                    <Text style={styles.profileNavText}>Delete</Text>
                 </TouchableOpacity>
-            </View>                        
-            <View>
+            </View>                      
+            <View style={styles.mainContent}>
                 { (loading) ?
                     <Text>Loading request...</Text>
                 :
@@ -59,37 +59,45 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: "column",
-        paddingTop: 50,
-        paddingLeft: 20,
-        paddingRight: 20
+        alignItems: "center",
+        padding: 20
     },
     profileNav: {
         flexDirection: "row",
-        marginBottom: 25,
+        marginBottom: 20,
         justifyContent: "center",
-        gap: 15
+        gap: 15,
     },
     profileNavButton: {
-        backgroundColor: "#D9EDF8",
+        backgroundColor: "#004A94",
         padding: 10,
         borderRadius: 10,
-        borderWidth: 3,
-        borderColor: "#004A94"
+        width: 100,
+        alignItems: "center"
+    },
+    profileNavText: {
+        fontSize: 20,
+        fontFamily: "Imprima_400Regular",
+        fontWeight: "400",
+        color: "white"
     },
     title: {
-        fontSize: 60,
+        fontSize: 37,
         fontFamily: "RampartOne_400Regular",
         fontWeight: "400",
         color: "#004A94",
         textAlign: "center",
-        marginBottom: 25,
+        marginBottom: 20
+    },
+    mainContent: {
+        width: "100%"
     },
     subtitle: {
-        fontSize: 25,
+        fontSize: 20,
         fontFamily: "Imprima_400Regular",
         fontWeight: "700",
         color: "#004A94",
-        marginBottom: 5
+        marginBottom: 2
     },
     profileText: {
         fontSize: 20,

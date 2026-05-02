@@ -1,6 +1,6 @@
 import { Button } from "@react-navigation/elements";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Pressable } from "react-native";
 import { RootStackParamList } from "../../App";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
@@ -22,22 +22,22 @@ export default function DeleteAccountScreen() {
                     style={styles.profileNavButton}
                     onPress={() => navigation.navigate("AccountInformation")}
                 >
-                    <FontAwesomeIcon icon={faHouseUser} size={40} color="#004A94" />
+                    <Text style={styles.profileNavText}>Account</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.profileNavButton}
                     onPress={() => navigation.navigate("Theme")}
                 >
-                    <FontAwesomeIcon icon={faPalette} size={40} color="#004A94" />
+                    <Text style={styles.profileNavText}>Theme</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.profileNavButton}
                     onPress={() => navigation.navigate("DeleteAccount")}
                 >
-                    <FontAwesomeIcon icon={faTrash} size={40} color="#004A94" />
+                    <Text style={styles.profileNavText}>Delete</Text>
                 </TouchableOpacity>
             </View>
-            <View>
+            <View style={styles.mainContent}>
                 { (loading) ?
                     <Text>Loading request...</Text>
                 :
@@ -48,16 +48,22 @@ export default function DeleteAccountScreen() {
                 }
                 <Text style={styles.subtitle}>Delete My Account</Text>
                 <Text style={styles.profileText}>Are you sure you want to delete your account? This action cannot be undone.</Text>
-                <TouchableOpacity
-                    style={styles.deleteBtns}
-                >
-                    <Text style={styles.deleteText}>I am certain!</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.deleteBtns}
-                >
-                    <Text style={styles.deleteText}>Let me think about it...</Text>
-                </TouchableOpacity>
+                <View style={styles.deleteBtns}>
+                    <Pressable style={styles.homeBtn} onPress={() => navigation.navigate("Login")}>
+                        <View style={styles.signupShadow} />
+                        <View style={styles.signupEdge} />
+                        <View style={styles.signupFront}>
+                            <Text style={styles.signupFrontText}>I am certain!</Text>
+                        </View>
+                    </Pressable> 
+                    <Pressable style={styles.homeBtn} onPress={() => navigation.navigate("Dashboard")}>
+                        <View style={styles.loginShadow} />
+                        <View style={styles.loginEdge} />
+                        <View style={styles.loginFront}>
+                            <Text style={styles.loginFrontText}>Let me think about it...</Text>
+                        </View>
+                    </Pressable>
+                </View>
             </View>
         </View>
     );
@@ -67,37 +73,45 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: "column",
-        paddingTop: 50,
-        paddingLeft: 20,
-        paddingRight: 20
+        alignItems: "center",
+        padding: 20
     },
     profileNav: {
         flexDirection: "row",
-        marginBottom: 25,
+        marginBottom: 20,
         justifyContent: "center",
-        gap: 15
+        gap: 15,
     },
     profileNavButton: {
-        backgroundColor: "#D9EDF8",
+        backgroundColor: "#004A94",
         padding: 10,
         borderRadius: 10,
-        borderWidth: 3,
-        borderColor: "#004A94"
+        width: 100,
+        alignItems: "center"
+    },
+    profileNavText: {
+        fontSize: 20,
+        fontFamily: "Imprima_400Regular",
+        fontWeight: "400",
+        color: "white"
+    },
+    mainContent: {
+        width: "100%"
     },
     title: {
-        fontSize: 60,
+        fontSize: 37,
         fontFamily: "RampartOne_400Regular",
         fontWeight: "400",
         color: "#004A94",
         textAlign: "center",
-        marginBottom: 25,
+        marginBottom: 20
     },
     subtitle: {
-        fontSize: 25,
+        fontSize: 20,
         fontFamily: "Imprima_400Regular",
         fontWeight: "700",
         color: "#004A94",
-        marginBottom: 5
+        marginBottom: 2
     },
     profileText: {
         fontSize: 20,
@@ -106,18 +120,85 @@ const styles = StyleSheet.create({
         marginBottom: 20
     },
     deleteBtns: {
-        backgroundColor: "#D9EDF8",
-        marginBottom: 10,
-        padding: 10,
-        borderRadius: 10,
-        flexDirection: "row",
-        justifyContent: "center",
-        borderWidth: 3,
-        borderColor: "#004A94"
+        alignItems: "center"
     },
-    deleteText: {
+    homeBtn: {
+        position: "relative",
+        backgroundColor: "transparent",
+        width: 250,
+        height: 56,
+        marginTop: 15
+    },
+    loginShadow: {
+        position: "absolute",
+        top: 6,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        borderRadius: 5,
+        backgroundColor: "rgba(0, 0, 0, 0.2)",
+    },
+    loginEdge: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        height: 50,
+        borderRadius: 5,
+        backgroundColor: "#01162b",
+    },
+    loginFront: {
+        position: "absolute",
+        top: -6,
+        left: 0,
+        right: 0,
+        width: 250,
+        height: 50,
+        borderRadius: 5,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#004A94"
+    },
+    loginFrontText: {
         fontSize: 20,
-        fontFamily: "Imprima_400Regular",
-        fontWeight: "400"
+        fontWeight: "400",
+        color: "white",
+        fontFamily: "Imprima_400Regular"
+    },
+    signupShadow: {
+        position: "absolute",
+        top: 6,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        borderRadius: 5,
+        backgroundColor: "rgba(0, 0, 0, 0.1)",
+    },
+    signupEdge: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        height: 50,
+        borderRadius: 5,
+        backgroundColor: "#afd6eb",
+    },
+    signupFront: {
+        position: "absolute",
+        top: -6,
+        left: 0,
+        right: 0,
+        width: 250,
+        height: 50,
+        borderRadius: 5,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#D9EDF8",
+    },
+    signupFrontText: {
+        fontSize: 20,
+        fontWeight: "400",
+        color: "#004A94",
+        fontFamily: "Imprima_400Regular"
     }
 });
