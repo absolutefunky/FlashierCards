@@ -10,6 +10,10 @@ export default function DashboardScreen() {
     const navigation = useNavigation<DashboardScreenNavigationProp>();
     const [decks, setDecks] = useState([{id: "1", title: "SENG 645 Exam 1 Review"}, {id: "2", title: "SENG 645 Exam 2 Review"}, {id: "3", title: "SENG 645 Exam 3 Review"}]);
     
+    function fetchDeckData() {
+        // get decks associated with user on effect
+    }
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Flashier Cards</Text>
@@ -62,4 +66,3 @@ const styles = StyleSheet.create({
         color: "#004A94"
     }
 });
-

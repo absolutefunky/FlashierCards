@@ -1,5 +1,5 @@
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator, Header } from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import { useFonts } from 'expo-font';
 import { RampartOne_400Regular } from "@expo-google-fonts/rampart-one";
 import { Imprima_400Regular } from "@expo-google-fonts/imprima";
@@ -13,7 +13,7 @@ import ThemeScreen from './src/screens/Theme';
 import DeleteAccountScreen from './src/screens/DeleteAccount';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { Pressable, Text, StyleSheet } from 'react-native';
-import { faArrowRightFromBracket, faFolder } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faArrowRightFromBracket, faFolder } from '@fortawesome/free-solid-svg-icons';
 
 export type RootStackParamList = {
     Login: undefined;
@@ -53,7 +53,7 @@ export default function App() {
                         title: "",
                         headerLeft: () => (
                             <Pressable style={styles.headerBtn} onPress={() => navigation.navigate("Login")}>
-                                <Text style={styles.headerText}>Login</Text>
+                                <FontAwesomeIcon style={styles.headerText} icon={faArrowLeft} size={26} />
                             </Pressable>
                         ),
                         headerStyle: {
@@ -68,7 +68,7 @@ export default function App() {
                         title: "",
                         headerLeft: () => (
                             <Pressable style={styles.headerBtn} onPress={() => navigation.navigate("ForgotPassword")}>
-                                <Text style={styles.headerText}>Forgot password</Text>
+                                <FontAwesomeIcon style={styles.headerText} icon={faArrowLeft} size={26} />
                             </Pressable>
                         ),
                         headerStyle: {

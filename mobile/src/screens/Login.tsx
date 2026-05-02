@@ -10,15 +10,25 @@ export default function LoginScreen() {
     const navigation = useNavigation<LoginScreenNavigationProp>();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState({status: false, message: ""});
+    const [loading, setLoading] = useState(false);
 
     function handleLogin() {
-        console.log(email);
-        console.log(password);
+        // handle user authentication here
+        navigation.navigate("Dashboard");
     }
 
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
             <Text style={styles.title}>Flashier Cards</Text>
+            { (loading) ?
+                <Text>Loading request...</Text>
+            :
+                (error.status) ?
+                    <Text>{error.message}</Text>
+                :
+                    <></>
+            }
             <View style={styles.formField}>
                 <Text style={styles.subtitle}>Email</Text>
                 <TextInput
@@ -30,7 +40,7 @@ export default function LoginScreen() {
                 />
             </View>
             <View style={styles.formField}>
-            <Text style={styles.subtitle}>Password</Text>
+                <Text style={styles.subtitle}>Password</Text>
                 <TextInput
                     textContentType="password"
                     placeholder="Enter your password..."
@@ -40,7 +50,7 @@ export default function LoginScreen() {
                     style={styles.input}
                 />
             </View>
-            <Pressable style={styles.homeBtn} onPress={() => navigation.navigate("Dashboard")}>
+            <Pressable style={styles.homeBtn} onPress={handleLogin}>
                 <View style={styles.loginShadow} />
                 <View style={styles.loginEdge} />
                 <View style={styles.loginFront}>
