@@ -6,15 +6,18 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCircleXmark, faPlus, faFolderOpen, faPencil, faICursor, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useFonts, Imprima_400Regular } from "@expo-google-fonts/imprima";
 import { RampartOne_400Regular } from "@expo-google-fonts/rampart-one";
+import { RouteProp, useRoute } from "@react-navigation/native";
+
 
 type Deck = {
   id: string;
   title: string;
 };
 type RootStackParamList = {
-  Dashboard: undefined;
+  Dashboard: { userId: number };
   Study: undefined;
 };
+type DashboardRouteProp = RouteProp<RootStackParamList, "Dashboard">;
 
 export default function Dashboard() {
   const [toolOptionHidden, setToolOptionHidden] = useState(true);
@@ -294,7 +297,7 @@ const styles = StyleSheet.create({
   deckText: {
     fontSize: 22,
     fontWeight: "600",
-    fontFamily: "System",
+    fontFamily: "Imprima_400Regular",
     color: "#004A94",
     textAlign: "center",
   },

@@ -1,5 +1,6 @@
 using FlashierCards.Api.Dtos.CreateDtos;
 using FlashierCards.Api.Dtos.UpdateDtos;
+using FlashierCards.Api.Dtos;
 using FlashierCards.Api.Models;
 using MongoDB.Driver;
 
@@ -9,34 +10,40 @@ public static class CardEndpoints
 {
     public static void MapCardEndpoints(this WebApplication app)
     {
-        // GET /users/{userId}/decks/{deckId}/cards
+        var collectionName = "deck_contents";
+
+        // GET all cards for one deck
         app.MapGet("/users/{userId}/decks/{deckId}/cards", async (
             int userId,
             int deckId,
             IMongoDatabase database) =>
         {
-            var collection = database.GetCollection<Card>("deck_contents");
+            var collection = database.GetCollection<Card>(collectionName);
 
             var cardDoc = await collection
                 .Find(c => c.UserId == userId && c.DeckId == deckId)
                 .FirstOrDefaultAsync();
 
-            if (cardDoc is null || cardDoc.Cards.Count == 0)
+            if (cardDoc is null)
             {
-                return Results.NotFound(new { message = "NO CARDS HAVE BEEN ADDED YET." });
+                return Results.NotFound(new { message = "NO CARD CONTENT EXIST FOR THIS DECK." });
             }
 
-            return Results.Ok(cardDoc.Cards);
+            return Results.Ok(new
+            {
+                frontCards = cardDoc.FrontCards,
+                backCards = cardDoc.BackCards
+            });
         });
 
-        // GET /users/{userId}/decks/{deckId}/cards/{cardNumber}
+        // GET one card by cardNumber
         app.MapGet("/users/{userId}/decks/{deckId}/cards/{cardNumber}", async (
             int userId,
             int deckId,
             int cardNumber,
             IMongoDatabase database) =>
         {
-            var collection = database.GetCollection<Card>("deck_contents");
+            var collection = database.GetCollection<Card>(collectionName);
 
             var cardDoc = await collection
                 .Find(c => c.UserId == userId && c.DeckId == deckId)
@@ -44,76 +51,82 @@ public static class CardEndpoints
 
             if (cardDoc is null)
             {
-                return Results.NotFound(new { message = "CARD CONTENT DOES NOT EXIST." });
+                return Results.NotFound(new { message = "NO CARD CONTENT EXIST FOR THIS DECK." });
             }
 
-            var card = cardDoc.Cards
-                .FirstOrDefault(c => c.CardNumber == cardNumber);
+            int index = cardNumber - 1;
 
-            if (card is null)
+            if (index < 0 || index >= cardDoc.FrontCards.Count || index >= cardDoc.BackCards.Count)
             {
                 return Results.NotFound(new { message = "CARD DOES NOT EXIST." });
             }
 
-            return Results.Ok(card);
+            return Results.Ok(new
+            {
+                cardNumber,
+                frontCard = cardDoc.FrontCards[index],
+                backCard = cardDoc.BackCards[index]
+            });
         });
 
-        // POST /users/{userId}/decks/{deckId}/cards/create
+        // POST create a new card
         app.MapPost("/users/{userId}/decks/{deckId}/cards/create", async (
             int userId,
             int deckId,
             CreateCardDto request,
             IMongoDatabase database) =>
         {
-            var collection = database.GetCollection<Card>("deck_contents");
+            var collection = database.GetCollection<Card>(collectionName);
 
             var cardDoc = await collection
                 .Find(c => c.UserId == userId && c.DeckId == deckId)
                 .FirstOrDefaultAsync();
 
-            int nextCardNumber = cardDoc?.Cards.Count + 1 ?? 1;
-
-            var newCard = new CardList
-            {
-                CardNumber = nextCardNumber,
-                CardFront = request.CardFront,
-                CardBack = request.CardBack
-            };
+            var frontCard = request.FrontCard ?? new CardElement();
+            var backCard = request.BackCard ?? new CardElement();
 
             if (cardDoc is null)
             {
                 var newDocument = new Card
                 {
-                    DocId = 0,
                     UserId = userId,
                     DeckId = deckId,
-                    Cards = new List<CardList> { newCard }
+                    FrontCards = new List<CardElement> { frontCard },
+                    BackCards = new List<CardElement> { backCard }
                 };
 
                 await collection.InsertOneAsync(newDocument);
 
                 return Results.Ok(new
                 {
-                    message = "Card were successfully created :).",
-                    card = newCard
+                    message = "Card successfully created :).",
+                    cardNumber = 1,
+                    frontCard,
+                    backCard
                 });
             }
 
-            var update = Builders<Card>.Update.Push(c => c.Cards, newCard);
+            var update = Builders<Card>.Update
+                .Push(c => c.FrontCards, frontCard)
+                .Push(c => c.BackCards, backCard);
 
             await collection.UpdateOneAsync(
                 c => c.UserId == userId && c.DeckId == deckId,
                 update
             );
 
+            int newCardNumber = cardDoc.FrontCards.Count + 1;
+
             return Results.Ok(new
             {
                 message = "Card was successfully created :).",
-                card = newCard
+                cardNumber = newCardNumber,
+                frontCard,
+                backCard
             });
         });
 
-        // PUT /users/{userId}/decks/{deckId}/cards/{cardNumber}
+        // PUT update one card
         app.MapPut("/users/{userId}/decks/{deckId}/cards/{cardNumber}", async (
             int userId,
             int deckId,
@@ -121,7 +134,7 @@ public static class CardEndpoints
             UpdateCardDto request,
             IMongoDatabase database) =>
         {
-            var collection = database.GetCollection<Card>("deck_contents");
+            var collection = database.GetCollection<Card>(collectionName);
 
             var cardDoc = await collection
                 .Find(c => c.UserId == userId && c.DeckId == deckId)
@@ -132,20 +145,15 @@ public static class CardEndpoints
                 return Results.NotFound(new { message = "CARD CONTENT DOES NOT EXIST." });
             }
 
-            int cardIndex = cardDoc.Cards
-                .FindIndex(c => c.CardNumber == cardNumber);
+            int index = cardNumber - 1;
 
-            if (cardIndex == -1)
+            if (index < 0 || index >= cardDoc.FrontCards.Count || index >= cardDoc.BackCards.Count)
             {
-                return Results.NotFound(new { message = "CARD DOES NOT EXIST." });
+                return Results.NotFound(new { message = "CARD DOESN'T EXIST." });
             }
 
-            cardDoc.Cards[cardIndex] = new CardList
-            {
-                CardNumber = cardNumber,
-                CardFront = request.CardFront,
-                CardBack = request.CardBack
-            };
+            cardDoc.FrontCards[index] = request.FrontCard ?? new CardElement();
+            cardDoc.BackCards[index] = request.BackCard ?? new CardElement();
 
             await collection.ReplaceOneAsync(
                 c => c.UserId == userId && c.DeckId == deckId,
@@ -155,18 +163,72 @@ public static class CardEndpoints
             return Results.Ok(new
             {
                 message = "Card was successfully updated :P.",
-                card = cardDoc.Cards[cardIndex]
+                cardNumber,
+                frontCard = cardDoc.FrontCards[index],
+                backCard = cardDoc.BackCards[index]
             });
         });
 
-        // DELETE /users/{userId}/decks/{deckId}/cards/{cardNumber}/delete
+
+        // PUT hopefully this works for edit view
+        app.MapPut("/users/{userId}/decks/{deckId}/cards/save", async (
+            int userId,
+            int deckId,
+            SaveCardsDto request,
+            IMongoDatabase database) =>
+        {
+            var collection = database.GetCollection<Card>("deck_contents");
+
+            var existingDoc = await collection
+                .Find(c => c.UserId == userId && c.DeckId == deckId)
+                .FirstOrDefaultAsync();
+
+            if (existingDoc is null)
+            {
+                var newDoc = new Card
+                {
+                    UserId = userId,
+                    DeckId = deckId,
+                    FrontCards = request.FrontCards,
+                    BackCards = request.BackCards
+                };
+
+                await collection.InsertOneAsync(newDoc);
+
+                return Results.Ok(new
+                {
+                    message = "Card content was saved successfully ;D.",
+                    frontCards = newDoc.FrontCards,
+                    backCards = newDoc.BackCards
+                });
+            }
+
+            var update = Builders<Card>.Update
+                .Set(c => c.FrontCards, request.FrontCards)
+                .Set(c => c.BackCards, request.BackCards);
+
+            await collection.UpdateOneAsync(
+                c => c.UserId == userId && c.DeckId == deckId,
+                update
+            );
+
+            return Results.Ok(new
+            {
+                message = "Card content was saved successfully ;D.",
+                frontCards = request.FrontCards,
+                backCards = request.BackCards
+            });
+        });
+    
+
+        // DELETE one card
         app.MapDelete("/users/{userId}/decks/{deckId}/cards/{cardNumber}/delete", async (
             int userId,
             int deckId,
             int cardNumber,
             IMongoDatabase database) =>
         {
-            var collection = database.GetCollection<Card>("deck_contents");
+            var collection = database.GetCollection<Card>(collectionName);
 
             var cardDoc = await collection
                 .Find(c => c.UserId == userId && c.DeckId == deckId)
@@ -177,20 +239,15 @@ public static class CardEndpoints
                 return Results.NotFound(new { message = "CARD CONTENT DOES NOT EXIST." });
             }
 
-            var byeCard = cardDoc.Cards
-                .FirstOrDefault(c => c.CardNumber == cardNumber);
+            int index = cardNumber - 1;
 
-            if (byeCard is null)
+            if (index < 0 || index >= cardDoc.FrontCards.Count || index >= cardDoc.BackCards.Count)
             {
                 return Results.NotFound(new { message = "CARD DOES NOT EXIST." });
             }
 
-            cardDoc.Cards.Remove(byeCard);
-
-            for (int i = 0; i < cardDoc.Cards.Count; i++)
-            {
-                cardDoc.Cards[i].CardNumber = i + 1;
-            }
+            cardDoc.FrontCards.RemoveAt(index);
+            cardDoc.BackCards.RemoveAt(index);
 
             await collection.ReplaceOneAsync(
                 c => c.UserId == userId && c.DeckId == deckId,
@@ -200,7 +257,8 @@ public static class CardEndpoints
             return Results.Ok(new
             {
                 message = "Card was successfully deleted :O.",
-                cards = cardDoc.Cards
+                frontCards = cardDoc.FrontCards,
+                backCards = cardDoc.BackCards
             });
         });
     }

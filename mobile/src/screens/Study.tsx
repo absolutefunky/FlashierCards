@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import React, { useRef, useState } from "react";
+import { View, Text, StyleSheet, Pressable, Animated } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -9,6 +9,7 @@ type Flashcard = {
   front: string;
   back: string;
 };
+
 type RootStackParamList = {
   Dashboard: undefined;
   Study: undefined;
@@ -17,7 +18,11 @@ type RootStackParamList = {
 export default function Study() {
   const [cardNum, setCardNum] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
-    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const flipDisplay = useRef(new Animated.Value(0)).current;
 
   const cards: Flashcard[] = [
     { front: "Front of card 1", back: "Back of card 1" },
@@ -29,21 +34,48 @@ export default function Study() {
 
   const total = cards.length;
 
+  const frontRotate = flipDisplay.interpolate({
+    inputRange: [0, 180],
+    outputRange: ["0deg", "180deg"],
+  });
+
+  const backRotate = flipDisplay.interpolate({
+    inputRange: [0, 180],
+    outputRange: ["180deg", "360deg"],
+  });
+
   function flipCard() {
+    if (isFlipped) {
+      Animated.spring(flipDisplay, {
+        toValue: 0,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      Animated.spring(flipDisplay, {
+        toValue: 180,
+        useNativeDriver: true,
+      }).start();
+    }
+
     setIsFlipped((prev) => !prev);
+  }
+
+  function resetFlip() {
+    flipDisplay.setValue(0);
+    setIsFlipped(false);
   }
 
   function showNextCard() {
     if (cardNum + 1 < total) {
       setCardNum((prev) => prev + 1);
-      setIsFlipped(false);
+      resetFlip();
     }
   }
 
   function showPrevCard() {
     if (cardNum - 1 >= 0) {
       setCardNum((prev) => prev - 1);
-      setIsFlipped(false);
+      resetFlip();
     }
   }
 
@@ -51,25 +83,37 @@ export default function Study() {
     <View style={styles.dashboardContent}>
       <View style={styles.mainSection}>
         <Text style={styles.title}>Flashier Cards</Text>
-          <Pressable
-            onPress={() =>navigation.navigate("Dashboard")}>
-              <FontAwesomeIcon icon={faCircleXmark} size={20} color= "#004A94" />
-          </Pressable>
+
+        <Pressable onPress={() => navigation.navigate("Dashboard")}>
+          <FontAwesomeIcon icon={faCircleXmark} size={20} color="#004A94" />
+        </Pressable>
+
         <View style={styles.deck}>
-          <Pressable style={styles.card} onPress={flipCard}>
-            <View style={styles.cardInner}>
-              <Text style={styles.cardText}>
-                {isFlipped ? cards[cardNum].back : cards[cardNum].front}
-              </Text>
-            </View>
+          <Pressable style={styles.cardContainer} onPress={flipCard}>
+            <Animated.View
+              style={[
+                styles.card,
+                styles.frontCard,
+                { transform: [{ rotateY: frontRotate }] },
+              ]}
+            >
+              <Text style={styles.cardText}>{cards[cardNum].front}</Text>
+            </Animated.View>
+
+            <Animated.View
+              style={[
+                styles.card,
+                styles.backCard,
+                { transform: [{ rotateY: backRotate }] },
+              ]}
+            >
+              <Text style={styles.cardText}>{cards[cardNum].back}</Text>
+            </Animated.View>
           </Pressable>
 
           <View style={styles.deckNav}>
             <Pressable
-              style={[
-                styles.navButton,
-                cardNum === 0 && styles.navButtonDisabled,
-              ]}
+              style={[styles.navButton, cardNum === 0 && styles.navButtonDisabled]}
               onPress={showPrevCard}
               disabled={cardNum === 0}
             >
@@ -90,7 +134,6 @@ export default function Study() {
             >
               <FontAwesomeIcon icon={faChevronRight} size={20} color="white" />
             </Pressable>
-
           </View>
         </View>
       </View>
@@ -127,6 +170,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
+  cardContainer: {
+    width: 350,
+    height: 300,
+    marginBottom: 30,
+  },
+
   card: {
     width: 350,
     height: 300,
@@ -140,14 +189,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 20,
     elevation: 5,
-    marginBottom: 30,
+    position: "absolute",
+    backfaceVisibility: "hidden",
   },
 
-  cardInner: {
-    flex: 1,
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
+  frontCard: {
+    backgroundColor: "white",
+  },
+
+  backCard: {
+    backgroundColor: "white",
   },
 
   cardText: {

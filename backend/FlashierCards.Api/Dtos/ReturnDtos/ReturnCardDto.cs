@@ -2,9 +2,8 @@ using FlashierCards.Api.Models;
 
 namespace FlashierCards.Api.Dtos.ReturnDtos;
 
-public record ReturnCardDto
-(
-    int CardNumber,
-    CardSide CardFront,
-    CardSide CardBack
-);
+public class ReturnCardDto
+{
+    public CardElement? FrontCard { get; set; }
+    public CardElement? BackCard { get; set; }
+}
