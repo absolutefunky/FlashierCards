@@ -20,6 +20,83 @@
     margin-bottom: 2rem;
 }
 
+.panel {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.sidePanel {
+    flex: 1;
+    min-width: 300px;
+    background-color: #D9EDF8;
+    border-radius: 5px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidePanel > div {
+    display: flex;
+    flex-direction: column;
+}
+
+.sidePanelTitle {
+    font-size: 20px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: white;
+    background-color: #004A94;
+    padding: 0.5rem;
+    margin-bottom: 0.8rem;
+}
+
+.textOptions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.textOptions > div {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.textOptions button {
+    font-size: 18px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    background-color: white;
+    border: 2px solid #004A94;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    color: #004A94;
+}
+
+.textOptions button:hover {
+    cursor: pointer;
+}
+
+.textInput {
+    display: flex;
+    height: 150px;
+    margin-bottom: 1.5rem;
+}
+
+.textInput textarea {
+    outline: none;
+    width: 100%;
+    resize: none;
+    border: 2px solid #004A94;
+    border-radius: 5px;
+    padding: 0.5rem;
+    font-size: 18px;
+}
+
 .deck {
     display: flex;
     flex-direction: column;

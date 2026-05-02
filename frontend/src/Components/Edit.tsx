@@ -1,83 +1,342 @@
 import Navbar from "./Navbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { faT } from "@fortawesome/free-solid-svg-icons";
-import { faPen } from "@fortawesome/free-solid-svg-icons";
-import { faCircle } from "@fortawesome/free-solid-svg-icons";
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
-import { faFill } from "@fortawesome/free-solid-svg-icons";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faT, faHeart, faTrash, faFloppyDisk, faCircleXmark, faChevronLeft, faRightLeft } from "@fortawesome/free-solid-svg-icons";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons/faChevronRight";
-import { faRightLeft } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Stage, Layer, Star, Circle as KonvaCircle, Arrow, Path, Transformer, Rect } from "react-konva";
-import type Konva from "konva";
 import styles from "../Styles/Deck.module.css";
+import { useParams } from "react-router-dom";
+import type Card from "../Interfaces/Card";
+import { Stage, Layer, Text, Image as KonvaImage } from "react-konva";
+import useImage from "use-image";
 
-type StickerType = "star" | "heart" | "badge" | "arrow" ;
-
-type Sticker = {
+type GiphySticker = {
   id: string;
-  type: StickerType;
+  title: string;
+  url: string;
+};
+
+type Stickers = {
+  url: string;
   x: number;
   y: number;
-  rotation: number;
-  scaleX: number;
-  scaleY: number;
+  width: number;
+  height: number;
 };
+
+function StickerImage({
+  sticker,
+  index,
+  onDragEnd,
+}: {
+  sticker: Stickers;
+  index: number;
+  onDragEnd: (index: number, x: number, y: number) => void;
+}) {
+  const [image] = useImage(sticker.url, "anonymous");
+
+  return (
+    <KonvaImage
+      image={image}
+      x={sticker.x}
+      y={sticker.y}
+      width={sticker.width}
+      height={sticker.height}
+      draggable
+      onDragEnd={(e) => onDragEnd(index, e.target.x(), e.target.y())}
+    />
+  );
+}
 
 function Edit() {
   const [error, setError] = useState({ status: false, message: "" });
   const [loading, setLoading] = useState(false);
-  const [deckName, setDeckName] = useState<string>("");
+  const [deckName, setDeckName] = useState("");
   const { userId, deckId } = useParams();
 
+  const [textPanel, setTextPanel] = useState(false);
+  const [gifPanel, setGifPanel] = useState(false);
+  const [stickerPanel, setStickerPanel] = useState(false);
+
+  const [text, setText] = useState("");
+  const [textArea, setTextArea] = useState(false);
+  const [textIndex, setTextIndex] = useState(0);
+
+  const [stickerSearch, setStickerSearch] = useState("");
+  const [stickerResults, setStickerResults] = useState<GiphySticker[]>([]);
+
   const cardRef = useRef<HTMLDivElement>(null);
-  const trRef = useRef<Konva.Transformer | null>(null);
-  const shapeRefs = useRef<Record<string, Konva.Node | null>>({});
-
-  const [cardSide, setCardSide] = useState<"Front" | "Back">("Front");
+  const [cardSide, setCardSide] = useState("Front");
   const [cardNum, setCardNum] = useState(1);
-  const total = 5;
+  const [total, setTotal] = useState(1);
 
-  const [displayStickerMenu, setDisplayStickerMenu] = useState(false);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [frontCard, setFrontCard] = useState<Card[]>([
+    { text: [], gif: [], sticker: [] },
+  ]);
 
-  const [frontStickers, setFrontStickers] = useState<Sticker[]>([]);
-  const [backStickers, setBackStickers] = useState<Sticker[]>([]);
+  const [backCard, setBackCard] = useState<Card[]>([
+    { text: [], gif: [], sticker: [] },
+  ]);
 
-    const stageWidth = 750;
-    const stageHeight = 380;
+  async function fetchStickers(e?: React.FormEvent) {
+    e?.preventDefault();
 
-  const currentStickers = cardSide === "Front" ? frontStickers : backStickers;
-  const setCurrentStickers =
-    cardSide === "Front" ? setFrontStickers : setBackStickers;
+    if (!stickerSearch.trim()) return;
+
+    try {
+      const response = await fetch(
+        `https://api.giphy.com/v1/stickers/search?api_key=${
+          import.meta.env.VITE_GIPHY_API_KEY
+        }&q=${encodeURIComponent(stickerSearch)}&limit=8&rating=g`
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Could not get stickers.");
+      }
+
+      const stickers: GiphySticker[] = data.data.map((item: any) => ({
+        id: item.id,
+        title: item.title,
+        url: item.images.original_still.url,
+      }));
+
+      setStickerResults(stickers);
+    } catch (err: any) {
+      setError({
+        status: true,
+        message: err.message || "Could not load stickers.",
+      });
+    }
+  }
+
+  function createSticker(url: string) {
+    const currSticker = {
+      url,
+      x: 50,
+      y: 50,
+      width: 100,
+      height: 100,
+    };
+
+    if (cardSide === "Front") {
+      setFrontCard((prev) =>
+        prev.map((card, index) =>
+          index === cardNum - 1
+            ? { ...card, sticker: [...card.sticker, currSticker] }
+            : card
+        )
+      );
+    } else {
+      setBackCard((prev) =>
+        prev.map((card, index) =>
+          index === cardNum - 1
+            ? { ...card, sticker: [...card.sticker, currSticker] }
+            : card
+        )
+      );
+    }
+  }
+
+  function changeTextColor(color: string) {
+    if (cardSide === "Front") {
+      setFrontCard((prev) =>
+        prev.map((card, index) =>
+          index === cardNum - 1
+            ? {
+                ...card,
+                text: card.text.map((cardText, i) =>
+                  i === textIndex ? { ...cardText, color } : cardText
+                ),
+              }
+            : card
+        )
+      );
+    } else {
+      setBackCard((prev) =>
+        prev.map((card, index) =>
+          index === cardNum - 1
+            ? {
+                ...card,
+                text: card.text.map((cardText, i) =>
+                  i === textIndex ? { ...cardText, color } : cardText
+                ),
+              }
+            : card
+        )
+      );
+    }
+  }
+
+  function createSmallText() {
+    createTextBox(300, 18);
+  }
+
+  function createMediumText() {
+    createTextBox(400, 28);
+  }
+
+  function createLargeText() {
+    createTextBox(600, 38);
+  }
+
+  function createTextBox(width: number, fontSize: number) {
+    const textTmp = {
+      input: "Enter text in the text area",
+      width,
+      x: 30,
+      y: 30,
+      fontSize,
+      color: "#201002",
+    };
+
+    if (cardSide === "Front") {
+      setFrontCard((prev) =>
+        prev.map((card, index) =>
+          index === cardNum - 1
+            ? { ...card, text: [...card.text, textTmp] }
+            : card
+        )
+      );
+    } else {
+      setBackCard((prev) =>
+        prev.map((card, index) =>
+          index === cardNum - 1
+            ? { ...card, text: [...card.text, textTmp] }
+            : card
+        )
+      );
+    }
+  }
+
+  function deleteText() {
+    if (cardSide === "Front") {
+      setFrontCard((prev) =>
+        prev.map((card, index) =>
+          index === cardNum - 1
+            ? {
+                ...card,
+                text: card.text.filter((_, index) => index !== textIndex),
+              }
+            : card
+        )
+      );
+    } else {
+      setBackCard((prev) =>
+        prev.map((card, index) =>
+          index === cardNum - 1
+            ? {
+                ...card,
+                text: card.text.filter((_, index) => index !== textIndex),
+              }
+            : card
+        )
+      );
+    }
+
+    setTextArea(false);
+  }
+
+  function showTextArea(request: boolean, index: number, input: string) {
+    setText(input);
+    setTextIndex(index);
+    setTextArea(request);
+  }
+
+  function changeTextInput(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    setText(e.target.value);
+
+    if (cardSide === "Front") {
+      setFrontCard((prev) =>
+        prev.map((card, index) =>
+          index === cardNum - 1
+            ? {
+                ...card,
+                text: card.text.map((cardText, i) =>
+                  i === textIndex
+                    ? { ...cardText, input: e.target.value }
+                    : cardText
+                ),
+              }
+            : card
+        )
+      );
+    } else {
+      setBackCard((prev) =>
+        prev.map((card, index) =>
+          index === cardNum - 1
+            ? {
+                ...card,
+                text: card.text.map((cardText, i) =>
+                  i === textIndex
+                    ? { ...cardText, input: e.target.value }
+                    : cardText
+                ),
+              }
+            : card
+        )
+      );
+    }
+  }
+
+  function addCard() {
+    if (total + 1 <= 20) {
+      setTotal(total + 1);
+      setFrontCard([...frontCard, { text: [], gif: [], sticker: [] }]);
+      setBackCard([...backCard, { text: [], gif: [], sticker: [] }]);
+    }
+  }
+
+  function deleteCard() {
+    if (total - 1 >= 1) {
+      setTotal(total - 1);
+      setFrontCard((prev) => prev.filter((_, index) => index !== cardNum - 1));
+      setBackCard((prev) => prev.filter((_, index) => index !== cardNum - 1));
+      setCardNum(cardNum > 1 ? cardNum - 1 : 1);
+    }
+  }
 
   function flipCard() {
     if (cardRef.current) {
       cardRef.current.classList.toggle(styles.flip);
       setCardSide((prev) => (prev === "Front" ? "Back" : "Front"));
-      setSelectedId(null);
-      setDisplayStickerMenu(false);
     }
   }
 
   function showNextCard() {
     if (cardNum + 1 <= total) {
       setCardNum(cardNum + 1);
-      setSelectedId(null);
-      setDisplayStickerMenu(false);
     }
   }
 
   function showPrevCard() {
     if (cardNum - 1 >= 1) {
       setCardNum(cardNum - 1);
-      setSelectedId(null);
-      setDisplayStickerMenu(false);
     }
+  }
+
+  function showTextPanel() {
+    setStickerPanel(false);
+    setGifPanel(false);
+    setTextPanel(true);
+  }
+
+  function showGifPanel() {
+    setTextPanel(false);
+    setStickerPanel(false);
+    setGifPanel(true);
+  }
+
+  function showStickerPanel() {
+    setTextPanel(false);
+    setGifPanel(false);
+    setStickerPanel(true);
+  }
+
+  function hideSidePanel() {
+    setTextPanel(false);
+    setStickerPanel(false);
+    setGifPanel(false);
   }
 
   const fetchDeckData = async () => {
@@ -95,10 +354,10 @@ function Edit() {
       }
 
       setDeckName(data.name);
-      setLoading(false);
     } catch (error: any) {
-      setLoading(false);
       setError({ status: true, message: error.message });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -106,169 +365,21 @@ function Edit() {
     fetchDeckData();
   }, []);
 
-  useEffect(() => {
-    if (selectedId && trRef.current && shapeRefs.current[selectedId]) {
-      trRef.current.nodes([shapeRefs.current[selectedId]!]);
-      trRef.current.getLayer()?.batchDraw();
-    } else if (trRef.current) {
-      trRef.current.nodes([]);
-      trRef.current.getLayer()?.batchDraw();
-    }
-  }, [selectedId, currentStickers, cardSide]);
-
-  function addSticker(type: StickerType) {
-    const id = `shape_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
-
-    const newSticker: Sticker = {
-      id,
-      type,
-      x: 120 + Math.random() * 120,
-      y: 80 + Math.random() * 80,
-      rotation: 0,
-      scaleX: 1,
-      scaleY: 1,
-    };
-
-    setCurrentStickers((prev) => [...prev, newSticker]);
-    setSelectedId(id);
-    setDisplayStickerMenu(false);
-  }
-
-  function updateStickerPosition(id: string, x: number, y: number) {
-    setCurrentStickers((prev) =>
-      prev.map((sticker) =>
-        sticker.id === id ? { ...sticker, x, y } : sticker
-      )
-    );
-  }
-
-  function handleTransformEnd(id: string) {
-    const node = shapeRefs.current[id];
-    if (!node) return;
-
-    setCurrentStickers((prev) =>
-      prev.map((sticker) =>
-        sticker.id === id
-          ? {
-              ...sticker,
-              x: node.x(),
-              y: node.y(),
-              rotation: node.rotation(),
-              scaleX: node.scaleX(),
-              scaleY: node.scaleY(),
-            }
-          : sticker
-      )
-    );
-  }
-
-  function handleStageClick(e: any) {
-    const clickedOnEmpty =
-      e.target === e.target.getStage() || e.target.getClassName() === "Rect";
-
-    if (clickedOnEmpty) {
-      setSelectedId(null);
-    }
-  }
-
-
-  function renderSticker(item: Sticker) {
-    const commonProps = {
-      key: item.id,
-      ref: (node: Konva.Node | null) => {
-        shapeRefs.current[item.id] = node;
-      },
-      x: item.x,
-      y: item.y,
-      rotation: item.rotation,
-      scaleX: item.scaleX,
-      scaleY: item.scaleY,
-      draggable: true,
-      onClick: () => setSelectedId(item.id),
-      onTap: () => setSelectedId(item.id),
-      onDragEnd: (e: any) =>
-        updateStickerPosition(item.id, e.target.x(), e.target.y()),
-      onTransformEnd: () => handleTransformEnd(item.id),
-    };
-
-    if (item.type === "star") {
-      return (
-        <Star
-          {...commonProps}
-          numPoints={5}
-          innerRadius={15}
-          outerRadius={35}
-          fill="#FFD700"
-          stroke="#FFA500"
-          strokeWidth={2}
-        />
-      );
-    }
-
-    if (item.type === "heart") {
-      return (
-        <Path
-          {...commonProps}
-          data="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
-          scaleX={item.scaleX * 2}
-          scaleY={item.scaleY * 2}
-          fill="#FF69B4"
-        />
-      );
-    }
-
-    if (item.type === "badge") {
-      return (
-        <KonvaCircle
-          {...commonProps}
-          radius={25}
-          fill="#FF4444"
-          stroke="#fff"
-          strokeWidth={3}
-        />
-      );
-    }
-
-    if (item.type === "arrow") {
-      return (
-        <Arrow
-          {...commonProps}
-          points={[0, 0, 60, 0]}
-          fill="#20C997"
-          stroke="#20C997"
-          strokeWidth={3}
-          pointerLength={12}
-          pointerWidth={12}
-        />
-      );
-    }
-
-    return null;
-  }
-
-  const stickerButtons: { emoji: string; name: string; type: StickerType }[] = [
-    { emoji: "⭐", name: "Star", type: "star" },
-    { emoji: "❤️", name: "Heart", type: "heart" },
-    { emoji: "🔴", name: "Badge", type: "badge" },
-    { emoji: "➡️", name: "Arrow", type: "arrow" }
-  ];
-
   return (
     <div className={styles.dashboardContent}>
       <Navbar userId={userId} />
+
       <div>
-        <div className={styles.title}>{deckName}</div>
+        <div className={styles.title}>{deckName || "Flashier Cards"}</div>
 
         {loading ? (
           <div className={styles.invalidRequest}>Loading request...</div>
         ) : error.status ? (
           <div className={styles.invalidRequest}>{error.message}</div>
-        ) : (
-          <div></div>
-        )}
+        ) : null}
 
         <div className={styles.toolbar}>
-          <button type="button" className={styles.toolOption}>
+          <button type="button" className={styles.toolOption} onClick={addCard}>
             <span className={styles.shadow}></span>
             <span className={styles.edge}></span>
             <span className={styles.front}>
@@ -276,15 +387,7 @@ function Edit() {
             </span>
           </button>
 
-          <button type="button" className={styles.toolOption}>
-            <span className={styles.shadow}></span>
-            <span className={styles.edge}></span>
-            <span className={styles.front}>
-              <FontAwesomeIcon icon={faCircle} />
-            </span>
-          </button>
-
-          <button type="button" className={styles.toolOption}>
+          <button type="button" className={styles.toolOption} onClick={showTextPanel}>
             <span className={styles.shadow}></span>
             <span className={styles.edge}></span>
             <span className={styles.front}>
@@ -292,64 +395,23 @@ function Edit() {
             </span>
           </button>
 
-          <button type="button" className={styles.toolOption}>
+          <button type="button" className={styles.toolOption} onClick={showGifPanel}>
             <span className={styles.shadow}></span>
             <span className={styles.edge}></span>
-            <span className={styles.front}>
-              <FontAwesomeIcon icon={faPen} />
+            <span className={styles.front} style={{ fontWeight: "600" }}>
+              GIF
             </span>
           </button>
 
-          <div style={{ position: "relative" }}>
-            <button
-              type="button"
-              className={styles.toolOption}
-              onClick={() => setDisplayStickerMenu((prev) => !prev)}
-            >
-              <span className={styles.shadow}></span>
-              <span className={styles.edge}></span>
-              <span className={styles.front}>
-                <FontAwesomeIcon icon={faHeart} />
-              </span>
-            </button>
-
-            {displayStickerMenu && (
-              <div
-                style={{ position: "absolute", top: "110%", left: 0, zIndex: 20, display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0.5rem", padding: "0.75rem", minWidth: "180px", borderRadius: "12px", background: " #D9EDF8", boxShadow: "0 8px 18px rgba(0,0,0,0.15)", }}>
-                {stickerButtons.map((s) => (
-                  <button
-                    key={s.type}
-                    type="button"
-                    onClick={() => addSticker(s.type)}
-                    style={{
-                      padding: "8px 10px",
-                      border: "1px solid #ddd",
-                      borderRadius: "8px",
-                      background: "#f8f9fa",
-                      cursor: "pointer",
-                      fontSize: "13px",
-                      fontWeight: 600,
-                    }}
-                  >
-                    {s.emoji} {s.name}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <button type="button" className={styles.toolOption}>
+          <button type="button" className={styles.toolOption} onClick={showStickerPanel}>
             <span className={styles.shadow}></span>
             <span className={styles.edge}></span>
             <span className={styles.front}>
-              <FontAwesomeIcon icon={faFill} />
+              <FontAwesomeIcon icon={faHeart} />
             </span>
           </button>
 
-          <button
-            type="button"
-            className={styles.toolOption}
-          >
+          <button type="button" className={styles.toolOption} onClick={deleteCard}>
             <span className={styles.shadow}></span>
             <span className={styles.edge}></span>
             <span className={styles.front}>
@@ -357,80 +419,279 @@ function Edit() {
             </span>
           </button>
 
-          <button
-            type="button"
-            className={styles.toolOption}
-            onClick={flipCard}
-          >
+          <button type="button" className={styles.toolOption} onClick={flipCard}>
             <span className={styles.shadow}></span>
             <span className={styles.edge}></span>
             <span className={styles.front}>
               <FontAwesomeIcon icon={faRightLeft} />
             </span>
           </button>
+
+          <button type="button" className={styles.toolOption}>
+            <span className={styles.shadow}></span>
+            <span className={styles.edge}></span>
+            <span className={styles.front}>
+              <FontAwesomeIcon icon={faFloppyDisk} />
+            </span>
+          </button>
+
+          <button type="button" className={styles.toolOption} onClick={hideSidePanel}>
+            <span className={styles.shadow}></span>
+            <span className={styles.edge}></span>
+            <span className={styles.front}>
+              <FontAwesomeIcon icon={faCircleXmark} />
+            </span>
+          </button>
         </div>
 
-        <div className={styles.deck}>
-          <div className={styles.card} ref={cardRef}>
-            <div className={styles.cardInner}>
-              <div className={styles.cardFront}>
-                <Stage
-                  width={stageWidth}
-                  height={stageHeight}
-                  onClick={handleStageClick}
-                  onTap={handleStageClick}
-                >
-                  <Layer>
-                    <Rect
-                      x={0}
-                      y={0}
-                      width={stageWidth}
-                      height={stageHeight}
-                      fill="white"
-                      cornerRadius={18}
-                    />
-                    {cardSide === "Front" &&
-                      frontStickers.map((item) => renderSticker(item))}
-                    <Transformer ref={trRef} />
-                  </Layer>
-                </Stage>
-              </div>
+        <div className={styles.panel}>
+          <div className={styles.deck}>
+            <div className={styles.card} ref={cardRef}>
+              <div className={styles.cardInner}>
+                <div className={styles.cardFront}>
+                  <Stage
+                    width={800}
+                    height={400}
+                    onClick={(e) => {
+                      if (e.target === e.target.getStage()) {
+                        showTextArea(false, 0, "");
+                      }
+                    }}
+                  >
+                    <Layer>
+                      {frontCard[cardNum - 1].text.map((text, textIndex) => (
+                        <Text
+                          key={textIndex}
+                          x={text.x}
+                          y={text.y}
+                          width={text.width}
+                          text={text.input}
+                          fontFamily="Imprima"
+                          fontSize={text.fontSize}
+                          fill={text.color}
+                          draggable
+                          onDblClick={() =>
+                            showTextArea(true, textIndex, text.input)
+                          }
+                          onDragEnd={(e) => {
+                            const { x, y } = e.target.position();
 
-              <div className={styles.cardBack}>
-                <Stage
-                  width={stageWidth}
-                  height={stageHeight}
-                  onClick={handleStageClick}
-                  onTap={handleStageClick}
-                >
-                  <Layer>
-                    <Rect
-                      x={0}
-                      y={0}
-                      width={stageWidth}
-                      height={stageHeight}
-                      fill="white"
-                      cornerRadius={18}
-                    />
-                    {cardSide === "Back" &&
-                      backStickers.map((item) => renderSticker(item))}
-                    <Transformer ref={trRef} />
-                  </Layer>
-                </Stage>
+                            setFrontCard((prev) =>
+                              prev.map((card, cardIndex) =>
+                                cardIndex === cardNum - 1
+                                  ? {
+                                      ...card,
+                                      text: card.text.map((tmp, i) =>
+                                        i === textIndex
+                                          ? { ...tmp, x, y }
+                                          : tmp
+                                      ),
+                                    }
+                                  : card
+                              )
+                            );
+                          }}
+                        />
+                      ))}
+
+                      {frontCard[cardNum - 1].sticker.map((sticker, stickerIndex) => (
+                        <StickerImage
+                          key={stickerIndex}
+                          sticker={sticker}
+                          index={stickerIndex}
+                          onDragEnd={(index, x, y) => {
+                            setFrontCard((prev) =>
+                              prev.map((card, cardIndex) =>
+                                cardIndex === cardNum - 1
+                                  ? {
+                                      ...card,
+                                      sticker: card.sticker.map((tmp, i) =>
+                                        i === index ? { ...tmp, x, y } : tmp
+                                      ),
+                                    }
+                                  : card
+                              )
+                            );
+                          }}
+                        />
+                      ))}
+                    </Layer>
+                  </Stage>
+                </div>
+
+                <div className={styles.cardBack}>
+                  <Stage
+                    width={800}
+                    height={400}
+                    onClick={(e) => {
+                      if (e.target === e.target.getStage()) {
+                        showTextArea(false, 0, "");
+                      }
+                    }}
+                  >
+                    <Layer>
+                      {backCard[cardNum - 1].text.map((text, textIndex) => (
+                        <Text
+                          key={textIndex}
+                          x={text.x}
+                          y={text.y}
+                          width={text.width}
+                          text={text.input}
+                          fontFamily="Imprima"
+                          fontSize={text.fontSize}
+                          fill={text.color}
+                          draggable
+                          onDblClick={() =>
+                            showTextArea(true, textIndex, text.input)
+                          }
+                          onDragEnd={(e) => {
+                            const { x, y } = e.target.position();
+
+                            setBackCard((prev) =>
+                              prev.map((card, cardIndex) =>
+                                cardIndex === cardNum - 1
+                                  ? {
+                                      ...card,
+                                      text: card.text.map((tmp, i) =>
+                                        i === textIndex
+                                          ? { ...tmp, x, y }
+                                          : tmp
+                                      ),
+                                    }
+                                  : card
+                              )
+                            );
+                          }}
+                        />
+                      ))}
+
+                      {backCard[cardNum - 1].sticker.map((sticker, stickerIndex) => (
+                        <StickerImage
+                          key={stickerIndex}
+                          sticker={sticker}
+                          index={stickerIndex}
+                          onDragEnd={(index, x, y) => {
+                            setBackCard((prev) =>
+                              prev.map((card, cardIndex) =>
+                                cardIndex === cardNum - 1
+                                  ? {
+                                      ...card,
+                                      sticker: card.sticker.map((tmp, i) =>
+                                        i === index ? { ...tmp, x, y } : tmp
+                                      ),
+                                    }
+                                  : card
+                              )
+                            );
+                          }}
+                        />
+                      ))}
+                    </Layer>
+                  </Stage>
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.deckNav}>
+              <button disabled={cardNum === 1} onClick={showPrevCard}>
+                <FontAwesomeIcon icon={faChevronLeft} />
+              </button>
+
+              <span>
+                {cardSide} of Card {cardNum}/{total}
+              </span>
+
+              <button disabled={cardNum === total} onClick={showNextCard}>
+                <FontAwesomeIcon icon={faChevronRight} />
+              </button>
+            </div>
+          </div>
+
+          <div
+            className={styles.sidePanel}
+            style={{ display: textPanel ? "flex" : "none" }}
+          >
+            <div style={{ display: textArea ? "flex" : "none" }}>
+              <div className={styles.sidePanelTitle}>Text Input</div>
+              <div className={styles.textInput}>
+                <textarea
+                  placeholder="Enter text here"
+                  value={text}
+                  onChange={changeTextInput}
+                />
+              </div>
+            </div>
+
+            <div style={{ display: textArea ? "flex" : "none" }}>
+              <div className={styles.sidePanelTitle}>Text Deletion</div>
+              <div className={styles.textOptions}>
+                <button onClick={deleteText}>Delete</button>
+              </div>
+            </div>
+
+            <div style={{ display: textArea ? "flex" : "none" }}>
+              <div className={styles.sidePanelTitle}>Text Color</div>
+              <div className={styles.textOptions}>
+                <div style={{ backgroundColor: "#201002" }} onClick={() => changeTextColor("#201002")}></div>
+                <div style={{ backgroundColor: "#FF2511" }} onClick={() => changeTextColor("#FF2511")}></div>
+                <div style={{ backgroundColor: "#FED43F" }} onClick={() => changeTextColor("#FED43F")}></div>
+                <div style={{ backgroundColor: "#016236" }} onClick={() => changeTextColor("#016236")}></div>
+                <div style={{ backgroundColor: "#E43480" }} onClick={() => changeTextColor("#E43480")}></div>
+                <div style={{ backgroundColor: "#621590" }} onClick={() => changeTextColor("#621590")}></div>
+                <div style={{ backgroundColor: "#1F6CB0" }} onClick={() => changeTextColor("#1F6CB0")}></div>
+              </div>
+            </div>
+
+            <div>
+              <div className={styles.sidePanelTitle}>Text Size</div>
+              <div className={styles.textOptions}>
+                <button onClick={createSmallText}>Small</button>
+                <button onClick={createMediumText}>Medium</button>
+                <button onClick={createLargeText}>Large</button>
               </div>
             </div>
           </div>
 
-          <div className={styles.deckNav}>
-            <button disabled={cardNum === 1} onClick={showPrevCard}>
-              <FontAwesomeIcon icon={faChevronLeft} />
-            </button>
-            <span>
-              {cardSide} of Card {cardNum}/{total}
-            </span>
-            <button disabled={cardNum === total} onClick={showNextCard}>
-              <FontAwesomeIcon icon={faChevronRight} />
-            </button>
+          <div
+            className={styles.sidePanel}
+            style={{ display: gifPanel ? "flex" : "none" }}
+          >
+            <div>
+              <div className={styles.sidePanelTitle}>Gifs</div>
+              <p>You can build GIF search the same way as sticker search.</p>
+            </div>
+          </div>
+
+          <div
+            className={styles.sidePanel}
+            style={{ display: stickerPanel ? "flex" : "none" }}
+          >
+            <div>
+              <div className={styles.sidePanelTitle}>Stickers</div>
+
+              <form onSubmit={fetchStickers}>
+                <input
+                  type="text"
+                  placeholder="Search stickers"
+                  value={stickerSearch}
+                  onChange={(e) => setStickerSearch(e.target.value)}
+                />
+              <div className={styles.textOptions}>
+                <button type="submit">Search</button>
+              </div>
+              </form>
+
+              <div className={styles.stickerGrid}>
+                {stickerResults.map((sticker) => (
+                  <img
+                    key={sticker.id}
+                    src={sticker.url}
+                    alt={sticker.title}
+                    onClick={() => createSticker(sticker.url)}
+                    style={{ width: "80px", height: "80px", objectFit: "contain", cursor: "pointer"}}/>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
