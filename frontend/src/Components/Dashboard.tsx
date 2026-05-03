@@ -100,7 +100,7 @@ function Dashboard() {
         setLoading(true);
 
         try {
-            // create a deck
+            // create a deck in supabase
             const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/decks/create`, {
                 method: "POST",
                 headers: {
@@ -116,6 +116,27 @@ function Dashboard() {
 
             if (!response.ok) {
                 throw new Error(data.message);
+            }
+
+            // create a doc in mongodb
+            const docResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/decks/${data.deckDto.id}/createCards`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    "userId": userId,
+                    "deckId": data.deckDto.id,
+                    "frontCards": [{"text": [], "gif": [], "sticker": []}],
+                    "backCards": [{"text": [], "gif": [], "sticker": []}]
+                })
+            });
+
+            // get message and doc data
+            const docData = await docResponse.json();
+
+            if (!docResponse.ok) {
+                throw new Error(docData.message);
             }
 
             setDecks(prev => [...prev, data.deckDto]);
@@ -171,7 +192,7 @@ function Dashboard() {
         setLoading(true);
 
         try {
-            // delete a deck
+            // delete a deck in supabase
             const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/decks/${deckId}/delete`, {
                 method: "DELETE"
             });
@@ -181,6 +202,18 @@ function Dashboard() {
 
             if (!response.ok) {
                 throw new Error(data.message);
+            }
+
+            // delete a doc in mongodb
+            const docResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/decks/${deckId}/deleteCards`, {
+                method: "DELETE"
+            });
+
+            // get message and doc data
+            const docData = await docResponse.json();
+
+            if (!response.ok) {
+                throw new Error(docData.message);
             }
 
             // update deck list
@@ -285,11 +318,17 @@ function Dashboard() {
                     <div className={styles.deckList}>
                         {
                             decks.map(deck => 
-                                <div key={deck.id.toString()} className={styles.deck} onClick={() => handleToolbar(true, deck.id)}>{deck.name}</div>
+                                <div 
+                                    key={deck.id.toString()}
+                                    className={styles.deck}
+                                    onClick={() => handleToolbar(true, deck.id)}
+                                    style={{border: (deck.id == deckId) ? "2px solid #004A94" : ""}}
+                                >
+                                    {deck.name}
+                                </div>
                             )
                         }
                     </div>
-                  
                 </div>
                 <div style={{display: createOverlay ? "flex" : "none"}}  className={styles.overlay}>
                     <div className={styles.exitOverlay}>

@@ -96,7 +96,7 @@ public static class CardEndpoints
                 cardDoc.BackCards
             );
 
-            return Results.Ok(new { message = "Card content was successfully saved.", deck = dto });
+            return Results.Ok(new { message = "Card content was successfully saved.", dto });
         });
 
         // DELETE /users/{userId}/decks/{deckId}/deleteCards to delete deck content when user deletes a deck

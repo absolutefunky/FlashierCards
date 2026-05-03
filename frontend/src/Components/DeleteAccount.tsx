@@ -21,6 +21,7 @@ function DeleteAccount() {
         setLoading(true);
 
         try {
+            // delete user in supabase
             const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/delete`, {
                 method: "DELETE"
             });
@@ -29,6 +30,17 @@ function DeleteAccount() {
 
             if (!response.ok) {
                 throw new Error(data.message);
+            }
+
+            // delete user card content in mongodb
+            const docResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/deleteCards`, {
+                method: "DELETE"
+            });
+
+            const docData = await docResponse.json();
+
+            if (!response.ok) {
+                throw new Error(docData.message);
             }
 
             setLoading(false);

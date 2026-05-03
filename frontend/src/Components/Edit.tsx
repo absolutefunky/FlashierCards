@@ -35,8 +35,8 @@ function Edit() {
     const [cardSide, setCardSide] = useState("Front");
     const [cardNum, setCardNum] = useState(1);
     const [total, setTotal] = useState(1);
-    const [frontCard, setFrontCard] = useState<Card[]>([{text: [], gif: [], sticker: []}]);
-    const [backCard, setBackCard] = useState<Card[]>([{text: [], gif: [], sticker: []}]);
+    const [frontCards, setFrontCards] = useState<Card[]>([{text: [], gif: [], sticker: []}]);
+    const [backCards, setBackCards] = useState<Card[]>([{text: [], gif: [], sticker: []}]);
 
     function fetchGiphs() {
         // implement fetch calls to gips api
@@ -48,7 +48,7 @@ function Edit() {
 
     function changeTextColor(color: string) {
         if (cardSide === "Front") {
-            setFrontCard(prev =>
+            setFrontCards(prev =>
                 prev.map((card, index) =>
                     index === (cardNum - 1) ? {...card, text: card.text.map((cardText, i) =>
                         i === textIndex ? {...cardText, color: color} : cardText
@@ -56,7 +56,7 @@ function Edit() {
                 )
             );
         } else if (cardSide == "Back") {
-            setBackCard(prev =>
+            setBackCards(prev =>
                 prev.map((card, index) =>
                     index === (cardNum - 1) ? {...card, text: card.text.map((cardText, i) =>
                         i === textIndex ? {...cardText, color: color} : cardText
@@ -67,15 +67,15 @@ function Edit() {
     }
 
     function createSmallText() {
-        let textTmp = {input: "Enter text in the text area", width: 300, x: 30, y: 30, fontSize: 18, color: "#201002"};
+        let textTmp = {input: "Double click to edit text", width: 300, x: 30, y: 30, fontSize: 18, color: "#201002"};
         if (cardSide == "Front") {
-            setFrontCard(prev =>
+            setFrontCards(prev =>
                 prev.map((card, index) =>
                     index === (cardNum - 1) ? {...card, text: [...card.text, textTmp]} : card
                 )
             );
         } else if (cardSide === "Back") {
-            setBackCard(prev =>
+            setBackCards(prev =>
                 prev.map((card, index) =>
                     index === (cardNum - 1) ? {...card, text: [...card.text, textTmp]} : card
                 )
@@ -84,15 +84,15 @@ function Edit() {
     }
 
     function createMediumText() {
-        let textTmp = {input: "Enter text in the text area", width: 400, x: 30, y: 30, fontSize: 28, color: "#201002"};
+        let textTmp = {input: "Double click to edit text", width: 400, x: 30, y: 30, fontSize: 28, color: "#201002"};
         if (cardSide == "Front") {
-            setFrontCard(prev =>
+            setFrontCards(prev =>
                 prev.map((card, index) =>
                     index === (cardNum - 1) ? {...card, text: [...card.text, textTmp]} : card
                 )
             );
         } else if (cardSide === "Back") {
-            setBackCard(prev =>
+            setBackCards(prev =>
                 prev.map((card, index) =>
                     index === (cardNum - 1) ? {...card, text: [...card.text, textTmp]} : card
                 )
@@ -101,15 +101,15 @@ function Edit() {
     }
 
     function createLargeText() {
-        let textTmp = {input: "Enter text in the text area", width: 600, x: 30, y: 30, fontSize: 38, color: "#201002"};
+        let textTmp = {input: "Double click to edit text", width: 600, x: 30, y: 30, fontSize: 38, color: "#201002"};
         if (cardSide == "Front") {
-            setFrontCard(prev =>
+            setFrontCards(prev =>
                 prev.map((card, index) =>
                     index === (cardNum - 1) ? {...card, text: [...card.text, textTmp]} : card
                 )
             );
         } else if (cardSide === "Back") {
-            setBackCard(prev =>
+            setBackCards(prev =>
                 prev.map((card, index) =>
                     index === (cardNum - 1) ? {...card, text: [...card.text, textTmp]} : card
                 )
@@ -119,7 +119,7 @@ function Edit() {
 
     function deleteText() {
         if (cardSide === "Front") {
-            setFrontCard(prev =>
+            setFrontCards(prev =>
                 prev.map((card, index) =>
                     index === (cardNum - 1) ? {...card, text: card.text.filter((_, index) =>
                         index != textIndex
@@ -127,7 +127,7 @@ function Edit() {
                 )
             );
         } else if (cardSide == "Back") {
-            setBackCard(prev =>
+            setBackCards(prev =>
                 prev.map((card, index) =>
                     index === (cardNum - 1) ? {...card, text: card.text.filter((_, index) =>
                         index != textIndex
@@ -147,7 +147,7 @@ function Edit() {
     function changeTextInput(e: any) {
         setText(e.target.value);
         if (cardSide === "Front") {
-            setFrontCard(prev =>
+            setFrontCards(prev =>
                 prev.map((card, index) =>
                     index === (cardNum - 1) ? {...card, text: card.text.map((cardText, i) =>
                         i === textIndex ? {...cardText, input: e.target.value} : cardText
@@ -155,7 +155,7 @@ function Edit() {
                 )
             );
         } else if (cardSide == "Back") {
-            setBackCard(prev =>
+            setBackCards(prev =>
                 prev.map((card, index) =>
                     index === (cardNum - 1) ? {...card, text: card.text.map((cardText, i) =>
                         i === textIndex ? {...cardText, input: e.target.value} : cardText
@@ -168,16 +168,16 @@ function Edit() {
     function addCard() {
         if ((total + 1) <= 20) {
             setTotal(total + 1);
-            setFrontCard([...frontCard, {text: [], gif: [], sticker: []}]);
-            setBackCard([...backCard, {text: [], gif: [], sticker: []}]);
+            setFrontCards([...frontCards, {text: [], gif: [], sticker: []}]);
+            setBackCards([...backCards, {text: [], gif: [], sticker: []}]);
         }
     }
 
     function deleteCard() {
         if ((total - 1) >= 1) {
             setTotal(total - 1);
-            setFrontCard(prev => prev.filter((_, index) => index != (cardNum - 1)));
-            setBackCard(prev => prev.filter((_, index) => index != (cardNum - 1)));
+            setFrontCards(prev => prev.filter((_, index) => index != (cardNum - 1)));
+            setBackCards(prev => prev.filter((_, index) => index != (cardNum - 1)));
             if (cardNum > 1) {
                 setCardNum(cardNum - 1);
             } else {
@@ -195,13 +195,21 @@ function Edit() {
 
     function showNextCard() {
         if ((cardNum + 1) <= total) {
+            showTextArea(false, 0, "");
             setCardNum(cardNum + 1);
+            if (cardSide === "Back") {
+                flipCard();
+            }
         }
     }
 
     function showPrevCard() {
         if ((cardNum - 1) >= 1) {
+            showTextArea(false, 0, "");
             setCardNum(cardNum - 1);
+            if (cardSide === "Back") {
+                flipCard();
+            }
         }
     }
 
@@ -235,6 +243,7 @@ function Edit() {
     function hideSidePanel() {
         if (textPanel) {
             setTextPanel(false);
+            showTextArea(false, 0, "");
         } else if (stickerPanel) {
             setStickerPanel(false);
         } else if (gifPanel) {
@@ -242,10 +251,44 @@ function Edit() {
         }
     }
     
+    const updateDeckContent  = async () => {
+        setLoading(true);
+
+        try {
+            // update card content in mongodb
+            const docResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/decks/${deckId}/saveCards`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    "userId": userId,
+                    "deckId": deckId,
+                    "frontCards": frontCards,
+                    "backCards": backCards
+                })
+            });
+
+            // get message and card content
+            const docData = await docResponse.json();
+
+            if (!docResponse.ok) {
+                throw new Error(docData.message);
+            }
+
+            setLoading(false);
+
+        } catch(error: any) {
+            setLoading(false);
+            setError({status: true, message: error.message});
+        }
+    }
+
     const fetchDeckData = async () => {
         setLoading(true);
 
         try {
+            // get deck data from supabase
             const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/decks/${deckId}`);
 
             // get message and deck data
@@ -255,7 +298,22 @@ function Edit() {
                 throw new Error(data.message);
             }
 
+            // get card content from mongodb
+            const docResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/decks/${deckId}/cards`);
+
+            // get message and card content
+            const docData = await docResponse.json();
+
+            if (!docResponse.ok) {
+                throw new Error(docData.message);
+            }
+
+            // set deck name content to display
             setDeckName(data.name);
+            setFrontCards(docData.frontCards);
+            setBackCards(docData.backCards);
+            setTotal(docData.frontCards.length);
+
             setLoading(false);
 
         } catch(error: any) {
@@ -352,7 +410,8 @@ function Edit() {
                     </button>
                     <button
                         type="button"
-                        className={styles.toolOption}                        
+                        className={styles.toolOption} 
+                        onClick={() => updateDeckContent()}                       
                     >
                         <span className={styles.shadow}></span>
                         <span className={styles.edge}></span>
@@ -387,7 +446,7 @@ function Edit() {
                                         }}
                                     >
                                         <Layer>
-                                            {frontCard[cardNum - 1].text.map((text, textIndex) =>
+                                            {frontCards[cardNum - 1].text.map((text, textIndex) =>
                                                 <Text
                                                     x={text.x}
                                                     y={text.y}
@@ -398,11 +457,12 @@ function Edit() {
                                                     fill={text.color}
                                                     draggable
                                                     onDblClick={() => {
-                                                        showTextArea(true, textIndex, text.input)
+                                                        showTextPanel();
+                                                        showTextArea(true, textIndex, text.input);
                                                     }}
                                                     onDragEnd={(e) => {
                                                         const { x, y } = e.target.position();
-                                                        setFrontCard(prev =>
+                                                        setFrontCards(prev =>
                                                             prev.map((card, cardIndex) =>
                                                                 cardIndex === (cardNum - 1) ? {
                                                                     ...card,
@@ -429,7 +489,7 @@ function Edit() {
                                         }}
                                     >
                                         <Layer>
-                                            {backCard[cardNum - 1].text.map((text, textIndex) =>
+                                            {backCards[cardNum - 1].text.map((text, textIndex) =>
                                                 <Text
                                                     x={text.x}
                                                     y={text.y}
@@ -437,11 +497,15 @@ function Edit() {
                                                     text={text.input}
                                                     fontFamily="Imprima"
                                                     fontSize={text.fontSize}
+                                                    fill={text.color}
                                                     draggable
-                                                    onDblClick={() => showTextArea(true, textIndex, text.input)}
+                                                    onDblClick={() => {
+                                                        showTextPanel();
+                                                        showTextArea(true, textIndex, text.input);
+                                                    }}
                                                     onDragEnd={(e) => {
                                                         const { x, y } = e.target.position();
-                                                        setBackCard(prev =>
+                                                        setBackCards(prev =>
                                                             prev.map((card, cardIndex) =>
                                                                 cardIndex === (cardNum - 1) ? {
                                                                     ...card,

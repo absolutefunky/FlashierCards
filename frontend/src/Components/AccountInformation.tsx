@@ -99,41 +99,38 @@ function AccountInformation() {
                             Delete Account
                         </button>
                     </div>
-                    { (loading) ? 
-                        <div>
+                    <div>
+                        { (loading) ? 
                             <div className={styles.invalidRequest}>
                                 Loading request...
                             </div>
-                        </div>
-                    :
-                        (error.status) ?
-                            <div>
+                        :
+                            (error.status) ?
                                 <div className={styles.invalidRequest}>
                                     {error.message}
                                 </div>
-                            </div>
-                        :
-                        <div>
-                            <div className={styles.subtitle} style={{fontWeight: "600"}}>
-                                Email
-                            </div>
-                            <div className={styles.profileText}>
-                                {user?.email}
-                            </div>
-                            <div className={styles.subtitle} style={{fontWeight: "600"}}>
-                                Date Account Created
-                            </div>
-                            <div className={styles.profileText}>
-                                {user?.dateAccountCreated}
-                            </div>
-                            <div className={styles.subtitle} style={{fontWeight: "600"}}>
-                                Total Number of Decks
-                            </div>
-                            <div className={styles.profileText}>
-                                {totalDecks}
-                            </div>
+                            :
+                                <div></div>
+                        }
+                        <div className={styles.subtitle} style={{fontWeight: "600"}}>
+                            Email
                         </div>
-                    }
+                        <div className={styles.profileText}>
+                            {user?.email}
+                        </div>
+                        <div className={styles.subtitle} style={{fontWeight: "600"}}>
+                            Date Account Created
+                        </div>
+                        <div className={styles.profileText}>
+                            {user?.dateAccountCreated}
+                        </div>
+                        <div className={styles.subtitle} style={{fontWeight: "600"}}>
+                            Total Number of Decks
+                        </div>
+                        <div className={styles.profileText}>
+                            {totalDecks}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
