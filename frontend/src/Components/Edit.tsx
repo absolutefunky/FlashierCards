@@ -86,7 +86,7 @@ function Edit() {
       const response = await fetch(
         `https://api.giphy.com/v1/stickers/search?api_key=${
           import.meta.env.VITE_GIPHY_API_KEY
-        }&q=${encodeURIComponent(stickerSearch)}&limit=8&rating=g`
+        }&q=${encodeURIComponent(stickerSearch)}&limit=100&rating=g`
       );
 
       const data = await response.json();
