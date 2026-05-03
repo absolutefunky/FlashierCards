@@ -1,13 +1,15 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { View, Text, Pressable, StyleSheet, FlatList } from "react-native";
 import { RootStackParamList } from "../../App";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { useState } from "react";
 
 type DashboardScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "Dashboard">;
+type DashboardScreenRouteProp = RouteProp<RootStackParamList, "Dashboard">;
 
 export default function DashboardScreen() {
     const navigation = useNavigation<DashboardScreenNavigationProp>();
+    const route = useRoute<DashboardScreenRouteProp>();
     const [decks, setDecks] = useState([{id: "1", title: "SENG 645 Exam 1 Review"}, {id: "2", title: "SENG 645 Exam 2 Review"}, {id: "3", title: "SENG 645 Exam 3 Review"}]);
     
     function fetchDeckData() {
@@ -17,12 +19,13 @@ export default function DashboardScreen() {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Flashier Cards</Text>
+            <Text></Text>
             <FlatList
                 showsVerticalScrollIndicator={false}
                 data={decks}
                 keyExtractor={item => item.id}
-                renderItem={({item}) => (
-                    <Pressable key={item.id} style={styles.deck} onPress={() => navigation.navigate("Study")}>
+                renderItem={({item}) => (                                                               // add prop for deckId here
+                    <Pressable key={item.id} style={styles.deck} onPress={() => navigation.navigate("Study", {userId: route.params.userId})}>
                         <Text style={styles.deckText}>{item.title}</Text>
                     </Pressable>
                 )}

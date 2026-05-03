@@ -15,15 +15,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { Pressable, Text, StyleSheet } from 'react-native';
 import { faArrowLeft, faArrowRightFromBracket, faFolder } from '@fortawesome/free-solid-svg-icons';
 
+// update props here
 export type RootStackParamList = {
     Login: undefined;
     ForgotPassword: undefined;
-    CreateNewPassword: undefined;
-    Dashboard: undefined;
-    Study: undefined;
-    AccountInformation: undefined;
-    Theme: undefined;
-    DeleteAccount: undefined;
+    CreateNewPassword: undefined;   // add prop for userId here
+    Dashboard: {userId: string};
+    Study: {userId: string};    // add prop for deckId here
+    AccountInformation: {userId: string};
+    Theme: {userId: string};
+    DeleteAccount: {userId: string};
 };
 
 const RootStack = createStackNavigator<RootStackParamList>();
@@ -64,9 +65,9 @@ export default function App() {
                 <RootStack.Screen
                     name="CreateNewPassword"
                     component={CreateNewPasswordScreen}
-                    options={({ navigation }) => ({
+                    options={({ navigation, route }) => ({
                         title: "",
-                        headerLeft: () => (
+                        headerLeft: () => (     // add prop for userId
                             <Pressable style={styles.headerBtn} onPress={() => navigation.navigate("ForgotPassword")}>
                                 <FontAwesomeIcon style={styles.headerText} icon={faArrowLeft} size={26} />
                             </Pressable>
@@ -79,7 +80,7 @@ export default function App() {
                 <RootStack.Screen
                     name="Dashboard"
                     component={DashboardScreen}
-                    options={({ navigation }) => ({
+                    options={({ navigation, route }) => ({
                         title: "",
                         headerLeft: () => (
                             <Pressable style={styles.headerBtn} onPress={() => navigation.navigate("Login")}>
@@ -87,7 +88,7 @@ export default function App() {
                             </Pressable>
                         ),
                         headerRight: () => (
-                            <Pressable style={styles.headerBtn} onPress={() => navigation.navigate("AccountInformation")}>
+                            <Pressable style={styles.headerBtn} onPress={() => navigation.navigate("AccountInformation", {userId: route.params.userId})}>
                                 <Text style={styles.headerText}>Profile</Text>
                             </Pressable>
                         ),
@@ -99,10 +100,10 @@ export default function App() {
                 <RootStack.Screen
                     name="Study"
                     component={StudyScreen}
-                    options={({ navigation }) => ({
+                    options={({ navigation, route }) => ({
                         title: "",
-                        headerLeft: () => (
-                            <Pressable style={styles.headerBtn} onPress={() => navigation.navigate("Dashboard")}>
+                        headerLeft: () => (         // add prop for deckId
+                            <Pressable style={styles.headerBtn} onPress={() => navigation.navigate("Dashboard", {userId: route.params.userId})}>
                                 <FontAwesomeIcon style={styles.headerText} icon={faFolder} size={26} />
                             </Pressable>
                         ),
@@ -114,10 +115,10 @@ export default function App() {
                 <RootStack.Screen 
                     name="AccountInformation"
                     component={AccountInformationScreen} 
-                    options={({ navigation }) => ({
+                    options={({ navigation, route }) => ({
                         title: "",
                         headerLeft: () => (
-                            <Pressable style={styles.headerBtn} onPress={() => navigation.navigate("Dashboard")}>
+                            <Pressable style={styles.headerBtn} onPress={() => navigation.navigate("Dashboard", {userId: route.params.userId})}>
                                 <FontAwesomeIcon style={styles.headerText} icon={faFolder} size={26} />
                             </Pressable>
                         ),
@@ -129,10 +130,10 @@ export default function App() {
                 <RootStack.Screen
                     name="Theme"
                     component={ThemeScreen}
-                    options={({ navigation }) => ({
+                    options={({ navigation, route }) => ({
                         title: "",
                         headerLeft: () => (
-                            <Pressable style={styles.headerBtn} onPress={() => navigation.navigate("Dashboard")}>
+                            <Pressable style={styles.headerBtn} onPress={() => navigation.navigate("Dashboard", {userId: route.params.userId})}>
                                 <FontAwesomeIcon style={styles.headerText} icon={faFolder} size={26} />
                             </Pressable>
                         ),
@@ -144,10 +145,10 @@ export default function App() {
                 <RootStack.Screen
                     name="DeleteAccount"
                     component={DeleteAccountScreen} 
-                    options={({ navigation }) => ({
+                    options={({ navigation, route }) => ({
                         title: "",
                         headerLeft: () => (
-                            <Pressable style={styles.headerBtn} onPress={() => navigation.navigate("Dashboard")}>
+                            <Pressable style={styles.headerBtn} onPress={() => navigation.navigate("Dashboard", {userId: route.params.userId})}>
                                 <FontAwesomeIcon style={styles.headerText} icon={faFolder} size={26} />
                             </Pressable>
                         ),

@@ -22,10 +22,10 @@ export default function ForgotPasswordScreen() {
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
             <Text style={styles.title}>Flashier Cards</Text>
             { (loading) ?
-                <Text>Loading request...</Text>
+                <Text style={styles.message}>Loading request...</Text>
             :
                 (error.status) ?
-                    <Text>{error.message}</Text>
+                    <Text style={styles.message}>{error.message}</Text>
                 :
                     <></>
             }
@@ -173,5 +173,15 @@ const styles = StyleSheet.create({
         fontWeight: "400",
         color: "#004A94",
         fontFamily: "Imprima_400Regular"
+    },
+    message: {
+        fontSize: 18,
+        fontWeight: "400",
+        color: "#004A94",
+        fontFamily: "Imprima_400Regular",
+        backgroundColor: "#D9EDF8",
+        padding: 12,
+        borderRadius: 5,
+        marginBottom: 20
     }
 });

@@ -12,20 +12,50 @@ export default function LoginScreen() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState({status: false, message: ""});
     const [loading, setLoading] = useState(false);
+    const FLASHIER_CARDS_API = "add flashier cards backend url here";
 
-    function handleLogin() {
-        // handle user authentication here
-        navigation.navigate("Dashboard");
+    const handleLogin = async () => {
+        setLoading(true);
+
+        try {
+            // find user account
+            const userResponse = await fetch(`${FLASHIER_CARDS_API}/users/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: email.trim(),
+                    password: password
+                })
+            });
+
+            // get message and user data
+            const userData = await userResponse.json();
+
+            if (!userResponse.ok) {
+                throw new Error(userData.message);
+            }
+
+            setLoading(false);
+
+            // go to dashboard after user account is created
+            navigation.navigate("Dashboard", {userId: userData.user.id});
+
+        } catch(error: any) {
+            setLoading(false);
+            setError({status: true, message: error.message});
+        }
     }
 
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
             <Text style={styles.title}>Flashier Cards</Text>
             { (loading) ?
-                <Text>Loading request...</Text>
+                <Text style={styles.message}>Loading request...</Text>
             :
                 (error.status) ?
-                    <Text>{error.message}</Text>
+                    <Text style={styles.message}>{error.message}</Text>
                 :
                     <></>
             }
@@ -182,5 +212,15 @@ const styles = StyleSheet.create({
         fontWeight: "400",
         color: "#004A94",
         fontFamily: "Imprima_400Regular"
+    },
+    message: {
+        fontSize: 18,
+        fontWeight: "400",
+        color: "#004A94",
+        fontFamily: "Imprima_400Regular",
+        backgroundColor: "#D9EDF8",
+        padding: 12,
+        borderRadius: 5,
+        marginBottom: 20
     }
 });

@@ -1,18 +1,41 @@
-import { Button } from "@react-navigation/elements";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { View, Text, StyleSheet, TouchableOpacity, Pressable } from "react-native";
 import { RootStackParamList } from "../../App";
-import { useNavigation } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { useState } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faHouseUser, faPalette, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 type DeleteAccountScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "DeleteAccount">;
+type DeleteAccountScreenRouteProp = RouteProp<RootStackParamList, "DeleteAccount">;
 
 export default function DeleteAccountScreen() {
     const navigation = useNavigation<DeleteAccountScreenNavigationProp>();
+    const route = useRoute<DeleteAccountScreenRouteProp>();
     const [error, setError] = useState({status: false, message: ""});
     const [loading, setLoading] = useState(false);
+    const FLASHIER_CARDS_API = "add flashier cards backend url here";
+
+    const deleteUserData = async () => {
+        setLoading(true);
+
+        try {
+            const response = await fetch(`${FLASHIER_CARDS_API}/users/${route.params.userId}/delete`, {
+                method: "DELETE"
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message);
+            }
+
+            setLoading(false);
+			navigation.navigate("Login");
+
+        } catch(error: any) {
+            setLoading(false);
+            setError({status: true, message: error.message});
+        }
+    }
 
     return (
         <View style={styles.container}>
@@ -20,43 +43,43 @@ export default function DeleteAccountScreen() {
             <View style={styles.profileNav}>
                 <TouchableOpacity
                     style={styles.profileNavButton}
-                    onPress={() => navigation.navigate("AccountInformation")}
+                    onPress={() => navigation.navigate("AccountInformation", {userId: route.params.userId})}
                 >
                     <Text style={styles.profileNavText}>Account</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.profileNavButton}
-                    onPress={() => navigation.navigate("Theme")}
+                    onPress={() => navigation.navigate("Theme", {userId: route.params.userId})}
                 >
                     <Text style={styles.profileNavText}>Theme</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.profileNavButton}
-                    onPress={() => navigation.navigate("DeleteAccount")}
+                    onPress={() => navigation.navigate("DeleteAccount", {userId: route.params.userId})}
                 >
                     <Text style={styles.profileNavText}>Delete</Text>
                 </TouchableOpacity>
             </View>
             <View style={styles.mainContent}>
                 { (loading) ?
-                    <Text>Loading request...</Text>
+                    <Text style={styles.message}>Loading request...</Text>
                 :
                     (error.status) ?
-                        <Text>{error.message}</Text>
+                        <Text style={styles.message}>{error.message}</Text>
                     :
                         <></>
                 }
                 <Text style={styles.subtitle}>Delete My Account</Text>
                 <Text style={styles.profileText}>Are you sure you want to delete your account? This action cannot be undone.</Text>
                 <View style={styles.deleteBtns}>
-                    <Pressable style={styles.homeBtn} onPress={() => navigation.navigate("Login")}>
+                    <Pressable style={styles.homeBtn} onPress={deleteUserData}>
                         <View style={styles.signupShadow} />
                         <View style={styles.signupEdge} />
                         <View style={styles.signupFront}>
                             <Text style={styles.signupFrontText}>I am certain!</Text>
                         </View>
                     </Pressable> 
-                    <Pressable style={styles.homeBtn} onPress={() => navigation.navigate("Dashboard")}>
+                    <Pressable style={styles.homeBtn} onPress={() => navigation.navigate("Dashboard", {userId: route.params.userId})}>
                         <View style={styles.loginShadow} />
                         <View style={styles.loginEdge} />
                         <View style={styles.loginFront}>
@@ -200,5 +223,15 @@ const styles = StyleSheet.create({
         fontWeight: "400",
         color: "#004A94",
         fontFamily: "Imprima_400Regular"
+    },
+    message: {
+        fontSize: 18,
+        fontWeight: "400",
+        color: "#004A94",
+        fontFamily: "Imprima_400Regular",
+        backgroundColor: "#D9EDF8",
+        padding: 12,
+        borderRadius: 5,
+        marginBottom: 20
     }
 });

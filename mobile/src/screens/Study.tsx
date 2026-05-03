@@ -1,9 +1,14 @@
 import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { RouteProp, useRoute } from "@react-navigation/native";
 import { useRef, useState } from "react";
 import { View, Text, StyleSheet, Animated, Pressable, TouchableOpacity } from "react-native";
+import { RootStackParamList } from "../../App";
+
+type StudyScreenRouteProp = RouteProp<RootStackParamList, "Study">;
 
 export default function StudyScreen() {
+    const route = useRoute<StudyScreenRouteProp>();
     const [error, setError] = useState({status: false, message: ""});
     const [loading, setLoading] = useState(false);
     const [isFlipped, setIsFlipped] = useState(false);
