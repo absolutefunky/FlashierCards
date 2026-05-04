@@ -6,10 +6,12 @@ import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import styles from "../Styles/Navbar.module.css";
+import UserAuth from "../AuthContext";
 
 function Navbar({userId}: any) {
     const [menuHidden, setMenuHidden] = useState(true);
     const navigate = useNavigate();
+    const { isAuthenticated, logout }: any = UserAuth();
 
     function showMenu() {
         setMenuHidden(!menuHidden);
@@ -24,7 +26,8 @@ function Navbar({userId}: any) {
     }
 
     function handleLogout() {
-        navigate(`/`, {replace: true});
+        logout();
+        navigate("/");
     }
 
     return (
@@ -41,10 +44,11 @@ function Navbar({userId}: any) {
                 <span><FontAwesomeIcon icon={faCircleUser} /></span>
                 <span style={{display: menuHidden ? "none" : "block"}}>Profile</span>
             </button>
+            {isAuthenticated &&
             <button className={styles.navOption} onClick={handleLogout}>
                 <span><FontAwesomeIcon icon={faRightFromBracket} /></span>
                 <span style={{display: menuHidden ? "none" : "block"}}>Logout</span>
-            </button>
+            </button>}
         </div>
     );
 }

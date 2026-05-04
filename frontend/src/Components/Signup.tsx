@@ -1,11 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import styles from "../Styles/HomeForms.module.css";
 import { useState, type ChangeEvent } from "react";
+import UserAuth from "../AuthContext";
 
 function Signup() {
     const navigate = useNavigate();
     const [error, setError] = useState({status: false, message: ""});
     const [loading, setLoading] = useState(false);
+    const { signup }: any = UserAuth();
 
     const [formData, setFormData] = useState({
         email: "",
@@ -68,7 +70,9 @@ function Signup() {
             setLoading(false);
 
             // go to dashboard after user account and profile is created
-            navigate(`/dashboard/${userData.user.id}`, {replace: true});
+            signup().then(() => {
+                navigate(`/dashboard/${userData.user.id}`, {replace: true})
+            })
 
         } catch(error: any) {
             setLoading(false);
