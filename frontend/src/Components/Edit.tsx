@@ -13,7 +13,30 @@ import { useEffect, useRef, useState } from "react";
 import styles from "../Styles/Deck.module.css";
 import { useParams } from "react-router-dom";
 import type Card from "../Interfaces/Card";
-import { Stage, Layer, Text } from 'react-konva';
+import { Stage, Layer, Text, Image } from 'react-konva';
+import useImage from "use-image";
+
+type Giphy = {
+    id: string;
+    title: string;
+    url: string;
+};
+
+function Sticker({sticker, onDragEnd}: any) {
+    const [image] = useImage(sticker.url);
+    return (
+        <Image
+            image={image}
+            x={sticker.x}
+            y={sticker.y}
+            width={sticker.width}
+            height={sticker.height}
+            draggable
+            onDragEnd={onDragEnd}
+        />
+    );
+}
+
 
 function Edit() {
     // fetch related variables
@@ -38,12 +61,82 @@ function Edit() {
     const [frontCards, setFrontCards] = useState<Card[]>([{text: [], gif: [], sticker: []}]);
     const [backCards, setBackCards] = useState<Card[]>([{text: [], gif: [], sticker: []}]);
 
-    function fetchGiphs() {
+    // giphs and stickers related variables
+    const [query, setQuery] = useState("");
+    const [stickerResults, setStickerResults] = useState<Giphy[]>([]);
+
+    const fetchGiphs = async (e: any) => {
+        e.preventDefault();
+        setQuery("");
+
         // implement fetch calls to gips api
     }
 
-    function fetchStickers() {
-         // implement fetch calls to stickers api
+    const fetchStickers = async (e: any) =>  {
+        e.preventDefault();
+        setLoading(true);
+        setQuery("");
+
+        try {
+            const response = await fetch(`https://api.giphy.com/v1/stickers/search?api_key=${import.meta.env.VITE_GIPHY_API_KEY}&q=${query.trim()}&limit=10&rating=g`);
+
+            // get stickers related data
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || "Sorry, we could not get the stickers.");
+            }
+
+            // get the urls
+            const stickers = data.data.map((item: any) => ({
+                id: item.id,
+                title: item.title,
+                url: item.images.original_still.url
+            }));
+
+            setStickerResults(stickers);
+            setLoading(false);
+
+        } catch(error: any) {
+            setLoading(false);
+            setError({status: true, message: error.message || "Sorry, we could not get the stickers."});
+        }
+    }
+
+    function createSticker(stickerUrl: string) {
+        let stickerTmp = {url: stickerUrl, width: 100, height: 100, x: 20, y: 20};
+        if (cardSide == "Front") {
+            setFrontCards(prev =>
+                prev.map((card, index) =>
+                    index === (cardNum - 1) ? {...card, sticker: [...card.sticker, stickerTmp]} : card
+                )
+            );
+        } else if (cardSide === "Back") {
+            setBackCards(prev =>
+                prev.map((card, index) =>
+                    index === (cardNum - 1) ? {...card, sticker: [...card.sticker, stickerTmp]} : card
+                )
+            );
+        }
+    }
+
+    console.log(frontCards);
+
+    function createGiph(gifUrl: string) {
+        let gifTmp = {url: gifUrl, width: 100, height: 100, x: 50, y: 50};
+        if (cardSide == "Front") {
+            setFrontCards(prev =>
+                prev.map((card, index) =>
+                    index === (cardNum - 1) ? {...card, gif: [...card.gif, gifTmp]} : card
+                )
+            );
+        } else if (cardSide === "Back") {
+            setBackCards(prev =>
+                prev.map((card, index) =>
+                    index === (cardNum - 1) ? {...card, gif: [...card.gif, gifTmp]} : card
+                )
+            );
+        }
     }
 
     function changeTextColor(color: string) {
@@ -224,6 +317,7 @@ function Edit() {
 
     function showGifPanel() {
         if (textPanel) {
+            setTextArea(false);
             setTextPanel(false);
         } else if (stickerPanel) {
             setStickerPanel(false);
@@ -233,6 +327,7 @@ function Edit() {
 
     function showStickerPanel() {
         if (textPanel) {
+            setTextArea(false);
             setTextPanel(false);
         } else if (gifPanel) {
             setGifPanel(false);
@@ -448,6 +543,7 @@ function Edit() {
                                         <Layer>
                                             {frontCards[cardNum - 1].text.map((text, textIndex) =>
                                                 <Text
+                                                    key={textIndex}
                                                     x={text.x}
                                                     y={text.y}
                                                     width={text.width}
@@ -475,7 +571,27 @@ function Edit() {
                                                     }}
                                                 />
                                             )}
+                                            {frontCards[cardNum - 1].sticker.map((sticker, stickerIndex) =>
+                                                <Sticker
+                                                    key={stickerIndex}
+                                                    sticker={sticker}
+                                                    onDragEnd={(e: any) => {
+                                                        const { x, y } = e.target.position();
+                                                        setFrontCards(prev =>
+                                                            prev.map((card, cardIndex) =>
+                                                                cardIndex === (cardNum - 1) ? {
+                                                                    ...card,
+                                                                    sticker: card.sticker.map((tmp, i) =>
+                                                                        i === stickerIndex ? {...tmp, x: x, y: y} : tmp
+                                                                    )
+                                                                } : card
+                                                            )
+                                                        );
+                                                    }}
+                                                />
+                                            )}
                                         </Layer>
+                                        
                                     </Stage>                                    
                                 </div>
                                 <div className={styles.cardBack}>
@@ -491,6 +607,7 @@ function Edit() {
                                         <Layer>
                                             {backCards[cardNum - 1].text.map((text, textIndex) =>
                                                 <Text
+                                                    key={textIndex}
                                                     x={text.x}
                                                     y={text.y}
                                                     width={text.width}
@@ -511,6 +628,25 @@ function Edit() {
                                                                     ...card,
                                                                     text: card.text.map((tmp, i) =>
                                                                         i === textIndex ? {...tmp, x: x, y: y} : tmp
+                                                                    )
+                                                                } : card
+                                                            )
+                                                        );
+                                                    }}
+                                                />
+                                            )}
+                                            {backCards[cardNum - 1].sticker.map((sticker, stickerIndex) =>
+                                                <Sticker
+                                                    key={stickerIndex}
+                                                    sticker={sticker}
+                                                    onDragEnd={(e: any) => {
+                                                        const { x, y } = e.target.position();
+                                                        setBackCards(prev =>
+                                                            prev.map((card, cardIndex) =>
+                                                                cardIndex === (cardNum - 1) ? {
+                                                                    ...card,
+                                                                    sticker: card.sticker.map((tmp, i) =>
+                                                                        i === stickerIndex ? {...tmp, x: x, y: y} : tmp
                                                                     )
                                                                 } : card
                                                             )
@@ -570,15 +706,41 @@ function Edit() {
                     <div className={styles.sidePanel} style={{display: gifPanel ? "flex" : "none"}}>
                         <div>
                             <div className={styles.sidePanelTitle}>Gifs</div>
-                            {/* add input form */}
+                            <form onSubmit={fetchGiphs}>
+                                <input
+                                    type="text"
+                                    placeholder="Search for giphs"
+                                    value={query}
+                                    onChange={(e) => setQuery(e.target.value)}
+                                />
+                                <button type="submit">Search</button>
+                            </form>
                             {/* 2x4 grid to dispaly 8 giphs */}
                         </div>
                     </div>
                     <div className={styles.sidePanel} style={{display: stickerPanel ? "flex" : "none"}}>
                         <div>
                             <div className={styles.sidePanelTitle}>Stickers</div>
-                            {/* add input form */}
-                            {/* 2x4 grid to dispaly 8 stickers */}
+                            <form onSubmit={fetchStickers} className={styles.mediaForm}>
+                                <input
+                                    type="text"
+                                    placeholder="Search for stickers"
+                                    value={query}
+                                    onChange={(e) => setQuery(e.target.value)}
+                                />
+                                <button type="submit" className={styles.mediaFormBtn}>Search</button>
+                            </form>
+                            <div className={styles.mediaGrid}>
+                                {stickerResults.map((sticker) => (
+                                    <img
+                                        key={sticker.id}
+                                        src={sticker.url}
+                                        alt={sticker.title}
+                                        onClick={() => createSticker(sticker.url)}
+                                    />
+                                ))}
+                            </div>
+                            <div className={styles.giphyLogo}>Powered by Giphy</div>
                         </div>
                     </div>
                 </div>

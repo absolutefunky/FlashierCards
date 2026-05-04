@@ -122,8 +122,10 @@ function Study() {
                                     </div>
                                 )}
                                 {frontCards[cardNum - 1].gif.map((gif, gifId) =>
-                                    <div 
+                                    <img 
                                         key={gifId}
+                                        src={gif.url}
+                                        alt="sticker"
                                         style={{
                                             width: gif.width + "px",
                                             height: gif.height + "px",
@@ -131,13 +133,13 @@ function Study() {
                                             left: gif.x + "px",
                                             top: gif.y + "px"
                                         }}
-                                    >
-                                        {gif.url}
-                                    </div>
+                                    />
                                 )}
                                 {frontCards[cardNum - 1].sticker.map((sticker, stickerId) =>
-                                    <div 
+                                    <img 
                                         key={stickerId}
+                                        src={sticker.url}
+                                        alt="sticker"
                                         style={{
                                             width: sticker.width + "px",
                                             height: sticker.height + "px",
@@ -145,9 +147,7 @@ function Study() {
                                             left: sticker.x + "px",
                                             top: sticker.y + "px"
                                         }}
-                                    >
-                                        {sticker.url}
-                                    </div>
+                                    />
                                 )}
                             </div>
                             <div className={styles.cardBack}>
@@ -168,8 +168,10 @@ function Study() {
                                     </div>
                                 )}
                                 {backCards[cardNum - 1].gif.map((gif, gifId) =>
-                                    <div 
+                                    <img 
                                         key={gifId}
+                                        src={gif.url}
+                                        alt="sticker"
                                         style={{
                                             width: gif.width + "px",
                                             height: gif.height + "px",
@@ -177,13 +179,13 @@ function Study() {
                                             left: gif.x + "px",
                                             top: gif.y + "px"
                                         }}
-                                    >
-                                        {gif.url}
-                                    </div>
+                                    />
                                 )}
                                 {backCards[cardNum - 1].sticker.map((sticker, stickerId) =>
-                                    <div 
+                                    <img 
                                         key={stickerId}
+                                        src={sticker.url}
+                                        alt="sticker"
                                         style={{
                                             width: sticker.width + "px",
                                             height: sticker.height + "px",
@@ -191,9 +193,7 @@ function Study() {
                                             left: sticker.x + "px",
                                             top: sticker.y + "px"
                                         }}
-                                    >
-                                        {sticker.url}
-                                    </div>
+                                    />
                                 )}
                             </div>
                         </div>
