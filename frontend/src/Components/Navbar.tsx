@@ -7,8 +7,15 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import styles from "../Styles/Navbar.module.css";
 
+type NavbarProps = {
+    userId?: string;
+};
+import styles from "../Styles/Navbar.module.css";
+
+function Navbar({ userId }: NavbarProps) {
 function Navbar({userId}: any) {
     const [menuHidden, setMenuHidden] = useState(true);
+    const navigate = useNavigate();
     const navigate = useNavigate();
 
     function showMenu() {
@@ -31,7 +38,7 @@ function Navbar({userId}: any) {
         <div id={styles.navbar}>
             <button className={styles.navOption} onClick={() => {showMenu()}}>
                 <span><FontAwesomeIcon icon={faBars} /></span>
-                <span style={{display: menuHidden ? "none" : "block"}}>Menu</span>
+                <span style={{ display: menuHidden ? "none" : "block" }}>Menu</span>
             </button>
             <button className={styles.navOption} onClick={handleDeck}>
                 <span><FontAwesomeIcon icon={faFolder} /></span>
@@ -49,4 +56,5 @@ function Navbar({userId}: any) {
     );
 }
 
+export default Navbar;
 export default Navbar;

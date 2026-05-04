@@ -1,9 +1,9 @@
+using FlashierCards.Api.Models;
+
 namespace FlashierCards.Api.Dtos.CreateDtos;
 
-// use this record when creating a new document (deck of cards) in MongoDB
-
-public record CreateCardDto (
-    int UserId,
-    int DeckId
-    // add more here
-);
+public class CreateCardDto
+{
+    public CardElement? FrontCard { get; set; }
+    public CardElement? BackCard { get; set; }
+}

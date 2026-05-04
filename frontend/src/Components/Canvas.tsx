@@ -73,7 +73,7 @@ function handleChange(e:React.ChangeEvent<HTMLInputElement>) {
         
 </form>
         <div>
-            <button onClick={fetchGifs}>get giphs</button>
+            <button onClick={fetchGifs}>get gifs</button>
             <div>
                 { (loading) ?
                     <div>

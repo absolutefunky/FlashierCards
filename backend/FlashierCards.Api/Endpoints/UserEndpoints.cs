@@ -13,6 +13,7 @@ public static class UserEndpoints
         // GET /users/{id} to get user data
         app.MapGet("/users/{id}", async(int id, Supabase.Client supabase) =>
         {
+            Console.WriteLine("Ok I know I at least ented this finc");
             // find user who has the given id
             var response = await supabase
                 .From<User>()
@@ -171,14 +172,14 @@ public static class UserEndpoints
 
             if (user is null)
             {
-                return Results.BadRequest(new { message = "Invalid current password." });
+                return Results.BadRequest(new { message = "Invalid request. User does not exist." });
             }
 
             bool sameNewPasswords = BCrypt.Net.BCrypt.Verify(passwordDto.CurrentPassword, user.PasswordHash);
 
             if (!sameNewPasswords)
             {
-                return Results.BadRequest(new { message = "Please choose a different password." });
+                return Results.BadRequest(new { message = "Invalid password. Please enter the correct password." });
             }
 
             // change password

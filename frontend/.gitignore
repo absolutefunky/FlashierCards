@@ -25,6 +25,10 @@ dist-ssr
 *.sln
 *.sw?
 *.idea
+
+appsettings.json
+appsettings.Development.json
+.env
 .env
 .env.local
 .env.production

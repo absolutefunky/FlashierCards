@@ -28,11 +28,11 @@ function Dashboard() {
     });
 
     function handleStudyView() {
-        navigate(`/user/${userId}/study/${deckId}`);
+        navigate(`/user/${userId}/study/${deckId}`, {replace: true});
     }
 
     function handleEditView() {
-        navigate(`/user/${userId}/edit/${deckId}`);
+        navigate(`/user/${userId}/edit/${deckId}`, {replace: true});
     }
 
     function handleToolbar(request: boolean, key: any) {

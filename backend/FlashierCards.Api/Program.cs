@@ -1,12 +1,15 @@
 using FlashierCards.Api.Endpoints;
-using FlashierCards.Api.Models;
 using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// database url and public key from Supabase
-var url = builder.Configuration.GetSection("SUPABASE_URL").Get<string>();
-var key = builder.Configuration.GetSection("SUPABASE_KEY").Get<string>();
+// Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// Supabase config
+var url = builder.Configuration["Supabase:Url"];
+var key = builder.Configuration["Supabase:Key"];
 
 if (string.IsNullOrWhiteSpace(url) || string.IsNullOrWhiteSpace(key))
 {
@@ -19,41 +22,45 @@ var options = new Supabase.SupabaseOptions
     AutoConnectRealtime = true
 };
 
-// creating Supabase client to establish connection with database
-var supabase = new Supabase.Client(url!, key, options);
+var supabase = new Supabase.Client(url, key, options);
 await supabase.InitializeAsync();
 builder.Services.AddSingleton(supabase);
 
-// database uri, name, and collection from MongoDB
-var mongodb_uri = builder.Configuration.GetSection("MONGODB_URI").Get<string>();
-var mongodb_name = builder.Configuration.GetSection("MONGODB_NAME").Get<string>();
-var mongodb_collection = builder.Configuration.GetSection("MONGODB_Collection").Get<string>();
+// MongoDB config
+var mongoConnectionString = builder.Configuration["MongoDbSettings:ConnectionString"];
+var mongoDatabaseName = builder.Configuration["MongoDbSettings:DatabaseName"];
 
-// creating MongoDb client to establish connection with database
-builder.Services.AddSingleton<IMongoCollection<Card>>(_ =>
+builder.Services.AddSingleton<IMongoClient>(_ =>
+    new MongoClient(mongoConnectionString));
+
+builder.Services.AddSingleton(sp =>
 {
-    var mongodb = new MongoClient(mongodb_uri);
-    var database = mongodb.GetDatabase(mongodb_name);
-    return database.GetCollection<Card>(mongodb_collection);
+    var client = sp.GetRequiredService<IMongoClient>();
+    return client.GetDatabase(mongoDatabaseName);
 });
 
-// configure CORS to establish connection with frontend
+// CORS
+var allowedOrigins = builder.Configuration
+    .GetSection("AllowedOrigins")
+    .Get<string[]>();
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowedOrigin", policy =>
+    options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
-            .AllowAnyHeader()
-            .AllowAnyMethod();
+        policy.WithOrigins(allowedOrigins!)
+              .AllowAnyMethod()
+              .AllowAnyHeader();
     });
 });
 
 var app = builder.Build();
 
-app.UseCors("AllowedOrigin");
-app.UseHttpsRedirection();
+app.UseSwagger();
+app.UseSwaggerUI();
 
-// endpoints
+app.UseCors();
+
 app.MapUserEndpoints();
 app.MapDeckEndpoints();
 app.MapProfileEndpoints();

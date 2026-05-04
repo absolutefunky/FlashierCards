@@ -11,8 +11,10 @@ function DeleteAccount() {
     const [error, setError] = useState({status: false, message: ""});
     const [loading, setLoading] = useState(false);
 	const [showOverlay, setShowOverlay] = useState(false);
-    const navigate = useNavigate();
-	
+	const [error, setError] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+	const [success, setSuccess] = useState(false);
+
 	function showProfileOverlay(request: boolean) {
         setShowOverlay(request);
     }

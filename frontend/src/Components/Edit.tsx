@@ -1,524 +1,87 @@
 import Navbar from "./Navbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import { faBrush } from "@fortawesome/free-solid-svg-icons";
 import { faT } from "@fortawesome/free-solid-svg-icons";
+import { faBold } from "@fortawesome/free-solid-svg-icons";
+import { faItalic } from "@fortawesome/free-solid-svg-icons";
+import { faUnderline } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faImage } from "@fortawesome/free-solid-svg-icons";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
-import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons/faChevronRight";
-import { faRightLeft } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useRef, useState } from "react";
-import styles from "../Styles/Deck.module.css";
-import { useParams } from "react-router-dom";
-import type Card from "../Interfaces/Card";
-import { Stage, Layer, Text } from 'react-konva';
-
+import React, { useRef, useState, type JSX } from "react";
+import styles from "../Styles/Edit.module.css";
 
 function Edit() {
-    // fetch related variables
-    const [error, setError] = useState({status: false, message: ""});
-    const [loading, setLoading] = useState(false);
-    const [deckName, setDeckName] = useState();
-    const { userId, deckId } = useParams();
-
-    // side panel related variables
-    const [textPanel, setTextPanel] = useState(false);
-    const [gifPanel, setGifPanel] = useState(false);
-    const [stickerPanel, setStickerPanel] = useState(false);
-    const [text, setText] = useState("");
-    const [textArea, setTextArea] = useState(false);
-    const [textIndex, setTextIndex] = useState(0);
-
-    // card related variables
+    const [textTool, setTextTool] = useState(false);
+    const [textObjects, setTextObjects] = useState<JSX.Element[]>([]);
     const cardRef = useRef<HTMLDivElement>(null);
-    const [cardSide, setCardSide] = useState("Front");
-    const [cardNum, setCardNum] = useState(1);
-    const [total, setTotal] = useState(1);
-    const [frontCard, setFrontCard] = useState<Card[]>([{text: [], gif: [], sticker: []}]);
-    const [backCard, setBackCard] = useState<Card[]>([{text: [], gif: [], sticker: []}]);
-
-    function fetchGiphs() {
-        // implement fetch calls to giphs api
-        const giphy = new GiphyFetch(env.VITE_REACT_APP_GIPHY_KEY)
-    }
-
-    function fetchStickers() {
-         // implement fetch calls to stickers api
-    }
-
-    function changeTextColor(color: string) {
-        if (cardSide === "Front") {
-            setFrontCard(prev =>
-                prev.map((card, index) =>
-                    index === (cardNum - 1) ? {...card, text: card.text.map((cardText, i) =>
-                        i === textIndex ? {...cardText, color: color} : cardText
-                    )} : card
-                )
-            );
-        } else if (cardSide == "Back") {
-            setBackCard(prev =>
-                prev.map((card, index) =>
-                    index === (cardNum - 1) ? {...card, text: card.text.map((cardText, i) =>
-                        i === textIndex ? {...cardText, color: color} : cardText
-                    )} : card
-                )
-            );
-        }
-    }
-
-    function createSmallText() {
-        let textTmp = {input: "Enter text in the text area", width: 300, x: 30, y: 30, fontSize: 18, color: "#201002"};
-        if (cardSide == "Front") {
-            setFrontCard(prev =>
-                prev.map((card, index) =>
-                    index === (cardNum - 1) ? {...card, text: [...card.text, textTmp]} : card
-                )
-            );
-        } else if (cardSide === "Back") {
-            setBackCard(prev =>
-                prev.map((card, index) =>
-                    index === (cardNum - 1) ? {...card, text: [...card.text, textTmp]} : card
-                )
-            );
-        }
-    }
-
-    function createMediumText() {
-        let textTmp = {input: "Enter text in the text area", width: 400, x: 30, y: 30, fontSize: 28, color: "#201002"};
-        if (cardSide == "Front") {
-            setFrontCard(prev =>
-                prev.map((card, index) =>
-                    index === (cardNum - 1) ? {...card, text: [...card.text, textTmp]} : card
-                )
-            );
-        } else if (cardSide === "Back") {
-            setBackCard(prev =>
-                prev.map((card, index) =>
-                    index === (cardNum - 1) ? {...card, text: [...card.text, textTmp]} : card
-                )
-            );
-        }
-    }
-
-    function createLargeText() {
-        let textTmp = {input: "Enter text in the text area", width: 600, x: 30, y: 30, fontSize: 38, color: "#201002"};
-        if (cardSide == "Front") {
-            setFrontCard(prev =>
-                prev.map((card, index) =>
-                    index === (cardNum - 1) ? {...card, text: [...card.text, textTmp]} : card
-                )
-            );
-        } else if (cardSide === "Back") {
-            setBackCard(prev =>
-                prev.map((card, index) =>
-                    index === (cardNum - 1) ? {...card, text: [...card.text, textTmp]} : card
-                )
-            );
-        }
-    }
-
-    function deleteText() {
-        if (cardSide === "Front") {
-            setFrontCard(prev =>
-                prev.map((card, index) =>
-                    index === (cardNum - 1) ? {...card, text: card.text.filter((_, index) =>
-                        index != textIndex
-                    )} : card
-                )
-            );
-        } else if (cardSide == "Back") {
-            setBackCard(prev =>
-                prev.map((card, index) =>
-                    index === (cardNum - 1) ? {...card, text: card.text.filter((_, index) =>
-                        index != textIndex
-                    )} : card
-                )
-            );
-        }
-        setTextArea(false);
-    }
-
-    function showTextArea(request: boolean, textIndex: number, input: string) {
-        setText(input);
-        setTextIndex(textIndex);
-        setTextArea(request);
-    }
-
-    function changeTextInput(e: any) {
-        setText(e.target.value);
-        if (cardSide === "Front") {
-            setFrontCard(prev =>
-                prev.map((card, index) =>
-                    index === (cardNum - 1) ? {...card, text: card.text.map((cardText, i) =>
-                        i === textIndex ? {...cardText, input: e.target.value} : cardText
-                    )} : card
-                )
-            );
-        } else if (cardSide == "Back") {
-            setBackCard(prev =>
-                prev.map((card, index) =>
-                    index === (cardNum - 1) ? {...card, text: card.text.map((cardText, i) =>
-                        i === textIndex ? {...cardText, input: e.target.value} : cardText
-                    )} : card
-                )
-            );
-        }
-    }
-
-    function addCard() {
-        if ((total + 1) <= 20) {
-            setTotal(total + 1);
-            setFrontCard([...frontCard, {text: [], gif: [], sticker: []}]);
-            setBackCard([...backCard, {text: [], gif: [], sticker: []}]);
-        }
-    }
-
-    function deleteCard() {
-        if ((total - 1) >= 1) {
-            setTotal(total - 1);
-            setFrontCard(prev => prev.filter((_, index) => index != (cardNum - 1)));
-            setBackCard(prev => prev.filter((_, index) => index != (cardNum - 1)));
-            if (cardNum > 1) {
-                setCardNum(cardNum - 1);
-            } else {
-                setCardNum(1);
-            }
-        }
-    }
+    let [card, setCard] = useState(1);
+    const total = 5;
+    let frontText = "Front of card " + card;
+    let backText = "Back of card " + card;
 
     function flipCard() {
         if (cardRef.current) {
-            cardRef.current.classList.toggle(styles.flip);
-            setCardSide(prev => (prev === "Front") ? "Back" : "Front");
+            cardRef.current.classList.toggle("flip");
         }
     }
 
     function showNextCard() {
-        if ((cardNum + 1) <= total) {
-            setCardNum(cardNum + 1);
+        if ((card + 1) <= total) {
+            card += 1;
+            setCard(card);
         }
     }
 
     function showPrevCard() {
-        if ((cardNum - 1) >= 1) {
-            setCardNum(cardNum - 1);
+        if ((card - 1) >= 1) {
+            card -= 1;
+            setCard(card);
         }
     }
 
-    function showTextPanel() {
-        if (stickerPanel) {
-            setStickerPanel(false);
-        } else if (gifPanel) {
-            setGifPanel(false);
-        }
-        setTextPanel(true);
+    function addTextObject() {
+        setTextTool(true);
+        setTextObjects(prev => [...prev, <TextObject key={prev.length} />]);
     }
-
-    function showGifPanel() {
-        if (textPanel) {
-            setTextPanel(false);
-        } else if (stickerPanel) {
-            setStickerPanel(false);
-        }
-        setGifPanel(true);
-    }
-
-    function showStickerPanel() {
-        if (textPanel) {
-            setTextPanel(false);
-        } else if (gifPanel) {
-            setGifPanel(false);
-        }
-        setStickerPanel(true);
-    }
-
-    function hideSidePanel() {
-        if (textPanel) {
-            setTextPanel(false);
-        } else if (stickerPanel) {
-            setStickerPanel(false);
-        } else if (gifPanel) {
-            setGifPanel(false);
-        }
-    }
-
-    const fetchDeckData = async () => {
-        setLoading(true);
-
-        try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/decks/${deckId}`);
-
-            // get message and deck data
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.message);
-            }
-
-            setDeckName(data.name);
-            setLoading(false);
-
-        } catch(error: any) {
-            setLoading(false);
-            setError({status: true, message: error.message});
-        }
-    }
-
-    useEffect(() => {
-        fetchDeckData()
-    }, []);
 
     return (
-        <div className={styles.dashboardContent}>
-            <Navbar userId={userId} />
+        <div id={styles.dashboardContent}>
+            <Navbar />
             <div>
-                <div className={styles.title}>{deckName || "Flashier Cards"}</div>
-                { (loading) ?
-                    <div className={styles.invalidRequest}>
-                        Loading request...
-                    </div>
-                :
-                    (error.status) ?
-                        <div className={styles.invalidRequest}>{error.message}</div>
-                    :
-                        <div></div>
-                }
-                <div className={styles.toolbar}>
-                    <button
-                        type="button"
-                        className={styles.toolOption}
-                        onClick={addCard}
-                    >
-                        <span className={styles.shadow}></span>
-                        <span className={styles.edge}></span>
-                        <span className={styles.front}>
-                            <FontAwesomeIcon icon={faPlus} />
-                        </span>
-                    </button>
-                    <button
-                        type="button"
-                        className={styles.toolOption}
-                        onClick={showTextPanel}
-                    >
-                        <span className={styles.shadow}></span>
-                        <span className={styles.edge}></span>
-                        <span className={styles.front}>
-                            <FontAwesomeIcon icon={faT} />
-                        </span>
-                    </button>
-                    <button
-                        type="button"
-                        className={styles.toolOption}
-                        onClick={showGifPanel}
-                    >
-                        <span className={styles.shadow}></span>
-                        <span className={styles.edge}></span>
-                        <span className={styles.front} style={{fontWeight: "600"}}>
-                            GIF
-                        </span>
-                    </button>
-                    <button
-                        type="button"
-                        className={styles.toolOption}
-                        onClick={showStickerPanel}
-                    >
-                        <span className={styles.shadow}></span>
-                        <span className={styles.edge}></span>
-                        <span className={styles.front}>
-                            <FontAwesomeIcon icon={faHeart} />
-                        </span>
-                    </button>
-                    <button
-                        type="button"
-                        className={styles.toolOption}
-                        onClick={deleteCard}
-                    >
-                        <span className={styles.shadow}></span>
-                        <span className={styles.edge}></span>
-                        <span className={styles.front}>
-                            <FontAwesomeIcon icon={faTrash} />
-                        </span>
-                    </button>
-                    <button
-                        type="button"
-                        className={styles.toolOption}
-                        onClick={() => flipCard()}
-                    >
-                        <span className={styles.shadow}></span>
-                        <span className={styles.edge}></span>
-                        <span className={styles.front}>
-                            <FontAwesomeIcon icon={faRightLeft} />
-                        </span>
-                    </button>
-                    <button
-                        type="button"
-                        className={styles.toolOption}
-                    >
-                        <span className={styles.shadow}></span>
-                        <span className={styles.edge}></span>
-                        <span className={styles.front}>
-                            <FontAwesomeIcon icon={faFloppyDisk} />
-                        </span>
-                    </button>
-                    <button
-                        type="button"
-                        className={styles.toolOption}
-                        onClick={hideSidePanel}
-                    >
-                        <span className={styles.shadow}></span>
-                        <span className={styles.edge}></span>
-                        <span className={styles.front}>
-                            <FontAwesomeIcon icon={faCircleXmark} />
-                        </span>
-                    </button>
+                <div id={styles.title}>Flashier Cards</div>
+                <div id={styles.toolbar}>
+                    <button className={styles.toolOption}><FontAwesomeIcon icon={faCircleXmark} /></button>
+                    <button className={styles.toolOption}><FontAwesomeIcon icon={faPlus} /></button>
+                    <button onClick={addTextObject} className={styles.toolOption}><FontAwesomeIcon icon={faT} /></button>
+                    <button style={{display: textTool ? "flex" : "none"}} className={styles.toolOption}><FontAwesomeIcon icon={faBold} /></button>
+                    <button style={{display: textTool ? "flex" : "none"}} className={styles.toolOption}><FontAwesomeIcon icon={faItalic} /></button>
+                    <button style={{display: textTool ? "flex" : "none"}} className={styles.toolOption}><FontAwesomeIcon icon={faUnderline} /></button>
+                    <button className={styles.toolOption}><FontAwesomeIcon icon={faBrush} /></button>
+                    <button className={styles.toolOption}><FontAwesomeIcon icon={faImage} /></button>
+                    <button className={styles.toolOption}><FontAwesomeIcon icon={faHeart} /></button>
+                    <button className={styles.toolOption}><FontAwesomeIcon icon={faTrash} /></button>
                 </div>
-                <div className={styles.panel}>
-                    <div className={styles.deck}>
-                        <div className={styles.card} ref={cardRef}>
-                            <div className={styles.cardInner}>
-                                <div className={styles.cardFront}>
-                                    <Stage
-                                        width={800}
-                                        height={400}
-                                        onClick={(e) => {
-                                            if (e.target === e.target.getStage()) {
-                                                showTextArea(false, 0, "");
-                                            }
-                                        }}
-                                    >
-                                        <Layer>
-                                            {frontCard[cardNum - 1].text.map((text, textIndex) =>
-                                                <Text
-                                                    x={text.x}
-                                                    y={text.y}
-                                                    width={text.width}
-                                                    text={text.input}
-                                                    fontFamily="Imprima"
-                                                    fontSize={text.fontSize}
-                                                    fill={text.color}
-                                                    draggable
-                                                    onDblClick={() => {
-                                                        showTextArea(true, textIndex, text.input)
-                                                    }}
-                                                    onDragEnd={(e) => {
-                                                        const { x, y } = e.target.position();
-                                                        setFrontCard(prev =>
-                                                            prev.map((card, cardIndex) =>
-                                                                cardIndex === (cardNum - 1) ? {
-                                                                    ...card,
-                                                                    text: card.text.map((tmp, i) =>
-                                                                        i === textIndex ? {...tmp, x: x, y: y} : tmp
-                                                                    )
-                                                                } : card
-                                                            )
-                                                        );
-                                                    }}
-                                                />
-                                            )}
-                                        </Layer>
-                                    </Stage>
-                                </div>
-                                <div className={styles.cardBack}>
-                                    <Stage
-                                        width={800}
-                                        height={400}
-                                        onClick={(e) => {
-                                            if (e.target === e.target.getStage()) {
-                                                showTextArea(false, 0, "");
-                                            }
-                                        }}
-                                    >
-                                        <Layer>
-                                            {backCard[cardNum - 1].text.map((text, textIndex) =>
-                                                <Text
-                                                    x={text.x}
-                                                    y={text.y}
-                                                    width={text.width}
-                                                    text={text.input}
-                                                    fontFamily="Imprima"
-                                                    fontSize={text.fontSize}
-                                                    draggable
-                                                    onDblClick={() => showTextArea(true, textIndex, text.input)}
-                                                    onDragEnd={(e) => {
-                                                        const { x, y } = e.target.position();
-                                                        setBackCard(prev =>
-                                                            prev.map((card, cardIndex) =>
-                                                                cardIndex === (cardNum - 1) ? {
-                                                                    ...card,
-                                                                    text: card.text.map((tmp, i) =>
-                                                                        i === textIndex ? {...tmp, x: x, y: y} : tmp
-                                                                    )
-                                                                } : card
-                                                            )
-                                                        );
-                                                    }}
-                                                />
-                                            )}
-                                        </Layer>
-                                    </Stage>
-                                </div>
-                            </div>
-                        </div>
-                        <div className={styles.deckNav}>
-                            <button disabled={cardNum === 1} onClick={showPrevCard}>
-                                <FontAwesomeIcon icon={faChevronLeft} />
-                            </button>
-                            <span>{cardSide} of Card {cardNum}/{total}</span>
-                            <button disabled={cardNum === total} onClick={showNextCard}>
-                                <FontAwesomeIcon icon={faChevronRight} />
-                            </button>
-                        </div>
+                <div id={styles.deck}>
+                    <div id={styles.deckNav}>
+                        <button disabled={card === 1} onClick={showPrevCard}>
+                            <FontAwesomeIcon icon={faChevronLeft} />
+                        </button>
+                        <span>{card}/{total}</span>
+                        <button disabled={card === total} onClick={showNextCard}>
+                            <FontAwesomeIcon icon={faChevronRight} />
+                        </button>
                     </div>
-                    <div className={styles.sidePanel} style={{display: textPanel ? "flex" : "none"}}>
-                        <div style={{display: (textArea) ? "flex" : "none"}}>
-                            <div className={styles.sidePanelTitle}>Text Input</div>
-                            <div className={styles.textInput}>
-                                <textarea placeholder="Enter text here" value={text} onChange={changeTextInput} />
-                            </div>
+                    <div>
+                        <div className={styles.card}>
+                            {textObjects}
                         </div>
-                        <div style={{display: (textArea) ? "flex" : "none"}}>
-                            <div className={styles.sidePanelTitle}>Text Deletion</div>
-                            <div className={styles.textOptions}>
-                                <button onClick={deleteText}>Delete</button>
-                            </div>
-                        </div>
-                        <div style={{display: (textArea) ? "flex" : "none"}}>
-                            <div className={styles.sidePanelTitle}>Text Color</div>
-                            <div className={styles.textOptions}>
-                                <div style={{backgroundColor: "#201002"}} onClick={() => changeTextColor("#201002")}></div>
-                                <div style={{backgroundColor: "#FF2511"}} onClick={() => changeTextColor("#FF2511")}></div>
-                                <div style={{backgroundColor: "#FED43F"}} onClick={() => changeTextColor("#FED43F")}></div>
-                                <div style={{backgroundColor: "#016236"}} onClick={() => changeTextColor("#016236")}></div>
-                                <div style={{backgroundColor: "#E43480"}} onClick={() => changeTextColor("#E43480")}></div>
-                                <div style={{backgroundColor: "#621590"}} onClick={() => changeTextColor("#621590")}></div>
-                                <div style={{backgroundColor: "#1F6CB0"}} onClick={() => changeTextColor("#1F6CB0")}></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div className={styles.sidePanelTitle}>Text Size</div>
-                            <div className={styles.textOptions}>
-                                <button onClick={createSmallText}>Small</button>
-                                <button onClick={createMediumText}>Medium</button>
-                                <button onClick={createLargeText}>Large</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div className={styles.sidePanel} style={{display: gifPanel ? "flex" : "none"}}>
-                        <div>
-                            <div className={styles.sidePanelTitle}>Gifs</div>
-                            {/* add input form */}
-                            {/* w3 school input form and form submit, but the submit is a button and the
-                            but basically input field, button for submit and a label */}
-                            {/* 2x4 grid to dispaly 8 giphs */}
-                        </div>
-                    </div>
-                    <div className={styles.sidePanel} style={{display: stickerPanel ? "flex" : "none"}}>
-                        <div>
-                            <div className={styles.sidePanelTitle}>Stickers</div>
-                            {/* add input form */}
-                            {/* 2x4 grid to dispaly 8 stickers */}
+                        <div className={styles.card}>
+                            back card
                         </div>
                     </div>
                 </div>
@@ -527,4 +90,4 @@ function Edit() {
     );
 }
 
-export default Edit;
+export default Edit

@@ -1,101 +1,107 @@
-import { useNavigate, useParams } from "react-router-dom";
-import styles from "../Styles/HomeForms.module.css";
-import { useState, type ChangeEvent } from "react";
+import { useState } from "react";
+import type { FormEvent } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+
+  type ForgotPasswordState = {
+    email: string;
+    sqAnswer: string;
+  };
+
+  type ForgotPasswordResponse = {
+    message?: string;
+  };
 
 function CreateNewPassword() {
+    const [newPassword, setNewPassword] = useState<string>("");
+    const [confirmPassword, setConfirmPassword] = useState<string>("");
+
     const navigate = useNavigate();
-    const [error, setError] = useState({status: false, message: ""});
-    const [loading, setLoading] = useState(false);
-    const { userId } = useParams();
+    const location = useLocation();
 
-    const [formData, setFormData] = useState({
-        newPassword: "",
-        confirmNewPassword: ""
-    });
+    const state = location.state as ForgotPasswordState | null;
 
-    function handleFormData(e: ChangeEvent<HTMLInputElement>) {
-        const {name, value} = e.target;
-        setFormData((prev) => ({...prev, [name]: value}));
-    }
+    async function handleVerify(e: FormEvent<HTMLFormElement>) {
+      e.preventDefault();
 
-    const submitForm = async (e: any) => {
-        e.preventDefault();
-        setLoading(true);
+      if (!state?.email || !state?.sqAnswer) {
+        alert("Missing information, try again");
+        navigate("/login/forgot-password");
+        return;
+      }
 
-        try {
-            // create new password for user
-            const userResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/createNewPassword`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    newPassword: formData.newPassword,
-                    confirmNewPassword: formData.confirmNewPassword
-                })
-            });
+      if (!newPassword || !confirmPassword) {
+        alert("Not all fields complete...");
+        return;
+      }
 
-            // get message and user data
-            const userData = await userResponse.json();
+      if (newPassword !== confirmPassword) {
+        alert("Passwords do not match.");
+        return;
+      }
 
-            if (!userResponse.ok) {
-                throw new Error(userData.message);
-            }
+      try {
+        const response = await fetch("http://localhost:5204/users/forgot-password", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: state.email,
+            sqAnswer: state.sqAnswer,
+            newPassword,
+            confirmNewPassword: confirmPassword,
+          }),
+        });
 
-            setLoading(false);
-            navigate(`/dashboard/${userId}`, {replace: true});
+        const data: ForgotPasswordResponse = await response.json();
 
-        } catch(error: any) {
-            setLoading(false);
-            setError({status: true, message: error.message});
+        if (!response.ok) {
+          alert(data.message || "Password reset failed.");
+          return;
         }
+
+        alert("Password successfully reset!");
+        navigate("/");
+      } catch (error) {
+        console.error("Forgot password error:", error);
+        alert("An issue has occurred. Try again!");
+      }
     }
 
     return (
-        <div id={styles.content}>
-            <div id={styles.title}>Flashier Cards</div>
-            { (loading) ?
-                <div className={styles.invalidRequest}>
-                    Loading request...
-                </div>
-            :
-                (error.status) ?
-                    <div className={styles.invalidRequest}>{error.message}</div>
-                :
-                    <div></div>
-            }
-            <form id={styles.signupForm} onSubmit={submitForm}>
-                <div>
-                    <div className={styles.subtitle}>New password</div>
-                    <input 
-                        type="password"
-                        name="newPassword"
-                        value={formData.newPassword}
-                        onChange={handleFormData}
-                        required={true}
-                    />
-                </div>
-                <div>
-                    <div className={styles.subtitle}>Confirm new password</div>
-                    <input 
-                        type="password"
-                        name="confirmNewPassword"
-                        value={formData.confirmNewPassword}
-                        onChange={handleFormData}
-                        required={true}
-                    />
-                </div>
-                <button
-                    type="submit"
-                    className={styles.homeBtn}
-                    style={{marginTop: "0.5rem"}}
-                >
-                    <span className={styles.loginShadow}></span>
-                    <span className={styles.loginEdge}></span>
-                    <span className={styles.loginFront}>Create password</span>
-                </button>
-            </form>
-        </div>
+      <div id="verify-form">
+        <span className="verify-title">Flashier Cards</span>
+
+        <form onSubmit={handleVerify}>
+          <div>
+            <div className="verify-sub-title">New Password</div>
+            <input
+              type="password"
+              required
+              value={newPassword}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setNewPassword(e.target.value)
+              }
+            />
+          </div>
+
+          <div>
+            <div className="verify-sub-title">Confirm New Password</div>
+            <input
+              type="password"
+              required
+              value={confirmPassword}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setConfirmPassword(e.target.value)
+              }
+            />
+          </div>
+
+          <button className="verify-form-blue-btn" type="submit">
+            Verify
+          </button>
+        </form>
+      </div>
     );
 }
 
