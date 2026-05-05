@@ -49,6 +49,8 @@ public static class UserEndpoints
                 return Results.BadRequest(new { message = "Please properly complete the form." });
             }
 
+            // implement password critera
+
             // check if passwords match
             if (newUser.Password != newUser.ConfirmPassword)
             {
@@ -155,6 +157,8 @@ public static class UserEndpoints
                 return Results.BadRequest(new { message = "Please properly complete the form." });
             }
 
+            // implement password critera here
+
             // check if passwords match
             if (passwordDto.NewPassword != passwordDto.ConfirmNewPassword)
             {
@@ -241,6 +245,8 @@ public static class UserEndpoints
             {
                 return Results.BadRequest(new { message = "Please properly complete the form." });
             }
+
+            // implement password criteria here
 
             // check if passwords match
             if (passwordDto.NewPassword != passwordDto.ConfirmNewPassword)

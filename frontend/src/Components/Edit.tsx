@@ -63,6 +63,7 @@ function Edit() {
 
     // giphs and stickers related variables
     const [query, setQuery] = useState("");
+    const [gifsResults, setGifsResults] = useState<Giphy[]>([]);
     const [stickerResults, setStickerResults] = useState<Giphy[]>([]);
 
     const fetchGiphs = async (e: any) => {
