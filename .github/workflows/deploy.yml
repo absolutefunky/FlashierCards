@@ -1,0 +1,55 @@
+name: Deploy to Heroku
+
+on:
+  push:
+    branches:
+      - Production
+
+jobs:
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            frontend:
+              - 'frontend/**'
+
+      - name: Deploy frontend to Heroku
+        if: steps.changes.outputs.frontend == 'true'
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          git config user.email "github-actions@github.com"
+          git config user.name "GitHub Actions"
+          git remote add heroku-frontend https://heroku:$HEROKU_API_KEY@git.heroku.com/flashiercards-frontend.git
+          git subtree push --prefix frontend heroku-frontend main
+
+  deploy-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
+
+      - name: Deploy backend to Heroku
+        if: steps.changes.outputs.backend == 'true'
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          git config user.email "github-actions@github.com"
+          git config user.name "GitHub Actions"
+          git remote add heroku-backend https://heroku:$HEROKU_API_KEY@git.heroku.com/flashiercards-backend.git
+          git subtree push --prefix backend heroku-backend main
