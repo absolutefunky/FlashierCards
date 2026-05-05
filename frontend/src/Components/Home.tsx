@@ -5,7 +5,7 @@ function Home() {
     return (
         <div id={styles.homeContent}>
             <div id={styles.title}>Flashier Cards</div>
-            <div id={styles.subtitle}>Study The Flashier Way</div>
+            <div id={styles.subtitle}>Study The Flashier Way :)</div>
             <Link
                 to="/signup"
                 className={styles.homeBtn}
