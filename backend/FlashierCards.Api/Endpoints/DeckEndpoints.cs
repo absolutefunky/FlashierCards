@@ -2,6 +2,7 @@ using FlashierCards.Api.Dtos.CreateDtos;
 using FlashierCards.Api.Dtos.ReturnDtos;
 using FlashierCards.Api.Dtos.UpdateDtos;
 using FlashierCards.Api.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FlashierCards.Api.Endpoints;
 
@@ -10,7 +11,7 @@ public static class DeckEndpoints
     public static void MapDeckEndpoints(this WebApplication app)
     {
         // GET /users/{id}/decks to return all decks
-        app.MapGet("/users/{id}/decks", async (int id, Supabase.Client supabase) =>
+        app.MapGet("/users/{id}/decks", [Authorize] async (int id, Supabase.Client supabase) =>
         {
             var response = await supabase
                 .From<Deck>()
@@ -37,7 +38,7 @@ public static class DeckEndpoints
         });
 
         // GET /users/{userId}/decks{id} to get a specific deck
-        app.MapGet("/users/{userId}/decks/{id}", async (int userId, int id, Supabase.Client supabase) =>
+        app.MapGet("/users/{userId}/decks/{id}", [Authorize] async (int userId, int id, Supabase.Client supabase) =>
         {
             var response = await supabase
                 .From<Deck>()
@@ -63,7 +64,7 @@ public static class DeckEndpoints
         });
 
         // POST /users/{id}/decks/create to create a new a deck
-        app.MapPost("/users/{id}/decks/create", async (int id, CreateDeckDto request, Supabase.Client supabase) =>
+        app.MapPost("/users/{id}/decks/create", [Authorize] async (int id, CreateDeckDto request, Supabase.Client supabase) =>
         {
             // check if an input field is empty
             if (string.IsNullOrWhiteSpace(request.Name))
@@ -81,7 +82,7 @@ public static class DeckEndpoints
 
             if (userFound is null)
             {
-                return Results.BadRequest(new {message = "Invalid request. User does not exist."});
+                return Results.BadRequest(new {message = "User does not exist."});
             }
 
             // check if deck with given name for user already exist
@@ -127,7 +128,7 @@ public static class DeckEndpoints
         });
 
         // PUT /users/{userId}/decks/{id}/rename to rename a deck
-        app.MapPut("/users/{userId}/decks/{id}", async (int userId, int id, UpdateDeckDto request, Supabase.Client supabase) =>
+        app.MapPut("/users/{userId}/decks/{id}", [Authorize] async (int userId, int id, UpdateDeckDto request, Supabase.Client supabase) =>
         {
             // check if an input field is empty
             if (string.IsNullOrWhiteSpace(request.Name))
@@ -145,7 +146,7 @@ public static class DeckEndpoints
 
             if (userFound is null)
             {
-                return Results.BadRequest(new {message = "Invalid request. User does not exist."});
+                return Results.BadRequest(new {message = "User does not exist."});
             }
 
             // check if deck with given name for user already exist
@@ -185,7 +186,7 @@ public static class DeckEndpoints
         });
 
         // DELETE /users/{userId}/decks/{id}/delete to delete a deck
-        app.MapDelete("/users/{userId}/decks/{id}/delete", async (int userId, int id, Supabase.Client supabase) =>
+        app.MapDelete("/users/{userId}/decks/{id}/delete", [Authorize] async (int userId, int id, Supabase.Client supabase) =>
         {
             // check if user id violates foregin key constraint
             var userResponse = await supabase
@@ -197,7 +198,7 @@ public static class DeckEndpoints
 
             if (userFound is null)
             {
-                return Results.BadRequest(new {message = "Invalid request. User does not exist."});
+                return Results.BadRequest(new {message = "User does not exist."});
             }
 
             // check if deck exist

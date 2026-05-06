@@ -12,10 +12,40 @@ export default function ForgotPasswordScreen() {
     const [sqAnswer, setSqAnswer] = useState("");
     const [error, setError] = useState({status: false, message: ""});
     const [loading, setLoading] = useState(false);
+    const FLASHIER_CARDS_API = "add flashier cards backend url here";
 
-    function handleForgotPassword() {
-        // handle user authentication here
-        navigation.navigate("CreateNewPassword");
+    const handleForgotPassword = async () => {
+        setLoading(true);
+
+        try {
+            // find user account
+            const userResponse = await fetch(`${FLASHIER_CARDS_API}/users/forgotPassword`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: email.trim(),
+                    sqAnswer: sqAnswer.trim()
+                })
+            });
+
+            // get message and user data
+            const userData = await userResponse.json();
+
+            if (!userResponse.ok) {
+                throw new Error(userData.message);
+            }
+
+            setLoading(false);
+
+            // go to dashboard after user account is created
+            navigation.navigate("CreateNewPassword", {userId: userData.user.id});
+
+        } catch(error: any) {
+            setLoading(false);
+            setError({status: true, message: error.message});
+        }
     }
 
     return (

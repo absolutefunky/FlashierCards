@@ -19,7 +19,7 @@ import { faArrowLeft, faArrowRightFromBracket, faFolder } from '@fortawesome/fre
 export type RootStackParamList = {
     Login: undefined;
     ForgotPassword: undefined;
-    CreateNewPassword: undefined;   // add prop for userId here
+    CreateNewPassword: {userId: string};
     Dashboard: {userId: string};
     Study: {userId: string};    // add prop for deckId here
     AccountInformation: {userId: string};
