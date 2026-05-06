@@ -1,12 +1,14 @@
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "../Styles/HomeForms.module.css";
 import { useState, type ChangeEvent } from "react";
+import UserAuth from "../AuthContext";
 
 function CreateNewPassword() {
     const navigate = useNavigate();
     const [error, setError] = useState({status: false, message: ""});
     const [loading, setLoading] = useState(false);
     const { userId } = useParams();
+    const { token }: any = UserAuth();
 
     const [formData, setFormData] = useState({
         newPassword: "",
@@ -24,10 +26,11 @@ function CreateNewPassword() {
 
         try {
             // create new password for user
-            const userResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/createNewPassword`, {
+            const userResponse = await fetch(`${import.meta.env.VITE_API_URL}/user/${userId}/createNewPassword`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     newPassword: formData.newPassword,

@@ -5,6 +5,7 @@ import { faX } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, type ChangeEvent } from 'react';
 import styles from "../Styles/Profile.module.css";
+import UserAuth from "../AuthContext";
 
 function ChangePassword() {
     const { userId } = useParams();
@@ -13,6 +14,7 @@ function ChangePassword() {
     const [success, setSuccess] = useState(false);
     const [showOverlay, setShowOverlay] = useState(false);
     const navigate = useNavigate();
+    const { token }: any = UserAuth();
 
     const [formData, setFormData] = useState({
         currentPassword: "",
@@ -42,10 +44,11 @@ function ChangePassword() {
         setLoading(true);
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/changePassword`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/user/${userId}/changePassword`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     currentPassword: formData.currentPassword,

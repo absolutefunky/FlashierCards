@@ -23,9 +23,6 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/forgotPassword" element={<ForgotPassword />} />
 
-                {/* testing route 
-                <Route path="/canvas" element={<Canvas />} />*/}
-
                 {/* private routes */}
                 <Route element={<PrivateRoute />}>
                     <Route path="/dashboard/:userId" element={<Dashboard />} />

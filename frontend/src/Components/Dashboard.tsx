@@ -10,6 +10,7 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState, type ChangeEvent } from 'react';
 import type Deck from "../Interfaces/Deck";
 import styles from "../Styles/Dashboard.module.css";
+import UserAuth from "../AuthContext";
 
 function Dashboard() {
     const [toolVisible, setToolVisible] = useState(false);
@@ -21,6 +22,7 @@ function Dashboard() {
     const [decks, setDecks] = useState<Deck[]>([]);
     const [deckId, setDeckId] = useState<any>();
     const navigate = useNavigate();
+    const { token } = UserAuth();
 
     const [formData, setFormData] = useState({
         name: "",
@@ -69,10 +71,16 @@ function Dashboard() {
 
     const fetchDeckData = async () => {
         setLoading(true);
+        console.log(token);
 
         try {
             // get list of decks
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/decks`);
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/user/${userId}/decks`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
 
             // get message and deck data
             const data = await response.json();
@@ -101,10 +109,11 @@ function Dashboard() {
 
         try {
             // create a deck in supabase
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/decks/create`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/user/${userId}/createDeck`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     name: formData.name.trim()
@@ -119,10 +128,11 @@ function Dashboard() {
             }
 
             // create a doc in mongodb
-            const docResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/decks/${data.deckDto.id}/createCards`, {
+            const docResponse = await fetch(`${import.meta.env.VITE_API_URL}/user/${userId}/deck/${data.deckDto.id}/createCards`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     "userId": userId,
@@ -156,10 +166,11 @@ function Dashboard() {
 
         try {
             // rename a deck
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/decks/${deckId}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/user/${userId}/deck/${deckId}/renameDeck`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     name: formData.newName.trim()
@@ -193,8 +204,11 @@ function Dashboard() {
 
         try {
             // delete a deck in supabase
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/decks/${deckId}/delete`, {
-                method: "DELETE"
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/user/${userId}/deck/${deckId}/deleteDeck`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
             });
 
             // get message and deck data
@@ -205,8 +219,11 @@ function Dashboard() {
             }
 
             // delete a doc in mongodb
-            const docResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/decks/${deckId}/deleteCards`, {
-                method: "DELETE"
+            const docResponse = await fetch(`${import.meta.env.VITE_API_URL}/user/${userId}/deck/${deckId}/deleteCards`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
             });
 
             // get message and doc data

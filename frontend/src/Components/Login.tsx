@@ -7,7 +7,7 @@ function Login() {
     const navigate = useNavigate();
     const [error, setError] = useState({status: false, message: ""});
     const [loading, setLoading] = useState(false);
-    const { login }: any = UserAuth();
+    const { register } = UserAuth();
 
     const [formData, setFormData] = useState({
         email: "",
@@ -22,11 +22,10 @@ function Login() {
     const submitForm = async (e: any) => {
         e.preventDefault();
         setLoading(true);
-        
 
         try {
             // find user account
-            const userResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/login`, {
+            const userResponse = await fetch(`${import.meta.env.VITE_API_URL}/user/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -47,7 +46,7 @@ function Login() {
             setLoading(false);
 
             // go to dashboard after user account is created
-            login().then(() => {
+            register(userData.token).then(() => {
                 navigate(`/dashboard/${userData.user.id}`, {replace: true})
             })
             

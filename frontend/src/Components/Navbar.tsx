@@ -27,7 +27,7 @@ function Navbar({userId}: any) {
 
     function handleLogout() {
         logout();
-        navigate("/");
+        navigate("/", {replace: true});
     }
 
     return (

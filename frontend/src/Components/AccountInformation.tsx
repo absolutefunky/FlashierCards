@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import styles from "../Styles/Profile.module.css";
 import { useEffect, useState } from 'react';
 import type UserModel from "../Interfaces/User";
+import UserAuth from "../AuthContext";
 
 function AccountInformation() {
     const { userId } = useParams();
@@ -11,6 +12,7 @@ function AccountInformation() {
     const [user, setUser] = useState<UserModel>();
     const [totalDecks, setTotalDecks] = useState();
     const navigate = useNavigate();
+    const { token }: any = UserAuth();
 
     function handleAccountInformation() {
         navigate(`/profile/${userId}/accountInformation`);
@@ -32,7 +34,12 @@ function AccountInformation() {
         setLoading(true);
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}`);
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/user/${userId}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
 
             // get message and user data
             const data = await response.json();
@@ -44,7 +51,12 @@ function AccountInformation() {
             setUser(data);
 
             // get list of decks to count
-            const deckResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/decks`);
+            const deckResponse = await fetch(`${import.meta.env.VITE_API_URL}/user/${userId}/decks`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
 
             // get message and deck data
             const deckData = await deckResponse.json();

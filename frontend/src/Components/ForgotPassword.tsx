@@ -1,11 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import styles from "../Styles/HomeForms.module.css";
 import { useState, type ChangeEvent } from "react";
+import UserAuth from "../AuthContext";
 
 function ForgotPassword() {
     const navigate = useNavigate();
     const [error, setError] = useState({status: false, message: ""});
     const [loading, setLoading] = useState(false);
+     const { register }: any = UserAuth();
 
     const [formData, setFormData] = useState({
         email: "",
@@ -23,7 +25,7 @@ function ForgotPassword() {
 
         try {
             // find user account
-            const userResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/forgotPassword`, {
+            const userResponse = await fetch(`${import.meta.env.VITE_API_URL}/user/forgotPassword`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -42,7 +44,11 @@ function ForgotPassword() {
             }
 
             setLoading(false);
-            navigate(`/forgotPassword/${userData.user.id}/createNewPassword`, {replace: true});
+
+            // go to create new password after user is authenticated
+            register(userData.token).then(() => {
+                navigate(`/forgotPassword/${userData.user.id}/createNewPassword`, {replace: true})
+            })
 
         } catch(error: any) {
             setLoading(false);

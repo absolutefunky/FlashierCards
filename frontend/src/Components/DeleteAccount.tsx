@@ -5,6 +5,7 @@ import { faX } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from 'react';
 import styles from "../Styles/Profile.module.css";
+import UserAuth from "../AuthContext";
 
 function DeleteAccount() {
 	const { userId } = useParams();
@@ -12,6 +13,7 @@ function DeleteAccount() {
     const [loading, setLoading] = useState(false);
 	const [showOverlay, setShowOverlay] = useState(false);
     const navigate = useNavigate();
+    const { token }: any = UserAuth();
 	
 	function showProfileOverlay(request: boolean) {
         setShowOverlay(request);
@@ -22,8 +24,11 @@ function DeleteAccount() {
 
         try {
             // delete user in supabase
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/delete`, {
-                method: "DELETE"
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/user/${userId}/delete`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
             });
 
             const data = await response.json();
@@ -33,8 +38,11 @@ function DeleteAccount() {
             }
 
             // delete user card content in mongodb
-            const docResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/deleteCards`, {
-                method: "DELETE"
+            const docResponse = await fetch(`${import.meta.env.VITE_API_URL}/user/${userId}/deleteCards`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
             });
 
             const docData = await docResponse.json();

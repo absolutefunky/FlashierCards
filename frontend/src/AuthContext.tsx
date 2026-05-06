@@ -1,42 +1,34 @@
 import { createContext, useContext, useState } from "react";
 
-// Source: https://fireship.dev/react-router-protected-routes-authentication
+// this component is used to authenticate user in the frontend
 
-const AuthContext = createContext({});
-
-function useAuth() {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-    return {
-        isAuthenticated,
-        signup() {
-            return new Promise((res) => {
-                setIsAuthenticated(true);
-                res({});
-            })
-        },
-        login() {
-            return new Promise((res) => {
-                setIsAuthenticated(true);
-                res({});
-            })
-        },
-        logout() {
-            return new Promise((res) => {
-                setIsAuthenticated(false);
-                res({});
-            })
-        }
-    };
-}
+const AuthContext = createContext<any>(null);
 
 export function AuthProvider({children}: any) {
-    const auth = useAuth();
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [token, setToken] = useState<string | null>(null);
+
+    function register(token: string) {
+        return new Promise((res) => {
+            setToken(token);
+            setIsAuthenticated(true);
+            res({});
+        });
+    }
+
+    function logout() {
+        return new Promise((res) => {
+            setToken(null);
+            setIsAuthenticated(false);
+            res({});
+        });
+    }
+    
     return (
-        <AuthContext.Provider value={auth}>
+        <AuthContext.Provider value={{ isAuthenticated, token, register, logout }}>
             {children}
         </AuthContext.Provider>
-    );
+    );   
 }
 
 export default function UserAuth() {

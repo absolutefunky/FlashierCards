@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import styles from "../Styles/Profile.module.css";
 import type Profile from "../Interfaces/Profile";
 import { useEffect, useState } from 'react';
+import UserAuth from "../AuthContext";
 
 function Theme() {
     const { userId } = useParams();
@@ -10,12 +11,18 @@ function Theme() {
     const [error, setError] = useState({status: false, message: ""});
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { token }: any = UserAuth();
 
     const fetchProfileData = async () => {
         setLoading(true);
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/profiles`);
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/user/${userId}/profile`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
             const data = await response.json();
 
             if (!response.ok) {
@@ -39,10 +46,11 @@ function Theme() {
         setLoading(true);
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/profiles/${profile?.id}/update`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/user/${userId}/profile/${profile?.id}/updateProfile`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({animationType: `${request}`})
             });

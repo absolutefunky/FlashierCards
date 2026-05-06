@@ -15,6 +15,7 @@ import { useParams } from "react-router-dom";
 import type Card from "../Interfaces/Card";
 import { Stage, Layer, Text, Image } from 'react-konva';
 import useImage from "use-image";
+import UserAuth from "../AuthContext";
 
 type Giphy = {
     id: string;
@@ -52,6 +53,7 @@ function Edit() {
     const [text, setText] = useState("");
     const [textArea, setTextArea] = useState(false);
     const [textIndex, setTextIndex] = useState(0);
+    const { token }: any = UserAuth();
 
     // card related variables
     const cardRef = useRef<HTMLDivElement>(null);
@@ -79,7 +81,7 @@ function Edit() {
         setQuery("");
 
         try {
-            const response = await fetch(`https://api.giphy.com/v1/stickers/search?api_key=${import.meta.env.VITE_GIPHY_API_KEY}&q=${query.trim()}&limit=10&rating=g`);
+            const response = await fetch(`https://api.giphy.com/v1/stickers/search?api_key=${import.meta.env.VITE_GIPHY_API_KEY}&q=${query.trim()}&limit=12&rating=g`);
 
             // get stickers related data
             const data = await response.json();
@@ -121,10 +123,8 @@ function Edit() {
         }
     }
 
-    console.log(frontCards);
-
     function createGiph(gifUrl: string) {
-        let gifTmp = {url: gifUrl, width: 100, height: 100, x: 50, y: 50};
+        let gifTmp = {url: gifUrl, width: 150, height: 150, x: 50, y: 50};
         if (cardSide == "Front") {
             setFrontCards(prev =>
                 prev.map((card, index) =>
@@ -352,10 +352,11 @@ function Edit() {
 
         try {
             // update card content in mongodb
-            const docResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/decks/${deckId}/saveCards`, {
+            const docResponse = await fetch(`${import.meta.env.VITE_API_URL}/user/${userId}/deck/${deckId}/saveCards`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     "userId": userId,
@@ -385,7 +386,12 @@ function Edit() {
 
         try {
             // get deck data from supabase
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/decks/${deckId}`);
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/user/${userId}/deck/${deckId}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
 
             // get message and deck data
             const data = await response.json();
@@ -395,7 +401,12 @@ function Edit() {
             }
 
             // get card content from mongodb
-            const docResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/decks/${deckId}/cards`);
+            const docResponse = await fetch(`${import.meta.env.VITE_API_URL}/user/${userId}/deck/${deckId}/cards`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
 
             // get message and card content
             const docData = await docResponse.json();

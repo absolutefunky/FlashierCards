@@ -7,7 +7,7 @@ function Signup() {
     const navigate = useNavigate();
     const [error, setError] = useState({status: false, message: ""});
     const [loading, setLoading] = useState(false);
-    const { signup }: any = UserAuth();
+    const { register } = UserAuth();
 
     const [formData, setFormData] = useState({
         email: "",
@@ -27,7 +27,7 @@ function Signup() {
 
         try {
             // create user account
-            const userResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/register`, {
+            const userResponse = await fetch(`${import.meta.env.VITE_API_URL}/user/register`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -46,12 +46,13 @@ function Signup() {
             if (!userResponse.ok) {
                 throw new Error(userData.message);
             }
-
+            
             // create user profile
-            const profileResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/${userData.user.id}/profiles/create`, {
+            const profileResponse = await fetch(`${import.meta.env.VITE_API_URL}/user/${userData.user.id}/createProfile`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${userData.token}`
                 },
                 body: JSON.stringify({
                     userId: userData.user.id,
@@ -70,7 +71,7 @@ function Signup() {
             setLoading(false);
 
             // go to dashboard after user account and profile is created
-            signup().then(() => {
+            register(userData.token).then(() => {
                 navigate(`/dashboard/${userData.user.id}`, {replace: true})
             })
 

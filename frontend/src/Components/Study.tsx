@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import styles from "../Styles/Deck.module.css";
 import { useParams } from "react-router-dom";
 import type Card from "../Interfaces/Card";
+import UserAuth from "../AuthContext";
 
 function Study() {
     const [error, setError] = useState({status: false, message: ""});
@@ -18,6 +19,7 @@ function Study() {
     const [cardSide, setCardSide] = useState("Front");
     const [cardNum, setCardNum] = useState(1);
     const [total, setTotal] = useState(0);
+    const { token }: any = UserAuth();
 
     function flipCard() {
         if (cardRef.current) {
@@ -49,7 +51,12 @@ function Study() {
 
         try {
             // get deck data from supabase
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/decks/${deckId}`);
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/user/${userId}/deck/${deckId}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
 
             // get message and deck data
             const data = await response.json();
@@ -59,7 +66,12 @@ function Study() {
             }
 
             // get card content from mongodb
-            const docResponse = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/decks/${deckId}/cards`);
+            const docResponse = await fetch(`${import.meta.env.VITE_API_URL}/user/${userId}/deck/${deckId}/cards`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
 
             // get message and card content
             const docData = await docResponse.json();
