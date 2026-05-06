@@ -23,21 +23,20 @@ type Giphy = {
     url: string;
 };
 
-function Sticker({sticker, onDragEnd}: any) {
-    const [image] = useImage(sticker.url);
+function Giphy({newImage, onDragEnd}: any) {
+    const [image] = useImage(newImage.url);
     return (
         <Image
             image={image}
-            x={sticker.x}
-            y={sticker.y}
-            width={sticker.width}
-            height={sticker.height}
+            x={newImage.x}
+            y={newImage.y}
+            width={newImage.width}
+            height={newImage.height}
             draggable
             onDragEnd={onDragEnd}
         />
     );
 }
-
 
 function Edit() {
     // fetch related variables
@@ -65,14 +64,38 @@ function Edit() {
 
     // giphs and stickers related variables
     const [query, setQuery] = useState("");
-    const [gifsResults, setGifsResults] = useState<Giphy[]>([]);
+    const [gifResults, setGifsResults] = useState<Giphy[]>([]);
     const [stickerResults, setStickerResults] = useState<Giphy[]>([]);
 
     const fetchGiphs = async (e: any) => {
         e.preventDefault();
+        setLoading(true);
         setQuery("");
 
-        // implement fetch calls to gips api
+        try {
+            const response = await fetch(`https://api.giphy.com/v1/gifs/search?api_key=${import.meta.env.VITE_GIPHY_API_KEY}&q=${query.trim()}&limit=12&rating=g`);
+
+            // get gifs related data
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || "Sorry, we could not get the gifs.");
+            }
+
+            // get the urls
+            const gifs = data.data.map((item: any) => ({
+                id: item.id,
+                title: item.title,
+                url: item.images.original.url
+            }));
+
+            setGifsResults(gifs);
+            setLoading(false);
+
+        } catch(error: any) {
+            setLoading(false);
+            setError({status: true, message: error.message || "Sorry, we could not get the gifs."});
+        }
     }
 
     const fetchStickers = async (e: any) =>  {
@@ -123,7 +146,7 @@ function Edit() {
         }
     }
 
-    function createGiph(gifUrl: string) {
+    function createGif(gifUrl: string) {
         let gifTmp = {url: gifUrl, width: 150, height: 150, x: 50, y: 50};
         if (cardSide == "Front") {
             setFrontCards(prev =>
@@ -584,9 +607,9 @@ function Edit() {
                                                 />
                                             )}
                                             {frontCards[cardNum - 1].sticker.map((sticker, stickerIndex) =>
-                                                <Sticker
+                                                <Giphy
                                                     key={stickerIndex}
-                                                    sticker={sticker}
+                                                    newImage={sticker}
                                                     onDragEnd={(e: any) => {
                                                         const { x, y } = e.target.position();
                                                         setFrontCards(prev =>
@@ -595,6 +618,25 @@ function Edit() {
                                                                     ...card,
                                                                     sticker: card.sticker.map((tmp, i) =>
                                                                         i === stickerIndex ? {...tmp, x: x, y: y} : tmp
+                                                                    )
+                                                                } : card
+                                                            )
+                                                        );
+                                                    }}
+                                                />
+                                            )}
+                                            {frontCards[cardNum - 1].gif.map((gif, gifIndex) =>
+                                                <Giphy
+                                                    key={gifIndex}
+                                                    newImage={gif}
+                                                    onDragEnd={(e: any) => {
+                                                        const { x, y } = e.target.position();
+                                                        setFrontCards(prev =>
+                                                            prev.map((card, cardIndex) =>
+                                                                cardIndex === (cardNum - 1) ? {
+                                                                    ...card,
+                                                                    gif: card.gif.map((tmp, i) =>
+                                                                        i === gifIndex ? {...tmp, x: x, y: y} : tmp
                                                                     )
                                                                 } : card
                                                             )
@@ -648,9 +690,9 @@ function Edit() {
                                                 />
                                             )}
                                             {backCards[cardNum - 1].sticker.map((sticker, stickerIndex) =>
-                                                <Sticker
+                                                <Giphy
                                                     key={stickerIndex}
-                                                    sticker={sticker}
+                                                    newImage={sticker}
                                                     onDragEnd={(e: any) => {
                                                         const { x, y } = e.target.position();
                                                         setBackCards(prev =>
@@ -659,6 +701,25 @@ function Edit() {
                                                                     ...card,
                                                                     sticker: card.sticker.map((tmp, i) =>
                                                                         i === stickerIndex ? {...tmp, x: x, y: y} : tmp
+                                                                    )
+                                                                } : card
+                                                            )
+                                                        );
+                                                    }}
+                                                />
+                                            )}
+                                            {backCards[cardNum - 1].gif.map((gif, gifIndex) =>
+                                                <Giphy
+                                                    key={gifIndex}
+                                                    newImage={gif}
+                                                    onDragEnd={(e: any) => {
+                                                        const { x, y } = e.target.position();
+                                                        setBackCards(prev =>
+                                                            prev.map((card, cardIndex) =>
+                                                                cardIndex === (cardNum - 1) ? {
+                                                                    ...card,
+                                                                    gif: card.gif.map((tmp, i) =>
+                                                                        i === gifIndex ? {...tmp, x: x, y: y} : tmp
                                                                     )
                                                                 } : card
                                                             )
@@ -718,16 +779,26 @@ function Edit() {
                     <div className={styles.sidePanel} style={{display: gifPanel ? "flex" : "none"}}>
                         <div>
                             <div className={styles.sidePanelTitle}>Gifs</div>
-                            <form onSubmit={fetchGiphs}>
+                            <form onSubmit={fetchGiphs} className={styles.mediaForm}>
                                 <input
                                     type="text"
-                                    placeholder="Search for giphs"
+                                    placeholder="Search for gifs"
                                     value={query}
                                     onChange={(e) => setQuery(e.target.value)}
                                 />
-                                <button type="submit">Search</button>
+                                <button type="submit" className={styles.mediaFormBtn}>Search</button>
                             </form>
-                            {/* 2x4 grid to dispaly 8 giphs */}
+                            <div className={styles.mediaGrid}>
+                                {gifResults.map((gif) => (
+                                    <img
+                                        key={gif.id}
+                                        src={gif.url}
+                                        alt={gif.title}
+                                        onClick={() => createGif(gif.url)}
+                                    />
+                                ))}
+                            </div>
+                            <div className={styles.giphyLogo}>Powered by Giphy</div>
                         </div>
                     </div>
                     <div className={styles.sidePanel} style={{display: stickerPanel ? "flex" : "none"}}>
