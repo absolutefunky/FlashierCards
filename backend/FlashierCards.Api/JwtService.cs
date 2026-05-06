@@ -22,8 +22,8 @@ public class JwtService
         
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub, id.ToString()),
-            new Claim(JwtRegisteredClaimNames.Email, email),
+            new Claim(ClaimTypes.NameIdentifier, id.ToString()),
+            new Claim(ClaimTypes.Email, email),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
@@ -35,7 +35,7 @@ public class JwtService
             issuer: issuer,
             audience: audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddHours(5),    
+            expires: DateTime.UtcNow.AddHours(2),
             signingCredentials: credentials
         );
         

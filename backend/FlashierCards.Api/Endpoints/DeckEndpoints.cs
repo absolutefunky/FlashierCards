@@ -10,8 +10,8 @@ public static class DeckEndpoints
 {
     public static void MapDeckEndpoints(this WebApplication app)
     {
-        // GET /users/{id}/decks to return all decks
-        app.MapGet("/users/{id}/decks", [Authorize] async (int id, Supabase.Client supabase) =>
+        // GET /user/{id}/decks to return all decks
+        app.MapGet("/user/{id}/decks", [Authorize] async (int id, Supabase.Client supabase) =>
         {
             var response = await supabase
                 .From<Deck>()
@@ -37,8 +37,8 @@ public static class DeckEndpoints
             return Results.Ok(deckList);
         });
 
-        // GET /users/{userId}/decks{id} to get a specific deck
-        app.MapGet("/users/{userId}/decks/{id}", [Authorize] async (int userId, int id, Supabase.Client supabase) =>
+        // GET /user/{userId}/deck/{id} to get a specific deck
+        app.MapGet("/user/{userId}/deck/{id}", [Authorize] async (int userId, int id, Supabase.Client supabase) =>
         {
             var response = await supabase
                 .From<Deck>()
@@ -63,8 +63,8 @@ public static class DeckEndpoints
             return Results.Ok(deckDto);
         });
 
-        // POST /users/{id}/decks/create to create a new a deck
-        app.MapPost("/users/{id}/decks/create", [Authorize] async (int id, CreateDeckDto request, Supabase.Client supabase) =>
+        // POST /user/{id}/createDeck to create a new a deck
+        app.MapPost("/user/{id}/createDeck", [Authorize] async (int id, CreateDeckDto request, Supabase.Client supabase) =>
         {
             // check if an input field is empty
             if (string.IsNullOrWhiteSpace(request.Name))
@@ -127,8 +127,8 @@ public static class DeckEndpoints
             return Results.Ok(new {message = "Deck was successfully created.", deckDto});
         });
 
-        // PUT /users/{userId}/decks/{id}/rename to rename a deck
-        app.MapPut("/users/{userId}/decks/{id}", [Authorize] async (int userId, int id, UpdateDeckDto request, Supabase.Client supabase) =>
+        // PUT /user/{userId}/deck/{id}/renameDeck to rename a deck
+        app.MapPut("/user/{userId}/deck/{id}/renameDeck", [Authorize] async (int userId, int id, UpdateDeckDto request, Supabase.Client supabase) =>
         {
             // check if an input field is empty
             if (string.IsNullOrWhiteSpace(request.Name))
@@ -185,8 +185,8 @@ public static class DeckEndpoints
             return Results.Ok(new {message = "Deck was successfully renamed.", deckDto});
         });
 
-        // DELETE /users/{userId}/decks/{id}/delete to delete a deck
-        app.MapDelete("/users/{userId}/decks/{id}/delete", [Authorize] async (int userId, int id, Supabase.Client supabase) =>
+        // DELETE /user/{userId}/deck/{id}/deleteDeck to delete a deck
+        app.MapDelete("/user/{userId}/deck/{id}/deleteDeck", [Authorize] async (int userId, int id, Supabase.Client supabase) =>
         {
             // check if user id violates foregin key constraint
             var userResponse = await supabase

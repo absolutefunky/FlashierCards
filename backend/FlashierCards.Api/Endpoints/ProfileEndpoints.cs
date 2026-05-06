@@ -10,8 +10,8 @@ public static class ProfileEndpoints
 {
     public static void MapProfileEndpoints(this WebApplication app)
     {
-        // GET /users/{id}/profiles to get user profile information
-        app.MapGet("/users/{id}/profiles", [Authorize] async(int id, Supabase.Client supabase) =>
+        // GET /user/{id}/profile to get user profile information
+        app.MapGet("/user/{id}/profile", [Authorize] async(int id, Supabase.Client supabase) =>
         {
             // find user profile with given id
             var response = await supabase
@@ -37,8 +37,8 @@ public static class ProfileEndpoints
             return Results.Ok(profileDto);
         });
 
-        // POST /users/{id}/profiles/create
-        app.MapPost("/users/{id}/profiles/create", [Authorize] async(int id, CreateProfileDto request, Supabase.Client supabase) =>
+        // POST /user/{id}/createProfile
+        app.MapPost("/user/{id}/createProfile", [Authorize] async(int id, CreateProfileDto request, Supabase.Client supabase) =>
         {
             // check if user id violates foreign key property
             var userResponse = await supabase
@@ -96,8 +96,8 @@ public static class ProfileEndpoints
             return Results.Ok(profileDto);
         });
 
-        // PUT /users/{id}/profiles
-        app.MapPut("/users/{userId}/profiles/{id}/update", [Authorize] async(int userId, int id, UpdateProfileDto request, Supabase.Client supabase) =>
+        // PUT /user/{userId}/profile/{id}/updateProfile
+        app.MapPut("/user/{userId}/profile/{id}/updateProfile", [Authorize] async(int userId, int id, UpdateProfileDto request, Supabase.Client supabase) =>
         {
             // check if an input field is empty
             if (string.IsNullOrWhiteSpace(request.AnimationType))

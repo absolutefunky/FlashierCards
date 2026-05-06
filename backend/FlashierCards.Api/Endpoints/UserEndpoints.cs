@@ -11,8 +11,8 @@ public static class UserEndpoints
 {
     public static void MapUserEndpoints(this WebApplication app)
     {
-        // GET /users/{id} to get user data
-        app.MapGet("/users/{id}", [Authorize] async(int id, Supabase.Client supabase) =>
+        // GET /user/{id} to get user data
+        app.MapGet("/user/{id}", [Authorize] async(int id, Supabase.Client supabase) =>
         {
             // find user who has the given id
             var response = await supabase
@@ -38,8 +38,8 @@ public static class UserEndpoints
             return Results.Ok(userDto);
         });
 
-        // GET /users/register to create new user
-        app.MapPost("/users/register", async (CreateUserDto newUser, Supabase.Client supabase, JwtService jwt) =>
+        // GET /user/register to create new user
+        app.MapPost("/user/register", async (CreateUserDto newUser, Supabase.Client supabase, JwtService jwt) =>
         {
             // check if an input field is empty
             if (string.IsNullOrWhiteSpace(newUser.Email) ||
@@ -108,8 +108,8 @@ public static class UserEndpoints
             });
         });
 
-        // POST /users/login to verify user for login
-        app.MapPost("/users/login", async (VerifyLoginDto loginUser, Supabase.Client supabase, JwtService jwt) =>
+        // POST /user/login to verify user for login
+        app.MapPost("/user/login", async (VerifyLoginDto loginUser, Supabase.Client supabase, JwtService jwt) =>
         {
             // check if an input field is empty
             if (string.IsNullOrWhiteSpace(loginUser.Email) ||
@@ -155,8 +155,8 @@ public static class UserEndpoints
             });
         });
 
-        // PUT /users/{id}/changePassword when user is logged in
-        app.MapPut("/users/{id}/changePassword", [Authorize] async (int id, UpdateUserDto passwordDto, Supabase.Client supabase) =>
+        // PUT /user/{id}/changePassword when user is logged in
+        app.MapPut("/user/{id}/changePassword", [Authorize] async (int id, UpdateUserDto passwordDto, Supabase.Client supabase) =>
         {
             // check if an input field is empty
             if (string.IsNullOrWhiteSpace(passwordDto.CurrentPassword) ||
@@ -201,8 +201,8 @@ public static class UserEndpoints
             return Results.Ok(new { message = "Password was successfully changed." });
         });
 
-        // POST /users/forgotPassword to authenticate user when they forget password
-        app.MapPost("/users/forgotPassword", async (VerifyForgotPasswordDto forgetfulUser, Supabase.Client supabase, JwtService jwt) =>
+        // POST /user/forgotPassword to authenticate user when they forget password
+        app.MapPost("/user/forgotPassword", async (VerifyForgotPasswordDto forgetfulUser, Supabase.Client supabase, JwtService jwt) =>
         {
             // check if an input field is empty
             if (string.IsNullOrWhiteSpace(forgetfulUser.Email) ||
@@ -249,8 +249,8 @@ public static class UserEndpoints
             });
         });
 
-        // PUT /users/createNewPassword when user forgot password
-        app.MapPut("/users/{id}/createNewPassword", [Authorize] async (int id, UpdateUserDto passwordDto, Supabase.Client supabase) =>
+        // PUT /user/createNewPassword when user forgot password
+        app.MapPut("/user/{id}/createNewPassword", [Authorize] async (int id, UpdateUserDto passwordDto, Supabase.Client supabase) =>
         {
             // check if an input field is empty
             if (string.IsNullOrWhiteSpace(passwordDto.NewPassword) ||
@@ -295,8 +295,8 @@ public static class UserEndpoints
             return Results.Ok(new { message = "Password was successfully created." });
         });
 
-        // DELETE /users/{id}/delete
-        app.MapDelete("/users/{id}/delete", [Authorize] async (int id, Supabase.Client supabase) =>
+        // DELETE /user/{id}/delete
+        app.MapDelete("/user/{id}/delete", [Authorize] async (int id, Supabase.Client supabase) =>
         {
             // check if user exists
             var response = await supabase

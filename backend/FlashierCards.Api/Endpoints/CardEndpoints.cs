@@ -11,8 +11,8 @@ public static class CardEndpoints
 {
     public static void MapCardEndpoints(this WebApplication app)
     {
-        // GET /users/{userId}/decks/{deckId}/cards to return deck content
-        app.MapGet("/users/{userId}/decks/{deckId}/cards", [Authorize] async (int userId, int deckId, IMongoCollection<Card> collection) =>
+        // GET /user/{userId}/deck/{deckId}/cards to return deck content
+        app.MapGet("/user/{userId}/deck/{deckId}/cards", [Authorize] async (int userId, int deckId, IMongoCollection<Card> collection) =>
         {
             // find doc in database
             var cardDoc = await collection
@@ -34,8 +34,8 @@ public static class CardEndpoints
             return Results.Ok(dto);
         });
 
-        // POST /users/{userId}/decks/{deckId}/createCards to create an initial doc when user creates a new deck
-        app.MapPost("/users/{userId}/decks/{deckId}/createCards", [Authorize] async (int userId, int deckId, CreateCardDto request, IMongoCollection<Card> collection) =>
+        // POST /user/{userId}/deck/{deckId}/createCards to create an initial doc when user creates a new deck
+        app.MapPost("/user/{userId}/deck/{deckId}/createCards", [Authorize] async (int userId, int deckId, CreateCardDto request, IMongoCollection<Card> collection) =>
         {
             // create a doc to insert
             var newDocument = new Card
@@ -60,8 +60,8 @@ public static class CardEndpoints
             }
         });
 
-        // PUT /users/{userId}/decks/{deckId}/saveCards to update card content when user clicks on save button
-        app.MapPut("/users/{userId}/decks/{deckId}/saveCards", [Authorize] async (int userId, int deckId, UpdateCardDto request, IMongoCollection<Card> collection) =>
+        // PUT /user/{userId}/deck/{deckId}/saveCards to update card content when user clicks on save button
+        app.MapPut("/user/{userId}/deck/{deckId}/saveCards", [Authorize] async (int userId, int deckId, UpdateCardDto request, IMongoCollection<Card> collection) =>
         {
             // create an updated doc
             var newDoc = new Card
@@ -100,8 +100,8 @@ public static class CardEndpoints
             return Results.Ok(new { message = "Card content was successfully saved.", dto });
         });
 
-        // DELETE /users/{userId}/decks/{deckId}/deleteCards to delete deck content when user deletes a deck
-        app.MapDelete("/users/{userId}/decks/{deckId}/deleteCards", [Authorize] async (int userId, int deckId, IMongoCollection<Card> collection) =>
+        // DELETE /user/{userId}/deck/{deckId}/deleteCards to delete deck content when user deletes a deck
+        app.MapDelete("/user/{userId}/deck/{deckId}/deleteCards", [Authorize] async (int userId, int deckId, IMongoCollection<Card> collection) =>
         {
             // delete card doc
             var result = await collection.DeleteOneAsync(c => c.UserId == userId && c.DeckId == deckId);
@@ -115,8 +115,8 @@ public static class CardEndpoints
             }
         });
 
-        // DELETE /users/{userId}/deleteCards to delete all deck content when user deletes their account
-        app.MapDelete("/users/{userId}/deleteCards", [Authorize] async (int userId, IMongoCollection<Card> collection) =>
+        // DELETE /user/{userId}/deleteCards to delete all deck content when user deletes their account
+        app.MapDelete("/user/{userId}/deleteCards", [Authorize] async (int userId, IMongoCollection<Card> collection) =>
         {
             // delete all card docs associated with userId
             var result = await collection.DeleteManyAsync(c => c.UserId == userId);
