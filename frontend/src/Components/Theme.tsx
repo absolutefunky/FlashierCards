@@ -1,16 +1,16 @@
 import Navbar from "./Navbar";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styles from "../Styles/Profile.module.css";
 import type Profile from "../Interfaces/Profile";
 import { useEffect, useState } from 'react';
 import UserAuth from "../AuthContext";
+import ProfileNavbar from "./ProfileNavBar";
 
 function Theme() {
     const { userId } = useParams();
     const [profile, setProfile] = useState<Profile>();
     const [error, setError] = useState({status: false, message: ""});
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
     const { token }: any = UserAuth();
 
     const fetchProfileData = async () => {
@@ -70,55 +70,13 @@ function Theme() {
         }
     };
 
-    function handleAccountInformation() {
-        navigate(`/profile/${userId}/accountInformation`);
-    }
-
-    function handleTheme() {
-        navigate(`/profile/${userId}/theme`);
-    }
-
-    function handleChangePassword() {
-        navigate(`/profile/${userId}/changePassword`);
-    }
-
-    function handleDeleteAccount() {
-        navigate(`/profile/${userId}/deleteAccount`);
-    }
-
     return (
         <div id={styles.dashboardContent}>
             <Navbar userId={userId} />
             <div>
                 <div id={styles.title}>Flashier Cards</div>
                 <div id={styles.profileContent}>
-                    <div>
-                        <button
-                            className={styles.profileOption}
-                            onClick={handleAccountInformation}
-                        >
-                            Account Information
-                        </button>
-                        <button
-                            style={{backgroundColor: "#003971"}}
-                            className={styles.profileOption}
-                            onClick={handleTheme}
-                        >
-                            Theme
-                        </button>
-                        <button
-                            className={styles.profileOption}
-                            onClick={handleChangePassword}
-                        >
-                            Change Password
-                        </button>
-                        <button
-                            className={styles.profileOption}
-                            onClick={handleDeleteAccount}
-                        >
-                            Delete Account
-                        </button>
-                    </div>
+                    <ProfileNavbar userId={userId} profileType={"theme"} />
                     <div>
                         <div>
                             { (loading) ?

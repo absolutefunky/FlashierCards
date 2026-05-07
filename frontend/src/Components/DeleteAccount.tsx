@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useState } from 'react';
 import styles from "../Styles/Profile.module.css";
 import UserAuth from "../AuthContext";
+import ProfileNavbar from "./ProfileNavBar";
 
 function DeleteAccount() {
 	const { userId } = useParams();
@@ -61,22 +62,6 @@ function DeleteAccount() {
             setError({status: true, message: error.message});
         }
     }
-
-	function handleAccountInformation() {
-        navigate(`/profile/${userId}/accountInformation`);
-    }
-
-    function handleTheme() {
-        navigate(`/profile/${userId}/theme`);
-    }
-
-    function handleChangePassword() {
-        navigate(`/profile/${userId}/changePassword`);
-    }
-
-    function handleDeleteAccount() {
-        navigate(`/profile/${userId}/deleteAccount`);
-    }
 	
     return (
 		<div id={styles.dashboardContent} style={{pointerEvents: showOverlay ? "none" : "auto"}}>
@@ -84,33 +69,7 @@ function DeleteAccount() {
             <div>
                 <div id={styles.title}>Flashier Cards</div>
                 <div id={styles.profileContent}>
-                    <div>
-						<button
-                            className={styles.profileOption}
-                            onClick={handleAccountInformation}
-                        >
-                            Account Information
-                        </button>
-                        <button
-                            className={styles.profileOption}
-                            onClick={handleTheme}
-                        >
-                            Theme
-                        </button>
-                        <button
-                            className={styles.profileOption}
-                            onClick={handleChangePassword}
-                        >
-                            Change Password
-                        </button>
-                        <button
-							style={{backgroundColor: "#003971"}}
-                            className={styles.profileOption}
-                            onClick={handleDeleteAccount}
-                        >
-                            Delete Account
-                        </button>
-                    </div>
+                    <ProfileNavbar userId={userId} profileType={"delete account"} />
                     <div>
 						<div>
 							{ (loading) ?

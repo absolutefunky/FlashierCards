@@ -18,11 +18,11 @@ function Navbar({userId}: any) {
     }
 
     function handleDeck() {
-        navigate(`/dashboard/${userId}`);
+        navigate(`/dashboard/${userId}`, {replace: true});
     }
 
     function handleProfile() {
-        navigate(`/profile/${userId}/accountInformation`);
+        navigate(`/profile/${userId}/accountInformation`, {replace: true});
     }
 
     function handleLogout() {

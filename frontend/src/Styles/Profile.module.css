@@ -27,7 +27,7 @@
     position: relative;
 }
 
-#profileContent > div:first-of-type {
+.profileNavbar {
     background-color: #004A94;
     border-bottom: 2px solid #004A94;
     display: flex;
