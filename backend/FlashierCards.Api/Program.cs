@@ -1,4 +1,5 @@
 using FlashierCards.Api.Endpoints;
+using FlashierCards.Api.Models;
 using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,11 +25,18 @@ var options = new Supabase.SupabaseOptions
 
 var supabase = new Supabase.Client(url, key, options);
 await supabase.InitializeAsync();
+
 builder.Services.AddSingleton(supabase);
 
 // MongoDB config
 var mongoConnectionString = builder.Configuration["MongoDbSettings:ConnectionString"];
 var mongoDatabaseName = builder.Configuration["MongoDbSettings:DatabaseName"];
+var collection = builder.Configuration["MongoDbSettings:CollectionName"];
+
+if (string.IsNullOrWhiteSpace(mongoConnectionString) || string.IsNullOrWhiteSpace(mongoDatabaseName))
+{
+    throw new Exception("MongoDB configuration is missing.");
+}
 
 builder.Services.AddSingleton<IMongoClient>(_ =>
     new MongoClient(mongoConnectionString));
@@ -39,27 +47,35 @@ builder.Services.AddSingleton(sp =>
     return client.GetDatabase(mongoDatabaseName);
 });
 
+builder.Services.AddSingleton<IMongoCollection<Card>>(sp =>
+{
+    var database = sp.GetRequiredService<IMongoDatabase>();
+    return database.GetCollection<Card>(collection);
+});
+
 // CORS
 var allowedOrigins = builder.Configuration
     .GetSection("AllowedOrigins")
     .Get<string[]>();
 
-builder.Services.AddCors(options =>
+if (allowedOrigins is null || allowedOrigins.Length == 0)
 {
-    options.AddDefaultPolicy(policy =>
-    {
-        policy.WithOrigins(allowedOrigins!)
-              .AllowAnyMethod()
-              .AllowAnyHeader();
+    throw new Exception("AllowedOrigins configuration is missing.");
+}
+
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowAll", policy => {
+        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
     });
 });
+
 
 var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseCors();
+app.UseCors("AllowAll");
 
 app.MapUserEndpoints();
 app.MapDeckEndpoints();

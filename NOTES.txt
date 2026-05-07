@@ -1,0 +1,16 @@
+Things for a secure backend and frontend
+FRONTEND
+1. Add sessionStorage to frontend using login.tsx
+    - sessionStorage.setItem(user,...)
+2. Add protected routes div to App.tsx file
+    - create protectedroute wrapper tsx file
+    - Add to app.tsx file
+3. Logout button should clear sessionStorage ie: sessionStorage.clear()
+
+BACKEND 
+1. Install JWT package
+    - dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer
+    - dotnet add package System.IdentityModel.Tokens.Jwt
+2. Update Program.cs file with JWT
+3. Add tokens to userendpoints
+

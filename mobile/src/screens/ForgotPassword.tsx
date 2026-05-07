@@ -1,51 +1,23 @@
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useState } from "react";
 import { View, Text, TextInput, StyleSheet, Pressable, KeyboardAvoidingView, Platform } from "react-native";
 import { RootStackParamList } from "../../App";
 
-type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "Login">;
+type ForgotPasswordScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "ForgotPassword">;
+type ForgotPasswordScreenRouteProp = RouteProp<RootStackParamList, "ForgotPassword">;
 
-export default function LoginScreen() {
-    const navigation = useNavigation<LoginScreenNavigationProp>();
+export default function ForgotPasswordScreen() {
+    const navigation = useNavigation<ForgotPasswordScreenNavigationProp>();
+    const route = useRoute<ForgotPasswordScreenRouteProp>();
     const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [sqAnswer, setSqAnswer] = useState("");
     const [error, setError] = useState({status: false, message: ""});
     const [loading, setLoading] = useState(false);
-    const FLASHIER_CARDS_API = "http://10.0.0.136:5204";
 
-    const handleLogin = async () => {
-        setLoading(true);
+    function handleForgotPassword() {
+        // handle user authentication here
 
-        try {
-            // find user account
-            const userResponse = await fetch(`${FLASHIER_CARDS_API}/users/login`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    email: email.trim(),
-                    password: password
-                })
-            });
-
-            // get message and user data
-            const userData = await userResponse.json();
-
-            if (!userResponse.ok) {
-                throw new Error(userData.message);
-            }
-
-            setLoading(false);
-
-            // go to dashboard after user account is created
-            navigation.navigate("Dashboard", {userId: userData.user.id});
-
-        } catch(error: any) {
-            setLoading(false);
-            setError({status: true, message: error.message});
-        }
     }
 
     return (
@@ -70,30 +42,22 @@ export default function LoginScreen() {
                 />
             </View>
             <View style={styles.formField}>
-                <Text style={styles.subtitle}>Password</Text>
+                <Text style={styles.subtitle}>Name of your best friend</Text>
                 <TextInput
-                    textContentType="password"
-                    placeholder="Enter your password..."
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry={true}
+                    textContentType="name"
+                    placeholder="Enter your answer..."
+                    value={sqAnswer}
+                    onChangeText={setSqAnswer}
                     style={styles.input}
                 />
             </View>
-            <Pressable style={styles.homeBtn} onPress={handleLogin}>
+            <Pressable style={styles.homeBtn} onPress={handleForgotPassword}>
                 <View style={styles.loginShadow} />
                 <View style={styles.loginEdge} />
                 <View style={styles.loginFront}>
-                    <Text style={styles.loginFrontText}>Log in!</Text>
+                    <Text style={styles.loginFrontText}>Continue</Text>
                 </View>
-            </Pressable>
-            <Pressable style={styles.homeBtn} onPress={() => navigation.navigate("ForgotPassword")}>
-                <View style={styles.signupShadow} />
-                <View style={styles.signupEdge} />
-                <View style={styles.signupFront}>
-                    <Text style={styles.signupFrontText}>Forgot password?</Text>
-                </View>
-            </Pressable>            
+            </Pressable>           
         </KeyboardAvoidingView>
     );
 }
@@ -103,11 +67,10 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "column",
         padding: 20,
-        justifyContent: "center",
         alignItems: "center"
     },
     title: {
-        fontSize: 65,
+        fontSize: 44,
         fontFamily: "RampartOne_400Regular",
         fontWeight: "400",
         color: "#004A94",

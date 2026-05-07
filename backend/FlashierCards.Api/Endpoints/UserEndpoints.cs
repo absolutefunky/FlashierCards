@@ -3,6 +3,7 @@ using FlashierCards.Api.Dtos.UpdateDtos;
 using FlashierCards.Api.Models;
 using FlashierCards.Api.Dtos.CreateDtos;
 using FlashierCards.Api.Dtos.VerifyDtos;
+using System.Text.RegularExpressions;
 
 namespace FlashierCards.Api.Endpoints;
 
@@ -54,6 +55,15 @@ public static class UserEndpoints
             if (newUser.Password != newUser.ConfirmPassword)
             {
                 return Results.BadRequest(new { message = "Password and Confirm password do not match." });
+            }
+
+            string regPassword =  @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$";
+            if(!Regex.IsMatch(newUser.Password, regPassword))
+            {
+                return Results.BadRequest(new
+                {
+                    message = "Passwords should have 8 characters, and at least one uppercase, lowercase letter, number, and special character"
+                });
             }
 
             var existingUser = await supabase
@@ -162,6 +172,15 @@ public static class UserEndpoints
                 return Results.BadRequest(new { message = "New password and Confirm new password do not match." });
             }
 
+            string regPassword =  @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$";
+            if(!Regex.IsMatch(passwordDto.NewPassword, regPassword))
+            {
+                return Results.BadRequest(new
+                {
+                    message = "Passwords should have 8 characters, and at least one uppercase, lowercase letter, number, and special character"
+                });
+            }
+
             // check if current password is real
             var response = await supabase
                 .From<User>()
@@ -247,6 +266,15 @@ public static class UserEndpoints
             if (passwordDto.NewPassword != passwordDto.ConfirmNewPassword)
             {
                 return Results.BadRequest(new { message = "Password and Confirm password do not match." });
+            }
+
+            string regPassword =  @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$";
+            if(!Regex.IsMatch(passwordDto.NewPassword, regPassword))
+            {
+                return Results.BadRequest(new
+                {
+                    message = "Passwords should have 8 characters, and at least one uppercase, lowercase letter, number, and special character"
+                });
             }
 
             // get user to create new password

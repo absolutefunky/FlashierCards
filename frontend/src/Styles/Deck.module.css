@@ -97,6 +97,68 @@
     font-size: 18px;
 }
 
+.mediaForm {
+    display: flex;
+    margin-bottom: 1rem;
+}
+
+.mediaForm input {
+    flex: 1;
+    margin-right: 0.5rem;
+    border: 2px solid #004A94;
+    border-radius: 5px;
+    font-size: 16px;
+    padding: 0.5rem;
+}
+
+.mediaForm input:focus {
+    outline: none;
+}
+
+.mediaFormBtn {
+    font-size: 18px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    background-color: #004A94;
+    border: 2px solid #004A94;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    color: white;
+}
+
+.mediaFormBtn:hover {
+    cursor: pointer;
+}
+
+.mediaGrid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+}
+
+.mediaGrid img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    cursor: pointer;
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+}
+
+.giphyLogo {
+    font-size: 18px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+    color: #004A94;
+    align-self: flex-end;
+    justify-self: flex-end;
+}
+
 .deck {
     display: flex;
     flex-direction: column;

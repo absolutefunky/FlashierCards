@@ -2,8 +2,9 @@ using FlashierCards.Api.Models;
 
 namespace FlashierCards.Api.Dtos.UpdateDtos;
 
-public class UpdateCardDto
-{
-    public CardElement? FrontCard { get; set; }
-    public CardElement? BackCard { get; set; }
-}
+// use this record when updating a document (deck of cards) in MongoDB
+
+public record UpdateCardDto (
+    List<CardElement> FrontCards,
+    List<CardElement> BackCards
+);

@@ -1,238 +1,312 @@
-import React, { useRef, useState } from "react";
-import { View, Text, StyleSheet, Pressable, Animated } from "react-native";
+import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { useNavigation } from "@react-navigation/native";
-import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { faChevronLeft, faChevronRight, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import { RouteProp, useRoute } from "@react-navigation/native";
+import { useRef, useState, useEffect } from "react";
+import { View, Text, StyleSheet, Animated, Pressable, TouchableOpacity, Image } from "react-native";
+import * as ScreenOrientation from "expo-screen-orientation";
+import { RootStackParamList } from "../../App";
 
-type Flashcard = {
-  front: string;
-  back: string;
+type CardText = {
+  input: string;
+  x: number;
+  y: number;
+  width: number;
+  color: string;
+  fontSize: number;
 };
 
-type RootStackParamList = {
-  Dashboard: undefined;
-  Study: undefined;
+type CardSticker = {
+  url: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
 };
 
-export default function Study() {
-  const [cardNum, setCardNum] = useState(0);
-  const [isFlipped, setIsFlipped] = useState(false);
+type Card = {
+  text: CardText[];
+  gif: CardSticker[];
+  sticker: CardSticker[];
+};
 
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+type StudyScreenRouteProp = RouteProp<RootStackParamList, "Study">;
 
-  const flipDisplay = useRef(new Animated.Value(0)).current;
+export default function StudyScreen() {
+      useEffect(() => {
+        async function changeScreenPos() {
+            await ScreenOrientation.lockAsync(
+                ScreenOrientation.OrientationLock.LANDSCAPE
+            );
+        }
 
-  const cards: Flashcard[] = [
-    { front: "Front of card 1", back: "Back of card 1" },
-    { front: "Front of card 2", back: "Back of card 2" },
-    { front: "Front of card 3", back: "Back of card 3" },
-    { front: "Front of card 4", back: "Back of card 4" },
-    { front: "Front of card 5", back: "Back of card 5" },
-  ];
+        changeScreenPos();
+        fetchCardData();
 
-  const total = cards.length;
+        return () => {
+            ScreenOrientation.unlockAsync();
+        };
+    }, []);
+    
+    const route = useRoute<StudyScreenRouteProp>();
 
-  const frontRotate = flipDisplay.interpolate({
-    inputRange: [0, 180],
-    outputRange: ["0deg", "180deg"],
-  });
+    const { userId, deckId } = route.params;
 
-  const backRotate = flipDisplay.interpolate({
-    inputRange: [0, 180],
-    outputRange: ["180deg", "360deg"],
-  });
+    const [error, setError] = useState({status: false, message: ""});
+    const [loading, setLoading] = useState(false);
+    const [isFlipped, setIsFlipped] = useState(false);
+    const flipDisplay = useRef(new Animated.Value(0)).current;
+    const [frontCards, setFrontCards] = useState<Card[]>([]);
+    const [backCards, setBackCards] = useState<Card[]>([]);
+    const [cardNum, setCardNum] = useState(1);
+    const [total, setTotal] = useState(0);
 
-  function flipCard() {
-    if (isFlipped) {
-      Animated.spring(flipDisplay, {
-        toValue: 0,
-        useNativeDriver: true,
-      }).start();
-    } else {
-      Animated.spring(flipDisplay, {
-        toValue: 180,
-        useNativeDriver: true,
-      }).start();
+    async function fetchCardData() {
+    setLoading(true);
+    setError({ status: false, message: "" });
+
+    try {
+        const deckResponse = await fetch(
+        `http://10.0.0.136:5204/users/${userId}/decks/${deckId}`
+        );
+
+        const deckData = await deckResponse.json();
+
+        if (!deckResponse.ok) {
+        throw new Error(deckData.message || "Failed to load card content.");
+        }
+
+        const cardResponse = await fetch(
+        `http://10.0.0.136:5204/users/${userId}/decks/${deckId}/cards`
+        );
+
+        const cardData = await cardResponse.json();
+
+        if (!cardResponse.ok) {
+        throw new Error(cardData.message || "Failed to load cards.");
+        }
+
+        setFrontCards(cardData.frontCards || []);
+        setBackCards(cardData.backCards || []);
+        setTotal(cardData.frontCards?.length || 0);
+        } catch (err: any) {
+            setError({ status: true, message: err.message });
+        } finally {
+            setLoading(false);
+        }
     }
 
-    setIsFlipped((prev) => !prev);
-  }
 
-  function resetFlip() {
-    flipDisplay.setValue(0);
-    setIsFlipped(false);
-  }
+    const frontRotate = flipDisplay.interpolate({
+        inputRange: [0, 180],
+        outputRange: ["0deg", "180deg"],
+    });
 
-  function showNextCard() {
-    if (cardNum + 1 < total) {
-      setCardNum((prev) => prev + 1);
-      resetFlip();
+    const flipToFrontStyle = {
+        transform: [{ rotateY: frontRotate }]
+    };
+
+    const backRotate = flipDisplay.interpolate({
+        inputRange: [0, 180],
+        outputRange: ["180deg", "360deg"],
+    });
+
+    const flipToBackStyle = {
+        transform: [{ rotateY: backRotate }]
+    };
+
+    function flipCard() {
+        if (isFlipped) {
+            Animated.spring(flipDisplay, {
+                toValue: 0,
+                friction: 8,
+                tension: 10,
+                useNativeDriver: true,
+            }).start();
+        } else {
+            Animated.spring(flipDisplay, {
+                toValue: 180,
+                friction: 8,
+                tension: 10,
+                useNativeDriver: true,
+            }).start();
+        }
+        setIsFlipped((prev) => !prev);
     }
-  }
 
-  function showPrevCard() {
-    if (cardNum - 1 >= 0) {
-      setCardNum((prev) => prev - 1);
-      resetFlip();
+    function resetFlip() {
+        flipDisplay.setValue(0);
+        setIsFlipped(false);
     }
-  }
 
-  return (
-    <View style={styles.dashboardContent}>
-      <View style={styles.mainSection}>
-        <Text style={styles.title}>Flashier Cards</Text>
+    function showNextCard() {
+        if ((cardNum + 1) <= total) {
+            setCardNum(cardNum + 1);
+            resetFlip();
+        }
+    }
 
-        <Pressable onPress={() => navigation.navigate("Dashboard")}>
-          <FontAwesomeIcon icon={faCircleXmark} size={20} color="#004A94" />
-        </Pressable>
+    function showPrevCard() {
+        if ((cardNum - 1) >= 1) {
+            setCardNum(cardNum - 1);
+            resetFlip();
+        }
+    }
 
-        <View style={styles.deck}>
-          <Pressable style={styles.cardContainer} onPress={flipCard}>
-            <Animated.View
-              style={[
-                styles.card,
-                styles.frontCard,
-                { transform: [{ rotateY: frontRotate }] },
-              ]}
-            >
-              <Text style={styles.cardText}>{cards[cardNum].front}</Text>
-            </Animated.View>
-
-            <Animated.View
-              style={[
-                styles.card,
-                styles.backCard,
-                { transform: [{ rotateY: backRotate }] },
-              ]}
-            >
-              <Text style={styles.cardText}>{cards[cardNum].back}</Text>
-            </Animated.View>
-          </Pressable>
-
-          <View style={styles.deckNav}>
-            <Pressable
-              style={[styles.navButton, cardNum === 0 && styles.navButtonDisabled]}
-              onPress={showPrevCard}
-              disabled={cardNum === 0}
-            >
-              <FontAwesomeIcon icon={faChevronLeft} size={20} color="white" />
+    const currentFrontCard = frontCards[cardNum - 1];
+    const currentBackCard = backCards[cardNum - 1];
+    return (
+        <View style={styles.container}>
+            <Pressable onPress={flipCard} style={styles.cardContainer}>
+                <Animated.View style={[styles.card, styles.frontCard, flipToFrontStyle]}>
+                    {currentFrontCard?.text.map((text, index) => (
+                    <Text
+                        key={index}
+                        style={[
+                        styles.cardText,
+                        {
+                            position: "absolute",
+                            left: text.x,
+                            top: text.y,
+                            width: text.width,
+                            color: text.color,
+                            fontSize: text.fontSize,
+                        },
+                        ]}
+                    >
+                        {text.input}
+                    </Text>
+                    ))}
+                    {currentFrontCard?.sticker.map((sticker, index) => (
+                    <Image
+                        key={`front-sticker-${index}`}
+                        source={{ uri: sticker.url }}
+                        style={{
+                        position: "absolute",
+                        left: sticker.x,
+                        top: sticker.y,
+                        width: sticker.width,
+                        height: sticker.height,
+                        }}
+                    />
+                    ))}
+                </Animated.View>
+                <Animated.View style={[styles.card, styles.backCard, flipToBackStyle]}>
+                    {currentBackCard?.text.map((text, index) => (
+                    <Text
+                        key={index}
+                        style={[
+                        styles.cardText,
+                        {
+                            position: "absolute",
+                            left: text.x,
+                            top: text.y,
+                            width: text.width,
+                            color: text.color,
+                            fontSize: text.fontSize,
+                        },
+                        ]}
+                    >
+                        {text.input}
+                    </Text>              
+                    ))}
+                    {currentBackCard?.sticker.map((sticker, index) => (
+                    <Image
+                        key={`back-sticker-${index}`}
+                        source={{ uri: sticker.url }}
+                        style={{
+                        position: "absolute",
+                        left: sticker.x,
+                        top: sticker.y,
+                        width: sticker.width,
+                        height: sticker.height,
+                        }}
+                    />
+                    ))}
+                </Animated.View>
             </Pressable>
-
-            <Text style={styles.counter}>
-              {cardNum + 1}/{total}
-            </Text>
-
-            <Pressable
-              style={[
-                styles.navButton,
-                cardNum === total - 1 && styles.navButtonDisabled,
-              ]}
-              onPress={showNextCard}
-              disabled={cardNum === total - 1}
-            >
-              <FontAwesomeIcon icon={faChevronRight} size={20} color="white" />
-            </Pressable>
-          </View>
+            <View style={styles.deckNav}>
+                <TouchableOpacity
+                    style={[styles.navButton, cardNum === 1 && styles.navButtonDisabled]}
+                    onPress={showPrevCard}
+                    disabled={cardNum === 1}
+                >
+                    <FontAwesomeIcon icon={faChevronLeft} size={24} color="white" />
+                </TouchableOpacity>
+                <Text style={styles.counter}>{cardNum}/{total}</Text>
+                <TouchableOpacity
+                    style={[styles.navButton, cardNum === total && styles.navButtonDisabled]}
+                    onPress={showNextCard}
+                    disabled={cardNum === total}
+                >
+                    <FontAwesomeIcon icon={faChevronRight} size={24} color="white" />
+                </TouchableOpacity>
+            </View>
         </View>
-      </View>
-    </View>
-  );
+    );
 }
 
 const styles = StyleSheet.create({
-  dashboardContent: {
-    flex: 1,
-    backgroundColor: "white",
-  },
-
-  mainSection: {
-    flex: 1,
-    paddingTop: 32,
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-    alignItems: "center",
-  },
-
-  title: {
-    fontSize: 45,
-    fontWeight: "400",
-    color: "#004A94",
-    textAlign: "center",
-    marginBottom: 32,
-  },
-
-  deck: {
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-    flex: 1,
-  },
-
-  cardContainer: {
-    width: 350,
-    height: 300,
-    marginBottom: 30,
-  },
-
-  card: {
-    width: 350,
-    height: 300,
-    backgroundColor: "white",
-    borderRadius: 12,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-    shadowColor: "rgba(28, 31, 40, 0.234)",
-    shadowOffset: { width: 10, height: 10 },
-    shadowOpacity: 1,
-    shadowRadius: 20,
-    elevation: 5,
-    position: "absolute",
-    backfaceVisibility: "hidden",
-  },
-
-  frontCard: {
-    backgroundColor: "white",
-  },
-
-  backCard: {
-    backgroundColor: "white",
-  },
-
-  cardText: {
-    fontSize: 24,
-    fontWeight: "600",
-    color: "#004A94",
-    textAlign: "center",
-  },
-
-  deckNav: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 20,
-  },
-
-  navButton: {
-    backgroundColor: "#004A94",
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  navButtonDisabled: {
-    backgroundColor: "#9db8d1",
-  },
-
-  counter: {
-    fontSize: 22,
-    fontWeight: "600",
-    color: "#004A94",
-    minWidth: 70,
-    textAlign: "center",
-  },
+    container: {
+        flex: 1,
+        flexDirection: "column",
+        alignItems: "center",
+        padding: 20
+    },
+    title: {
+        fontSize: 44,
+        fontFamily: "RampartOne_400Regular",
+        fontWeight: "400",
+        color: "#004A94",
+        textAlign: "center",
+        marginBottom: 20
+    },
+    cardContainer: {
+        width: "60%",
+        height: 240,
+        marginBottom: 20
+    },
+    card: {
+        width: "100%",
+        height: 240,
+        borderRadius: 10,
+        borderWidth: 2,
+        borderColor: "#004A94",
+        position: "absolute",
+        backfaceVisibility: "hidden"
+    },
+    frontCard: {
+        backgroundColor: "white"
+    },
+    backCard: {
+        backgroundColor: "white"
+    },
+    cardText: {
+        fontSize: 20,
+        fontWeight: "400",
+        color: "#004A94",
+        textAlign: "center"
+    },
+    deckNav: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 20
+    },
+    navButton: {
+        backgroundColor: "#004A94",
+        width: 45,
+        height: 45,
+        borderRadius: 50,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    navButtonDisabled: {
+        backgroundColor: "#9db8d1"
+    },
+    counter: {
+        fontSize: 20,
+        fontWeight: "400",
+        color: "#004A94",
+        textAlign: "center"
+    }
 });

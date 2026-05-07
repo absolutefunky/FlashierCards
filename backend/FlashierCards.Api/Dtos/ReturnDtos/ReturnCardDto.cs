@@ -2,8 +2,11 @@ using FlashierCards.Api.Models;
 
 namespace FlashierCards.Api.Dtos.ReturnDtos;
 
-public class ReturnCardDto
-{
-    public CardElement? FrontCard { get; set; }
-    public CardElement? BackCard { get; set; }
-}
+// use this record when returning a document (deck of cards) from MongoDB
+
+public record ReturnCardDto (
+    int UserId,
+    int DeckId,
+    List<CardElement> FrontCards,
+    List<CardElement> BackCards
+);

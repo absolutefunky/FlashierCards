@@ -2,8 +2,11 @@ using FlashierCards.Api.Models;
 
 namespace FlashierCards.Api.Dtos.CreateDtos;
 
-public class CreateCardDto
-{
-    public CardElement? FrontCard { get; set; }
-    public CardElement? BackCard { get; set; }
-}
+// use this record when creating a new document (deck of cards) in MongoDB
+
+public record CreateCardDto (
+    int UserId,
+    int DeckId,
+    List<CardElement> FrontCards,
+    List<CardElement> BackCards
+);
