@@ -4,7 +4,15 @@ import { RouteProp, useRoute } from "@react-navigation/native";
 import { useRef, useState, useEffect } from "react";
 import { View, Text, StyleSheet, Animated, Pressable, TouchableOpacity, Image } from "react-native";
 import * as ScreenOrientation from "expo-screen-orientation";
+import { Dimensions } from "react-native";
 import { RootStackParamList } from "../../App";
+
+const SPREADWIDTH = Dimensions.get("window").width;
+const CARD_WIDTH = SPREADWIDTH * 0.6;
+const CARD_HEIGHT = CARD_WIDTH / 2;
+
+const scaleX = CARD_WIDTH / 800;
+const scaleY = CARD_HEIGHT / 400;
 
 type CardText = {
   input: string;
@@ -165,11 +173,12 @@ export default function StudyScreen() {
                         styles.cardText,
                         {
                             position: "absolute",
-                            left: text.x,
-                            top: text.y,
-                            width: text.width,
+                            left: text.x * scaleX,
+                            top: text.y * scaleY,
+                            width: text.width * scaleX,
                             color: text.color,
-                            fontSize: text.fontSize,
+                            fontSize: text.fontSize * scaleX,
+                            fontFamily: "Imprima_400Regular",
                         },
                         ]}
                     >
@@ -181,11 +190,11 @@ export default function StudyScreen() {
                         key={`front-sticker-${index}`}
                         source={{ uri: sticker.url }}
                         style={{
-                        position: "absolute",
-                        left: sticker.x,
-                        top: sticker.y,
-                        width: sticker.width,
-                        height: sticker.height,
+                            position: "absolute",
+                            left: sticker.x * scaleX,
+                            top: sticker.y * scaleY,
+                            width: sticker.width * scaleX,
+                            height: sticker.height * scaleY,
                         }}
                     />
                     ))}
@@ -198,11 +207,12 @@ export default function StudyScreen() {
                         styles.cardText,
                         {
                             position: "absolute",
-                            left: text.x,
-                            top: text.y,
-                            width: text.width,
+                            left: text.x * scaleX,
+                            top: text.y * scaleY,
+                            width: text.width * scaleX,
                             color: text.color,
-                            fontSize: text.fontSize,
+                            fontSize: text.fontSize * scaleX,
+                            fontFamily: "Imprima_400Regular",
                         },
                         ]}
                     >
@@ -214,11 +224,11 @@ export default function StudyScreen() {
                         key={`back-sticker-${index}`}
                         source={{ uri: sticker.url }}
                         style={{
-                        position: "absolute",
-                        left: sticker.x,
-                        top: sticker.y,
-                        width: sticker.width,
-                        height: sticker.height,
+                            position: "absolute",
+                            left: sticker.x * scaleX,
+                            top: sticker.y * scaleY,
+                            width: sticker.width * scaleX,
+                            height: sticker.height * scaleY,
                         }}
                     />
                     ))}
@@ -260,20 +270,25 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginBottom: 20
     },
+
     cardContainer: {
-        width: "60%",
-        height: 240,
-        marginBottom: 20
+    width: CARD_WIDTH,
+    height: CARD_HEIGHT,
+    marginBottom: 20,
     },
+
     card: {
-        width: "100%",
-        height: 240,
-        borderRadius: 10,
-        borderWidth: 2,
-        borderColor: "#004A94",
-        position: "absolute",
-        backfaceVisibility: "hidden"
+    width: CARD_WIDTH,
+    height: CARD_HEIGHT,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "#004A94",
+    position: "absolute",
+    backfaceVisibility: "hidden",
+    backgroundColor: "white",
+    overflow: "hidden",
     },
+    
     frontCard: {
         backgroundColor: "white"
     },
