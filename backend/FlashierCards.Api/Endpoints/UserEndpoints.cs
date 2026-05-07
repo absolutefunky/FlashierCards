@@ -58,7 +58,7 @@ public static class UserEndpoints
 
             var existingUser = await supabase
                 .From<User>()
-                .Where(u => u.Email == newUser.Email)
+                .Where(u => u.Email == newUser.Email.Trim().ToLower())
                 .Get();
 
             // check if user already exists
@@ -71,7 +71,7 @@ public static class UserEndpoints
 
             var userToInsert = new User
             {
-                Email = newUser.Email,
+                Email = newUser.Email.Trim().ToLower(),
                 PasswordHash = hashedPassword,
                 SqAnswer = newUser.SqAnswer,
                 DateAccountCreated = DateOnly.FromDateTime(DateTime.UtcNow)
@@ -115,7 +115,7 @@ public static class UserEndpoints
             // check if user exists
             var response = await supabase
                 .From<User>()
-                .Where(u => u.Email == loginUser.Email)
+                .Where(u => u.Email == loginUser.Email.Trim().ToLower())
                 .Get();
 
             var user = response.Models.FirstOrDefault();
@@ -202,7 +202,7 @@ public static class UserEndpoints
             // check if user exists
              var response = await supabase
                 .From<User>()
-                .Where(u => u.Email == forgetfulUser.Email)
+                .Where(u => u.Email == forgetfulUser.Email.Trim().ToLower())
                 .Get();
 
             var user = response.Models.FirstOrDefault();

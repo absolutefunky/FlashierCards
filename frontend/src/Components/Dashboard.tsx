@@ -10,6 +10,7 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState, type ChangeEvent } from 'react';
 import type Deck from "../Interfaces/Deck";
 import styles from "../Styles/Dashboard.module.css";
+import Tooltip from "@mui/material/Tooltip";
 
 function Dashboard() {
     const [toolVisible, setToolVisible] = useState(false);
@@ -200,10 +201,11 @@ function Dashboard() {
                 <div>
                     <div id={styles.title}>Flashier Cards</div>
                     <div id={styles.toolbar}>
+                        <Tooltip title="Create Deck">
                         <button
                             type="button"
                             className={styles.toolOption}
-                            onClick={() => handleCreateOverlay(true)} 
+                            onClick={() => handleCreateOverlay(true)}
                         >
                             <span className={styles.shadow}></span>
                             <span className={styles.edge}></span>
@@ -211,6 +213,7 @@ function Dashboard() {
                                 <FontAwesomeIcon icon={faPlus} />
                             </span>
                         </button>
+                        </Tooltip>
                         <button
                             type="button"
                             style={{ display: toolVisible ? "inline-block" : "none" }}

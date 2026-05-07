@@ -15,7 +15,7 @@ export default function AccountInformationScreen() {
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState<UserModel>();
     const [totalDecks, setTotalDecks] = useState();
-    const FLASHIER_CARDS_API = "add flashier cards backend url here";
+    const FLASHIER_CARDS_API = "https://flashiercards-backend-f908e93ff9f3.herokuapp.com";
 
     const fetchUserData = async () => {
         setLoading(true);

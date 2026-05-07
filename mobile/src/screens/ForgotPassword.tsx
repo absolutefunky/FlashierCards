@@ -13,10 +13,31 @@ export default function ForgotPasswordScreen() {
     const [error, setError] = useState({status: false, message: ""});
     const [loading, setLoading] = useState(false);
 
-    function handleForgotPassword() {
-        // handle user authentication here
-        navigation.navigate("CreateNewPassword");
-    }
+    const FLASHIER_CARDS_API = "https://flashiercards-backend-f908e93ff9f3.herokuapp.com";
+
+    const handleForgotPassword = async () => {
+        setLoading(true);
+        setError({ status: false, message: "" });
+
+        try {
+            const response = await fetch(`${FLASHIER_CARDS_API}/users/forgotPassword`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: email.trim(), sqAnswer })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) throw new Error(data.message);
+
+            setLoading(false);
+            navigation.navigate("CreateNewPassword", { userId: String(data.user.id) });
+
+        } catch (err: any) {
+            setLoading(false);
+            setError({ status: true, message: err.message });
+        }
+    };
 
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>

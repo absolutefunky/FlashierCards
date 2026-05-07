@@ -14,7 +14,7 @@ export default function ThemeScreen() {
     const [profile, setProfile] = useState<Profile>();
     const [error, setError] = useState({status: false, message: ""});
     const [loading, setLoading] = useState(false);
-    const FLASHIER_CARDS_API = "add flashier cards backend url here";
+    const FLASHIER_CARDS_API = "https://flashiercards-backend-f908e93ff9f3.herokuapp.com";
 
     const fetchProfileData = async () => {
         setLoading(true);

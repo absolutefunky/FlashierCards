@@ -12,7 +12,7 @@ export default function DeleteAccountScreen() {
     const route = useRoute<DeleteAccountScreenRouteProp>();
     const [error, setError] = useState({status: false, message: ""});
     const [loading, setLoading] = useState(false);
-    const FLASHIER_CARDS_API = "add flashier cards backend url here";
+    const FLASHIER_CARDS_API = "https://flashiercards-backend-f908e93ff9f3.herokuapp.com";
 
     const deleteUserData = async () => {
         setLoading(true);
