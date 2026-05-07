@@ -8,12 +8,10 @@ import styles from "../Styles/Profile.module.css";
 
 function DeleteAccount() {
 	const { userId } = useParams();
+	const navigate = useNavigate();
     const [error, setError] = useState({status: false, message: ""});
     const [loading, setLoading] = useState(false);
 	const [showOverlay, setShowOverlay] = useState(false);
-	const [error, setError] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-	const [success, setSuccess] = useState(false);
 
 	function showProfileOverlay(request: boolean) {
         setShowOverlay(request);

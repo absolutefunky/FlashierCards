@@ -1,8 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
-import { faFolder } from "@fortawesome/free-solid-svg-icons";
-import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
-import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faFolder, faCircleUser, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import styles from "../Styles/Navbar.module.css";
@@ -10,12 +7,9 @@ import styles from "../Styles/Navbar.module.css";
 type NavbarProps = {
     userId?: string;
 };
-import styles from "../Styles/Navbar.module.css";
 
 function Navbar({ userId }: NavbarProps) {
-function Navbar({userId}: any) {
     const [menuHidden, setMenuHidden] = useState(true);
-    const navigate = useNavigate();
     const navigate = useNavigate();
 
     function showMenu() {
@@ -56,5 +50,4 @@ function Navbar({userId}: any) {
     );
 }
 
-export default Navbar;
 export default Navbar;

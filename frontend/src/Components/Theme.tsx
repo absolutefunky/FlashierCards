@@ -1,9 +1,4 @@
 import Navbar from "./Navbar";
-import { Link } from "react-router-dom";
-import styles from "../Styles/Profile.module.css";
-import { useState } from 'react';
-
-import Navbar from "./Navbar";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "../Styles/Profile.module.css";
 import type Profile from "../Interfaces/Profile";
@@ -157,5 +152,4 @@ function Theme() {
     );
 }
 
-export default Theme;
 export default Theme;

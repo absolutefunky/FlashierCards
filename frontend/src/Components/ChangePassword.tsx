@@ -1,8 +1,7 @@
 import Navbar from "./Navbar";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
-import { faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck, faX } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
 
 function ChangePassword() {
 const [passwordOverlay, setPasswordOverlay] = useState(false);
