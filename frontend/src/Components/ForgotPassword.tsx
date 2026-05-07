@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 import styles from "../Styles/HomeForms.module.css";
 import { useState, type ChangeEvent } from "react";
 import UserAuth from "../AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 function ForgotPassword() {
     const navigate = useNavigate();
@@ -13,6 +15,10 @@ function ForgotPassword() {
         email: "",
         sqAnswer: ""
     });
+
+    function navigateToLogin() {
+        navigate("/login", {replace: true});
+    }
 
     function handleFormData(e: ChangeEvent<HTMLInputElement>) {
         const {name, value} = e.target;
@@ -57,49 +63,54 @@ function ForgotPassword() {
     }
 
     return (
-        <div id={styles.content}>
-            <div id={styles.title}>Flashier Cards</div>
-            { (loading) ?
-                <div className={styles.invalidRequest}>
-                    Loading request...
-                </div>
-            :
-                (error.status) ?
-                    <div className={styles.invalidRequest}>{error.message}</div>
+        <div className={styles.main}>
+            <div className={styles.homeNav}>
+                <span className={styles.homeNavBtn} onClick={navigateToLogin}>
+                    <FontAwesomeIcon icon={faArrowLeft} />
+                </span>
+            </div>
+            <div className={styles.content}>
+                <div className={styles.title}>Flashier Cards</div>
+                { (loading) ?
+                    <div className={styles.invalidRequest}>
+                        Loading request...
+                    </div>
                 :
-                    <div></div>
-            }
-            <form id={styles.signupForm} onSubmit={submitForm}>
-                <div>
-                    <div className={styles.subtitle}>Email</div>
-                    <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleFormData}
-                        required={true}
-                    />
-                </div>
-                <div>
-                    <div className={styles.subtitle}>Name of your best friend</div>
-                    <input
-                        type="text"
-                        name="sqAnswer"
-                        value={formData.sqAnswer}
-                        onChange={handleFormData}
-                        required={true}
-                    />
-                </div>
-                <button
-                    type="submit"
-                    className={styles.homeBtn}
-                    style={{marginTop: "0.5rem"}}
-                >
-                    <span className={styles.loginShadow}></span>
-                    <span className={styles.loginEdge}></span>
-                    <span className={styles.loginFront}>Continue</span>
-                </button>
-            </form>
+                    (error.status) ?
+                        <div className={styles.invalidRequest}>{error.message}</div>
+                    :
+                        <div></div>
+                }
+                <form className={styles.signupForm} onSubmit={submitForm}>
+                    <div>
+                        <div className={styles.subtitle}>Email</div>
+                        <input
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleFormData}
+                        />
+                    </div>
+                    <div>
+                        <div className={styles.subtitle}>Name of your best friend</div>
+                        <input
+                            type="text"
+                            name="sqAnswer"
+                            value={formData.sqAnswer}
+                            onChange={handleFormData}
+                        />
+                    </div>
+                    <button
+                        type="submit"
+                        className={styles.homeBtn}
+                        style={{marginTop: "0.5rem"}}
+                    >
+                        <span className={styles.loginShadow}></span>
+                        <span className={styles.loginEdge}></span>
+                        <span className={styles.loginFront}>Continue</span>
+                    </button>
+                </form>
+            </div>
         </div>
     );
 }
