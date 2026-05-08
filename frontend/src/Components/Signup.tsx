@@ -39,7 +39,7 @@ function Signup() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    email: formData.email.trim(),
+                    email: formData.email.trim().toLowerCase(),
                     password: formData.password,
                     confirmPassword: formData.confirmPassword,
                     sqAnswer: formData.sqAnswer.trim()
