@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useState } from 'react';
 import styles from "../Styles/Profile.module.css";
 import UserAuth from "../AuthContext";
-import ProfileNavbar from "./ProfileNavBar";
+import ProfileNavbar from "./ProfileNavbar";
 
 function DeleteAccount() {
 	const { userId } = useParams();
@@ -64,11 +64,11 @@ function DeleteAccount() {
     }
 	
     return (
-		<div id={styles.dashboardContent} style={{pointerEvents: showOverlay ? "none" : "auto"}}>
+		<div className={styles.dashboardContent} style={{pointerEvents: showOverlay ? "none" : "auto"}}>
             <Navbar userId={userId} />
             <div>
-                <div id={styles.title}>Flashier Cards</div>
-                <div id={styles.profileContent}>
+                <div className={styles.title}>Flashier Cards</div>
+                <div className={styles.profileContent}>
                     <ProfileNavbar userId={userId} profileType={"delete account"} />
                     <div>
 						<div>

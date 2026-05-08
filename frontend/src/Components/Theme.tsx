@@ -4,15 +4,14 @@ import styles from "../Styles/Profile.module.css";
 import type Profile from "../Interfaces/Profile";
 import { useEffect, useState } from 'react';
 import UserAuth from "../AuthContext";
-import ProfileNavbar from "./ProfileNavBar";
-import { motion } from "motion/react";
+import ProfileNavbar from "./ProfileNavbar";
 
 function Theme() {
     const { userId } = useParams();
     const [profile, setProfile] = useState<Profile>();
     const [error, setError] = useState({status: false, message: ""});
     const [loading, setLoading] = useState(false);
-    const { token }: any = UserAuth();
+    const { token } = UserAuth();
 
     const fetchProfileData = async () => {
         setLoading(true);
@@ -72,80 +71,48 @@ function Theme() {
     };
 
     return (
-        <div id={styles.dashboardContent}>
+        <div className={styles.dashboardContent}>
             <Navbar userId={userId} />
             <div>
-                <div id={styles.title}>Flashier Cards</div>
-                <div id={styles.profileContent}>
+                <div className={styles.title}>Flashier Cards</div>
+                <div className={styles.profileContent}>
                     <ProfileNavbar userId={userId} profileType={"theme"} />
                     <div>
-                        <div>
-                            { (loading) ?
-                                <div className={styles.invalidRequest}>
-                                    Loading request...
-                                </div>
+                        { (loading) ?
+                            <div className={styles.invalidRequest}>
+                                Loading request...
+                            </div>
+                        :
+                            (error.status) ?
+                                <div className={styles.invalidRequest}>{error.message}</div>
                             :
-                                (error.status) ?
-                                    <div className={styles.invalidRequest}>{error.message}</div>
-                                :
-                                    <div></div>
-                            }
-                            <div className={styles.subtitle} style={{fontWeight: "600"}}>Background Animations</div>
-                            <div id={styles.profileThemes}>
-                                <div
-                                    className={styles.themeGroup}
-                                    style={{border: (profile?.animationType === "none" ? "2px solid #004A94" : "2px solid #D9EDF8")}} 
-                                    onClick={() => updateProfileData("none")}
-                                >
-                                    No Animation
-                                </div>
-                                <div 
-                                    className={styles.themeGroup}
-                                    style={{border: (profile?.animationType === "animationOne" ? "2px solid #004A94" : "2px solid #D9EDF8")}} 
-                                    onClick={() => updateProfileData("animationOne")}
-                                >
-                                    <div className={styles.animations}>
-                                        <motion.div
-                                            style={{minWidth: 130, minHeight: 130, borderRadius: 20, backgroundColor: "#afd6eb89" }}
-                                            initial={{rotate: 45}}
-                                            animate={{ rotate: 405 }}
-                                            transition={{ duration: 2, ease: "easeInOut" }}
-                                        />
-                                        <motion.div
-                                            style={{minWidth: 130, minHeight: 130, borderRadius: "50%", backgroundColor: "#004a94bc" }}
-                                            initial={{ scale: 0 }}
-                                            animate={{ scale: 1 }}
-                                            transition={{ duration: 2, ease: "easeInOut" }}
-                                        />
-                                        <motion.div
-                                            style={{minWidth: 130, minHeight: 130, borderRadius: 20, backgroundColor: "#afd6eb89" }}
-                                            initial={{rotate: 45}}
-                                            animate={{ rotate: 405 }}
-                                            transition={{ duration: 2, ease: "easeInOut" }}
-                                        />
-                                        <motion.div
-                                            style={{minWidth: 130, minHeight: 130, borderRadius: "50%", backgroundColor: "#004a94bc" }}
-                                            initial={{ scale: 0 }}
-                                            animate={{ scale: 1 }}
-                                            transition={{ duration: 2, ease: "easeInOut" }}
-                                        />
-                                    </div>
-                                    <div>
-                                        study
-                                    </div>
-                                </div>
-                                <div 
-                                    className={styles.themeGroup}
-                                    style={{border: (profile?.animationType === "animationTwo" ? "2px solid #004A94" : "2px solid #D9EDF8")}} 
-                                    onClick={() => updateProfileData("animationTwo")}
-                                >
-                                    <div>
-                                        dashboard
-                                    </div>
-                                    <div>
-                                        study
-                                    </div>
-                                </div>
+                                <div></div>
+                        }
+                        <div className={styles.subtitle} style={{fontWeight: "600"}}>
+                            Background Animations
+                        </div>
+                        <div className={styles.profileText}>
+                            Select background animation for the study web page.
+                        </div>
+                        <div className={styles.profileThemes}>
+                            <div
+                                style={{border: (profile?.animationType === "none" ? "2px solid #004A94" : "2px solid #D9EDF8")}} 
+                                onClick={() => updateProfileData("none")}
+                            >
+                                <span className={styles.profileText}>No Animation</span>
+                            </div>
+                            <div 
+                                style={{border: (profile?.animationType === "animationOne" ? "2px solid #004A94" : "2px solid #D9EDF8")}} 
+                                onClick={() => updateProfileData("animationOne")}
+                            >
+                                
+                                <span className={styles.profileText}>Circles Animation</span>
+                            </div>
+                            <div 
+                                style={{border: (profile?.animationType === "animationTwo" ? "2px solid #004A94" : "2px solid #D9EDF8")}} 
+                                onClick={() => updateProfileData("animationTwo")}
+                            >
+                                <span className={styles.profileText}>Stripes Animation</span>
                             </div>
                         </div>
                     </div>

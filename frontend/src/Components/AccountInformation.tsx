@@ -4,7 +4,7 @@ import styles from "../Styles/Profile.module.css";
 import { useEffect, useState } from 'react';
 import type UserModel from "../Interfaces/User";
 import UserAuth from "../AuthContext";
-import ProfileNavbar from "./ProfileNavBar";
+import ProfileNavbar from "./ProfileNavbar";
 
 function AccountInformation() {
     const { userId } = useParams();
@@ -12,7 +12,7 @@ function AccountInformation() {
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState<UserModel>();
     const [totalDecks, setTotalDecks] = useState();
-    const { token }: any = UserAuth();
+    const { token } = UserAuth();
 
     const fetchUserData = async () => {
         setLoading(true);
@@ -63,11 +63,11 @@ function AccountInformation() {
     }, []);
 
     return (
-        <div id={styles.dashboardContent}>
+        <div className={styles.dashboardContent}>
             <Navbar userId={userId} />
             <div>
-                <div id={styles.title}>Flashier Cards</div>
-                <div id={styles.profileContent}>
+                <div className={styles.title}>Flashier Cards</div>
+                <div className={styles.profileContent}>
                     <ProfileNavbar userId={userId} profileType={"account information"} />
                     <div>
                         { (loading) ? 

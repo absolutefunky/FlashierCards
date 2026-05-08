@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import { useState, type ChangeEvent } from 'react';
 import styles from "../Styles/Profile.module.css";
 import UserAuth from "../AuthContext";
-import ProfileNavbar from "./ProfileNavBar";
+import ProfileNavbar from "./ProfileNavbar";
 
 function ChangePassword() {
     const { userId } = useParams();
@@ -75,11 +75,11 @@ function ChangePassword() {
     }
 
     return (
-        <div id={styles.dashboardContent} style={{pointerEvents: showOverlay ? "none" : "auto"}}>
+        <div className={styles.dashboardContent} style={{pointerEvents: showOverlay ? "none" : "auto"}}>
             <Navbar userId={userId} />
             <div>
-                <div id={styles.title}>Flashier Cards</div>
-                <div id={styles.profileContent}>
+                <div className={styles.title}>Flashier Cards</div>
+                <div className={styles.profileContent}>
                     <ProfileNavbar userId={userId} profileType={"change password"} />
                     <div>
                         { (loading) ?
@@ -100,7 +100,7 @@ function ChangePassword() {
                         <div className={styles.profileText}>
                             Enter the information below to confirm password change.
                         </div>
-                        <form id={styles.signupForm} onSubmit={submitForm}>
+                        <form className={styles.signupForm} onSubmit={submitForm}>
                             <div className={styles.formField}>
                                 <div className={styles.subtitle}>Current password</div>
                                 <input 
@@ -108,7 +108,6 @@ function ChangePassword() {
                                     name="currentPassword"
                                     value={formData.currentPassword}
                                     onChange={handleFormData}
-                                    required={true}
                                 />
                             </div>
                             <div className={styles.formField}>
@@ -118,7 +117,6 @@ function ChangePassword() {
                                     name="newPassword"
                                     value={formData.newPassword}
                                     onChange={handleFormData}
-                                    required={true}
                                 />
                             </div>
                             <div className={styles.formField}>
@@ -128,7 +126,6 @@ function ChangePassword() {
                                     name="confirmNewPassword"
                                     value={formData.confirmNewPassword}
                                     onChange={handleFormData}
-                                    required={true}
                                 />
                             </div>
                             <button

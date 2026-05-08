@@ -31,7 +31,7 @@ function Navbar({userId}: any) {
     }
 
     return (
-        <div id={styles.navbar}>
+        <div className={styles.navbar}>
             <button className={styles.navOption} onClick={() => {showMenu()}}>
                 <span><FontAwesomeIcon icon={faBars} /></span>
                 <span style={{display: menuHidden ? "none" : "block"}}>Menu</span>
