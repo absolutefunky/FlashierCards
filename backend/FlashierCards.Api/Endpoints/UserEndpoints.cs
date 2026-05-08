@@ -56,9 +56,10 @@ public static class UserEndpoints
                 return Results.BadRequest(new { message = "Password and Confirm password do not match." });
             }
 
+            var normalizedRegisterEmail = newUser.Email.Trim().ToLower();
             var existingUser = await supabase
                 .From<User>()
-                .Where(u => u.Email == newUser.Email.Trim().ToLower())
+                .Where(u => u.Email == normalizedRegisterEmail)
                 .Get();
 
             // check if user already exists
@@ -113,9 +114,10 @@ public static class UserEndpoints
             }
 
             // check if user exists
+            var normalizedLoginEmail = loginUser.Email.Trim().ToLower();
             var response = await supabase
                 .From<User>()
-                .Where(u => u.Email == loginUser.Email.Trim().ToLower())
+                .Where(u => u.Email == normalizedLoginEmail)
                 .Get();
 
             var user = response.Models.FirstOrDefault();
@@ -200,9 +202,10 @@ public static class UserEndpoints
             }
 
             // check if user exists
+            var normalizedForgotEmail = forgetfulUser.Email.Trim().ToLower();
              var response = await supabase
                 .From<User>()
-                .Where(u => u.Email == forgetfulUser.Email.Trim().ToLower())
+                .Where(u => u.Email == normalizedForgotEmail)
                 .Get();
 
             var user = response.Models.FirstOrDefault();

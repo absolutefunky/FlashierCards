@@ -10,6 +10,7 @@ function Study() {
     const [error, setError] = useState({status: false, message: ""});
     const [loading, setLoading] = useState(false);
     const [deckName, setDeckName] = useState();
+    const [animationType, setAnimationType] = useState("none");
     const { userId, deckId } = useParams();
     const cardRef = useRef<HTMLDivElement>(null);
     const [cardNum, setCardNum] = useState(1);
@@ -55,12 +56,22 @@ function Study() {
         }
     }
 
+    const fetchProfileData = async () => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/profiles`);
+            const data = await response.json();
+            if (response.ok) setAnimationType(data.animationType ?? "none");
+        } catch { }
+    };
+
     useEffect(() => {
-        fetchDeckData()
+        fetchDeckData();
+        fetchProfileData();
     }, []);
 
     return (
         <div className={styles.dashboardContent}>
+            <div className={`${styles.background} ${styles[animationType]}`} />
             <Navbar userId={userId} />
             <div>
                 <div className={styles.title}>{deckName}</div>
