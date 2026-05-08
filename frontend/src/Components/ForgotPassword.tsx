@@ -9,7 +9,7 @@ function ForgotPassword() {
     const navigate = useNavigate();
     const [error, setError] = useState({status: false, message: ""});
     const [loading, setLoading] = useState(false);
-     const { register }: any = UserAuth();
+    const { register }: any = UserAuth();
 
     const [formData, setFormData] = useState({
         email: "",

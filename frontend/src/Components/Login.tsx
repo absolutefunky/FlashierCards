@@ -4,6 +4,7 @@ import { useState, type ChangeEvent } from "react";
 import UserAuth from "../AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import HomeAnimation from "./HomeAnimation";
 
 function Login() {
     const navigate = useNavigate();
@@ -16,10 +17,12 @@ function Login() {
         password: ""
     });
 
+    // navigate to home page
     function navigateToHome() {
         navigate("/", {replace: true});
     }
 
+    // navigate to forgot password page
     function navigateToForgotPassword() {
         navigate("/forgotPassword", {replace: true});
     }
@@ -68,60 +71,63 @@ function Login() {
 
     return (
         <div className={styles.main}>
-            <div className={styles.homeNav}>
-                <span className={styles.homeNavBtn} onClick={navigateToHome}>
-                    <FontAwesomeIcon icon={faArrowLeft} />
-                </span>
-            </div>
-            <div className={styles.content}>
-                <div className={styles.title}>Flashier Cards</div>
-                { (loading) ?
-                    <div className={styles.invalidRequest}>
-                        Loading request...
-                    </div>
-                :
-                    (error.status) ?
-                        <div className={styles.invalidRequest}>{error.message}</div>
+            <HomeAnimation />
+            <div className={styles.homeContent}>
+                <div className={styles.homeNav}>
+                    <span className={styles.homeNavBtn} onClick={navigateToHome}>
+                        <FontAwesomeIcon icon={faArrowLeft} />
+                    </span>
+                </div>
+                <div className={styles.content}>
+                    <div className={styles.title}>Flashier Cards</div>
+                    { (loading) ?
+                        <div className={styles.invalidRequest}>
+                            Loading request...
+                        </div>
                     :
-                        <div></div>
-                }
-                <form className={styles.signupForm} onSubmit={submitForm}>
-                    <div>
-                        <div className={styles.subtitle}>Email</div>
-                        <input
-                            type="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleFormData}
-                        />
-                    </div>
-                    <div>
-                        <div className={styles.subtitle}>Password</div>
-                        <input
-                            type="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleFormData}
-                        />
-                    </div>
-                    <button
-                        type="submit"
-                        className={styles.homeBtn}
-                        style={{marginTop: "0.5rem", marginBottom: "1.5rem"}}
-                    >
-                        <span className={styles.loginShadow}></span>
-                        <span className={styles.loginEdge}></span>
-                        <span className={styles.loginFront}>Log in</span>
-                    </button>
-                    <button
-                        onClick={navigateToForgotPassword}
-                        className={styles.homeBtn}
-                    >
-                        <span className={styles.signupShadow}></span>
-                        <span className={styles.signupEdge}></span>
-                        <span className={styles.signupFront}>Forgot password?</span>
-                    </button>
-                </form>
+                        (error.status) ?
+                            <div className={styles.invalidRequest}>{error.message}</div>
+                        :
+                            <div></div>
+                    }
+                    <form className={styles.signupForm} onSubmit={submitForm}>
+                        <div>
+                            <div className={styles.subtitle}>Email</div>
+                            <input
+                                type="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleFormData}
+                            />
+                        </div>
+                        <div>
+                            <div className={styles.subtitle}>Password</div>
+                            <input
+                                type="password"
+                                name="password"
+                                value={formData.password}
+                                onChange={handleFormData}
+                            />
+                        </div>
+                        <button
+                            type="submit"
+                            className={styles.homeBtn}
+                            style={{marginTop: "0.5rem", marginBottom: "1.5rem"}}
+                        >
+                            <span className={styles.loginShadow}></span>
+                            <span className={styles.loginEdge}></span>
+                            <span className={styles.loginFront}>Log in</span>
+                        </button>
+                        <button
+                            onClick={navigateToForgotPassword}
+                            className={styles.homeBtn}
+                        >
+                            <span className={styles.signupShadow}></span>
+                            <span className={styles.signupEdge}></span>
+                            <span className={styles.signupFront}>Forgot password?</span>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     );

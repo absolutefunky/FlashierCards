@@ -1,46 +1,23 @@
 import { useNavigate } from "react-router-dom";
 import styles from "../Styles/Home.module.css";
-import { motion } from "motion/react";
+import HomeAnimation from "./HomeAnimation";
 
 function Home() {
     const navigate = useNavigate();
 
+    // navigate to sign up component
     function handleSignup() {
         navigate("/signup", {replace: true});
     }
 
+    // navigate to log in component
     function handleLogin() {
         navigate("/login", {replace: true});
     }
 
     return (
         <div className={styles.main}>
-            <div className={styles.animations}>
-                <motion.div
-                    style={{minWidth: 130, minHeight: 130, borderRadius: 20, backgroundColor: "#afd6eb89" }}
-                    initial={{rotate: 45}}
-                    animate={{ rotate: 405 }}
-                    transition={{ duration: 2, ease: "easeInOut" }}
-                />
-                <motion.div
-                    style={{minWidth: 130, minHeight: 130, borderRadius: "50%", backgroundColor: "#004a94bc" }}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 2, ease: "easeInOut" }}
-                />
-                <motion.div
-                    style={{minWidth: 130, minHeight: 130, borderRadius: 20, backgroundColor: "#afd6eb89" }}
-                    initial={{rotate: 45}}
-                    animate={{ rotate: 405 }}
-                    transition={{ duration: 2, ease: "easeInOut" }}
-                />
-                <motion.div
-                    style={{minWidth: 130, minHeight: 130, borderRadius: "50%", backgroundColor: "#004a94bc" }}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 2, ease: "easeInOut" }}
-                />
-            </div>
+            <HomeAnimation />
             <div className={styles.homeContent}>
                 <div className={styles.title}>Flashier Cards</div>
                 <div className={styles.subtitle}>Study The Flashier Way</div>

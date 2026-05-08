@@ -1,10 +1,19 @@
 /* this css applies to signup, login,
-forgot password, create new password, ... */
+forgot password, create new password components */
 
 .main {
     display: flex;
     flex-direction: column;
     height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.homeContent {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    position: relative;
 }
 
 .homeNav {
@@ -28,9 +37,9 @@ forgot password, create new password, ... */
 
 .content {
     display: flex;
+    flex: 1;
     flex-direction: column;
     align-items: center;
-    flex: 1;
     margin-top: 1rem;
 }
 
