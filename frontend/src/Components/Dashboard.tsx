@@ -1,4 +1,5 @@
 import Navbar from "./Navbar";
+import { animate, stagger } from "animejs";
 import { useNavigate, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
@@ -7,9 +8,18 @@ import { faFolderOpen } from "@fortawesome/free-solid-svg-icons";
 import { faPencil } from "@fortawesome/free-solid-svg-icons";
 import { faICursor } from "@fortawesome/free-solid-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FaCircle } from "react-icons/fa";
+import { FaSquare } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 import { useEffect, useState, type ChangeEvent } from 'react';
 import type Deck from "../Interfaces/Deck";
 import styles from "../Styles/Dashboard.module.css";
+
+const shapes = [
+  ...Array(6).fill(FaCircle),
+  ...Array(6).fill(FaSquare),
+  ...Array(6).fill(FaStar)
+];
 
 function Dashboard() {
     const [toolVisible, setToolVisible] = useState(false);
@@ -91,6 +101,18 @@ function Dashboard() {
     }
 
     useEffect(() => {
+    animate(`.${styles.floatingShapes}`, {
+        translateY: ["110vh", "-120vh"],
+        translateX: () => `${Math.random() * 120 - 60}px`,
+        rotate: () => Math.random() * 360,
+        opacity: [0, 0.45, 0],
+        scale: () => Math.random() * 0.6 + 0.6,
+        duration: () => Math.random() * 6000 + 9000,
+       /* delay: stagger(150), */
+        loopDelay: 0,
+        loop: true,
+        ease: "linear",
+        });
         fetchDeckData()
     }, []);
 
@@ -232,6 +254,19 @@ function Dashboard() {
             <div>
                 <div>
                     <div id={styles.title}>Flashier Cards</div>
+                    <div className={styles.floatingBackground}>
+                        {shapes.map((Icon, index) => (
+                        <Icon
+                            key={index}
+                            className={styles.floatingShapes}
+                            style={{
+                            left: `${Math.random() * 95}%`,
+                            color: ["#004A94", "#FFD166", "#EF476F", "#06D6A0"][index % 4],
+                            fontSize: `${Math.random() * 25 + 25}px`,
+                            }}
+                        />
+                        ))}
+                     </div>
                     <div id={styles.toolbar}>
                         <button
                             type="button"

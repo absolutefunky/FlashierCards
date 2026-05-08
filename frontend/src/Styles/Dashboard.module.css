@@ -249,3 +249,16 @@
     border-radius: 5px;
     padding: 1rem;
 }
+
+.floatingBackground {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.floatingShapes {
+  position: absolute;
+  bottom: -80px;
+}
