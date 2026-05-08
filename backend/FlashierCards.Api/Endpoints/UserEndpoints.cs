@@ -4,6 +4,7 @@ using FlashierCards.Api.Models;
 using FlashierCards.Api.Dtos.CreateDtos;
 using FlashierCards.Api.Dtos.VerifyDtos;
 using Microsoft.AspNetCore.Authorization;
+using System.Text.RegularExpressions;
 
 namespace FlashierCards.Api.Endpoints;
 
@@ -50,14 +51,6 @@ public static class UserEndpoints
                 return Results.BadRequest(new { message = "Please properly complete the form." });
             }
 
-            // implement password critera
-
-            // check if passwords match
-            if (newUser.Password != newUser.ConfirmPassword)
-            {
-                return Results.BadRequest(new { message = "Password and Confirm password do not match." });
-            }
-
             var existingUser = await supabase
                 .From<User>()
                 .Where(u => u.Email == newUser.Email)
@@ -69,6 +62,24 @@ public static class UserEndpoints
                 return Results.BadRequest(new { message = "User with this email already has an account. Please login instead." });
             }
 
+            string regPassword =  @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$";
+
+            // check if password meets criteria
+            if(!Regex.IsMatch(newUser.Password, regPassword))
+            {
+                return Results.BadRequest(new
+                {
+                    message = "Password should have 8 characters with at least one uppercase letter, lowercase letter, number, and special character."
+                });
+            }
+
+            // check if passwords match
+            if (newUser.Password != newUser.ConfirmPassword)
+            {
+                return Results.BadRequest(new { message = "Password and Confirm password do not match." });
+            }
+
+            // create hash of password
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(newUser.Password);
 
             var userToInsert = new User
@@ -166,15 +177,6 @@ public static class UserEndpoints
                 return Results.BadRequest(new { message = "Please properly complete the form." });
             }
 
-            // implement password critera here
-
-            // check if passwords match
-            if (passwordDto.NewPassword != passwordDto.ConfirmNewPassword)
-            {
-                return Results.BadRequest(new { message = "New password and Confirm new password do not match." });
-            }
-
-            // check if current password is real
             var response = await supabase
                 .From<User>()
                 .Where(u => u.Id == id)
@@ -184,14 +186,32 @@ public static class UserEndpoints
 
             if (user is null)
             {
-                return Results.BadRequest(new { message = "Invalid current password." });
+                return Results.BadRequest(new { message = "User does not exist." });
             }
 
+            // check if current password is accurate
             bool sameNewPasswords = BCrypt.Net.BCrypt.Verify(passwordDto.CurrentPassword, user.PasswordHash);
 
             if (!sameNewPasswords)
             {
-                return Results.BadRequest(new { message = "Please choose a different password." });
+                return Results.BadRequest(new { message = "Invalid current password." });
+            }
+
+            string regPassword =  @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$";
+
+            // check if new password meets criteria
+            if(!Regex.IsMatch(passwordDto.NewPassword, regPassword))
+            {
+                return Results.BadRequest(new
+                {
+                    message = "Password should have 8 characters with at least one uppercase letter, lowercase letter, number, and special character."
+                });
+            }
+
+            // check if passwords match
+            if (passwordDto.NewPassword != passwordDto.ConfirmNewPassword)
+            {
+                return Results.BadRequest(new { message = "New password and Confirm new password do not match." });
             }
 
             // change password
@@ -259,14 +279,6 @@ public static class UserEndpoints
                 return Results.BadRequest(new { message = "Please properly complete the form." });
             }
 
-            // implement password criteria here
-
-            // check if passwords match
-            if (passwordDto.NewPassword != passwordDto.ConfirmNewPassword)
-            {
-                return Results.BadRequest(new { message = "Password and Confirm password do not match." });
-            }
-
             // get user to create new password
             var response = await supabase
                 .From<User>()
@@ -278,6 +290,23 @@ public static class UserEndpoints
             if (user is null)
             {
                 return Results.NotFound(new { message = "User does not exist." });
+            }
+
+            string regPassword =  @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$";
+
+            // check if new password meets criteria
+            if(!Regex.IsMatch(passwordDto.NewPassword, regPassword))
+            {
+                return Results.BadRequest(new
+                {
+                    message = "Password should have 8 characters with at least one uppercase letter, lowercase letter, number, and special character."
+                });
+            }
+
+            // check if passwords match
+            if (passwordDto.NewPassword != passwordDto.ConfirmNewPassword)
+            {
+                return Results.BadRequest(new { message = "Password and Confirm password do not match." });
             }
 
             // check if new password same as old password
