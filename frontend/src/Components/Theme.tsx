@@ -5,6 +5,7 @@ import type Profile from "../Interfaces/Profile";
 import { useEffect, useState } from 'react';
 import UserAuth from "../AuthContext";
 import ProfileNavbar from "./ProfileNavBar";
+import { motion } from "motion/react";
 
 function Theme() {
     const { userId } = useParams();
@@ -91,23 +92,59 @@ function Theme() {
                             }
                             <div className={styles.subtitle} style={{fontWeight: "600"}}>Background Animations</div>
                             <div id={styles.profileThemes}>
-                                <div 
+                                <div
+                                    className={styles.themeGroup}
                                     style={{border: (profile?.animationType === "none" ? "2px solid #004A94" : "2px solid #D9EDF8")}} 
                                     onClick={() => updateProfileData("none")}
                                 >
                                     No Animation
                                 </div>
                                 <div 
+                                    className={styles.themeGroup}
                                     style={{border: (profile?.animationType === "animationOne" ? "2px solid #004A94" : "2px solid #D9EDF8")}} 
                                     onClick={() => updateProfileData("animationOne")}
                                 >
-                                    Animation One
+                                    <div className={styles.animations}>
+                                        <motion.div
+                                            style={{minWidth: 130, minHeight: 130, borderRadius: 20, backgroundColor: "#afd6eb89" }}
+                                            initial={{rotate: 45}}
+                                            animate={{ rotate: 405 }}
+                                            transition={{ duration: 2, ease: "easeInOut" }}
+                                        />
+                                        <motion.div
+                                            style={{minWidth: 130, minHeight: 130, borderRadius: "50%", backgroundColor: "#004a94bc" }}
+                                            initial={{ scale: 0 }}
+                                            animate={{ scale: 1 }}
+                                            transition={{ duration: 2, ease: "easeInOut" }}
+                                        />
+                                        <motion.div
+                                            style={{minWidth: 130, minHeight: 130, borderRadius: 20, backgroundColor: "#afd6eb89" }}
+                                            initial={{rotate: 45}}
+                                            animate={{ rotate: 405 }}
+                                            transition={{ duration: 2, ease: "easeInOut" }}
+                                        />
+                                        <motion.div
+                                            style={{minWidth: 130, minHeight: 130, borderRadius: "50%", backgroundColor: "#004a94bc" }}
+                                            initial={{ scale: 0 }}
+                                            animate={{ scale: 1 }}
+                                            transition={{ duration: 2, ease: "easeInOut" }}
+                                        />
+                                    </div>
+                                    <div>
+                                        study
+                                    </div>
                                 </div>
                                 <div 
+                                    className={styles.themeGroup}
                                     style={{border: (profile?.animationType === "animationTwo" ? "2px solid #004A94" : "2px solid #D9EDF8")}} 
                                     onClick={() => updateProfileData("animationTwo")}
                                 >
-                                    Animation Two
+                                    <div>
+                                        dashboard
+                                    </div>
+                                    <div>
+                                        study
+                                    </div>
                                 </div>
                             </div>
                         </div>

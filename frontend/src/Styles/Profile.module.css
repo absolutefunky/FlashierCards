@@ -241,9 +241,8 @@
     gap: 30px;
 }
 
-#profileThemes div {
-    width: 250px;
-    height: 200px;
+.themeGroup {
+    display: flex;
     background-color: #D9EDF8;
     border-radius: 10px;
     border: 2px solid #D9EDF8;
@@ -255,8 +254,26 @@
     align-items: center;
 }
 
-#profileThemes div:hover {
+.themeGroup div:hover {
     transform: translateY(5px);
+}
+
+.themeGroup > div {
+    background-color: white;
+    width: 250px;
+    height: 200px;
+    border-radius: 5px;
+}
+
+.animations {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding-left: 3rem;
 }
 
 .invalidRequest {
