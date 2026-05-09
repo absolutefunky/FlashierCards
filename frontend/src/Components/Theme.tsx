@@ -112,7 +112,7 @@ function Theme() {
                                 style={{border: (profile?.animationType === "animationTwo" ? "2px solid #004A94" : "2px solid #D9EDF8")}} 
                                 onClick={() => updateProfileData("animationTwo")}
                             >
-                                <span className={styles.profileText}>Stripes Animation</span>
+                                <span className={styles.profileText}>Diamonds Animation</span>
                             </div>
                         </div>
                     </div>

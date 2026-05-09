@@ -258,6 +258,10 @@ change password, and delete account components */
     height: 150px;
 }
 
+.profileThemes > div > span {
+    text-align: center;
+}
+
 .profileThemes div:hover {
     transform: translateY(5px);
 }
