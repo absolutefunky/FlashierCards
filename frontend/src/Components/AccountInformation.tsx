@@ -1,29 +1,60 @@
 import Navbar from "./Navbar";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styles from "../Styles/Profile.module.css";
 import { useEffect, useState } from 'react';
 import type UserModel from "../Interfaces/User";
+import UserAuth from "../AuthContext";
+import ProfileNavbar from "./ProfileNavbar";
 
 function AccountInformation() {
-    const [user, setUser] = useState<UserModel>();
-    const [error, setError] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
     const { userId } = useParams();
+    const [error, setError] = useState({status: false, message: ""});
+    const [loading, setLoading] = useState(false);
+    const [user, setUser] = useState<UserModel>();
+    const [totalDecks, setTotalDecks] = useState();
+    const { token } = UserAuth();
 
     const fetchUserData = async () => {
-        setIsLoading(true);
+        setLoading(true);
+
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/1`);
-            if (!response.ok) {
-                throw new Error("Invalid request.");
-            }
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/user/${userId}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+
+            // get message and user data
             const data = await response.json();
-            setIsLoading(false);
+
+            if (!response.ok) {
+                throw new Error(data.message);
+            }
+
             setUser(data);
+
+            // get list of decks to count
+            const deckResponse = await fetch(`${import.meta.env.VITE_API_URL}/user/${userId}/decks`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+
+            // get message and deck data
+            const deckData = await deckResponse.json();
+
+            if (!deckResponse.ok) {
+                throw new Error(deckData.message);
+            }
+
+            setTotalDecks(deckData.length);
+            setLoading(false);
+            
         } catch (error: any) {
-            setIsLoading(false);
-            setError(true);
-            console.log(error.message);
+            setLoading(false);
+            setError({status: true, message: error.message});
         }
     };
 
@@ -32,52 +63,44 @@ function AccountInformation() {
     }, []);
 
     return (
-        <div id={styles.dashboardContent}>
+        <div className={styles.dashboardContent}>
             <Navbar userId={userId} />
             <div>
-                <div id={styles.title}>Flashier Cards</div>
-                <div id={styles.profileContent}>
+                <div className={styles.title}>Flashier Cards</div>
+                <div className={styles.profileContent}>
+                    <ProfileNavbar userId={userId} profileType={"account information"} />
                     <div>
-                        <Link style={{backgroundColor: "#003971"}} className={styles.profileOption} to="/profile/account-information">Account Information</Link>
-                        <Link className={styles.profileOption} to="/profile/theme">Theme</Link>
-                        <Link className={styles.profileOption} to="/profile/change-password">Change Password</Link>
-                        <Link className={styles.profileOption} to="/profile/delete-account">Delete Account</Link>
-                    </div>
-                    { (isLoading) ? 
-                        <div>
+                        { (loading) ? 
                             <div className={styles.invalidRequest}>
                                 Loading request...
                             </div>
-                        </div>
-                    :
-                        (error) ?
-                            <div>
-                                <div className={styles.invalidRequest}>
-                                    Invalid request.
-                                </div>
-                            </div>
                         :
-                        <div>
-                            <div className={styles.subtitle} style={{fontWeight: "600"}}>
-                                Email
-                            </div>
-                            <div className={styles.profileText}>
-                                {user?.email}
-                            </div>
-                            <div className={styles.subtitle} style={{fontWeight: "600"}}>
-                                Date Account Created
-                            </div>
-                            <div className={styles.profileText}>
-                                {user?.dateAccountCreated}
-                            </div>
-                            <div className={styles.subtitle} style={{fontWeight: "600"}}>
-                                Total Number of Decks
-                            </div>
-                            <div className={styles.profileText}>
-                                enter number here
-                            </div>
+                            (error.status) ?
+                                <div className={styles.invalidRequest}>
+                                    {error.message}
+                                </div>
+                            :
+                                <div></div>
+                        }
+                        <div className={styles.subtitle} style={{fontWeight: "600"}}>
+                            Email
                         </div>
-                    }
+                        <div className={styles.profileText}>
+                            {user?.email}
+                        </div>
+                        <div className={styles.subtitle} style={{fontWeight: "600"}}>
+                            Date Account Created
+                        </div>
+                        <div className={styles.profileText}>
+                            {user?.dateAccountCreated}
+                        </div>
+                        <div className={styles.subtitle} style={{fontWeight: "600"}}>
+                            Total Number of Decks
+                        </div>
+                        <div className={styles.profileText}>
+                            {totalDecks}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

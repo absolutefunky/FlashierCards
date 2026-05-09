@@ -2,71 +2,89 @@ import Navbar from "./Navbar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { faX } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState } from 'react';
 import styles from "../Styles/Profile.module.css";
+import UserAuth from "../AuthContext";
+import ProfileNavbar from "./ProfileNavbar";
 
 function DeleteAccount() {
+	const { userId } = useParams();
+    const [error, setError] = useState({status: false, message: ""});
+    const [loading, setLoading] = useState(false);
 	const [showOverlay, setShowOverlay] = useState(false);
-	const [error, setError] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-	const [success, setSuccess] = useState(false);
-
+    const navigate = useNavigate();
+    const { token }: any = UserAuth();
+	
 	function showProfileOverlay(request: boolean) {
         setShowOverlay(request);
     }
 
 	const deleteUserData = async () => {
-		showProfileOverlay(false);
-        setIsLoading(true);
+        setLoading(true);
+
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/1/delete`, {
+            // delete user in supabase
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/user/${userId}/delete`, {
                 method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
             });
+
+            const data = await response.json();
+
             if (!response.ok) {
-                throw new Error("Invalid request.");
+                throw new Error(data.message);
             }
-			setSuccess(true);
-            setIsLoading(false);
-        } catch (error: any) {
-            setIsLoading(false);
-            setError(true);
-            console.log(error.message);
+
+            // delete user card content in mongodb
+            const docResponse = await fetch(`${import.meta.env.VITE_API_URL}/user/${userId}/deleteCards`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+
+            const docData = await docResponse.json();
+
+            if (!response.ok) {
+                throw new Error(docData.message);
+            }
+
+            setLoading(false);
+            showProfileOverlay(false);
+			navigate(`/`, {replace: true});
+
+        } catch(error: any) {
+            setLoading(false);
+            showProfileOverlay(false);
+            setError({status: true, message: error.message});
         }
-    };
+    }
 	
     return (
-		<div id={styles.dashboardContent} style={{pointerEvents: showOverlay ? "none" : "auto"}}>
-            <Navbar />
+		<div className={styles.dashboardContent} style={{pointerEvents: showOverlay ? "none" : "auto"}}>
+            <Navbar userId={userId} />
             <div>
-                <div id={styles.title}>Flashier Cards</div>
-                <div id={styles.profileContent}>
-                    <div>
-                        <Link className={styles.profileOption} to="/profile/account-information">Account Information</Link>
-                        <Link className={styles.profileOption} to="/profile/theme">Theme</Link>
-                        <Link className={styles.profileOption} to="/profile/change-password">Change Password</Link>
-                        <Link style={{backgroundColor: "#003971"}} className={styles.profileOption} to="/profile/delete-account">Delete Account</Link>
-                    </div>
+                <div className={styles.title}>Flashier Cards</div>
+                <div className={styles.profileContent}>
+                    <ProfileNavbar userId={userId} profileType={"delete account"} />
                     <div>
 						<div>
-							{ (isLoading) ?
+							{ (loading) ?
 								<div className={styles.invalidRequest}>
 									Loading request...
 								</div>
 							:
-								(error) ?
-									<div className={styles.invalidRequest}>
-										Invalid request.
-									</div>
+								(error.status) ?
+									<div className={styles.invalidRequest}>{error.message}</div>
 								:
-									(success) ?
-										<div className={styles.invalidRequest}>
-											Your account has been deleted. Please log out.
-										</div>
-									:
-										<div></div>
+									<div></div>
 							}
-							<div className={styles.profileText}>If you no longer wish to use Flashier Cards, you can permanently delete your account.</div>
+							<div className={styles.profileText}>
+								If you no longer wish to use Flashier Cards, you can permanently delete your account.
+							</div>
 							<button
 								className={styles.homeBtn}
 								onClick={() => showProfileOverlay(true)}
@@ -111,4 +129,4 @@ function DeleteAccount() {
     );
 }
 
-export default DeleteAccount
+export default DeleteAccount;

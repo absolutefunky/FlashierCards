@@ -1,70 +1,118 @@
 import Navbar from "./Navbar";
-import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styles from "../Styles/Profile.module.css";
-import { useState } from 'react';
+import type Profile from "../Interfaces/Profile";
+import { useEffect, useState } from 'react';
+import UserAuth from "../AuthContext";
+import ProfileNavbar from "./ProfileNavbar";
 
 function Theme() {
-    const [error, setError] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [success, setSuccess] = useState(false);
+    const { userId } = useParams();
+    const [profile, setProfile] = useState<Profile>();
+    const [error, setError] = useState({status: false, message: ""});
+    const [loading, setLoading] = useState(false);
+    const { token } = UserAuth();
+
+    const fetchProfileData = async () => {
+        setLoading(true);
+
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/user/${userId}/profile`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message);
+            }
+
+            setProfile(data);
+            setLoading(false);
+            
+        } catch (error: any) {
+            setLoading(false);
+            setError({status: true, message: error.message});
+        }
+    };
+    
+    useEffect(() => {
+        fetchProfileData()
+    }, []);
 
     const updateProfileData = async (request: string) => {
-        setIsLoading(true);
+        setLoading(true);
+
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/1/profiles/update`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/user/${userId}/profile/${profile?.id}/updateProfile`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({animationType: `${request}`})
             });
+
+            const data = await response.json();
+
             if (!response.ok) {
-                throw new Error("Invalid request.");
+                throw new Error(data.message);
             }
-            setSuccess(true);
-            setIsLoading(false);
+
+            setProfile({...profile!, animationType: data.animationType})
+            setLoading(false);
+
         } catch (error: any) {
-            setIsLoading(false);
-            setError(true);
-            console.log(error.message);
+            setLoading(false);
+            setError({status: true, message: error.message});
         }
     };
 
     return (
-        <div id={styles.dashboardContent}>
-            <Navbar />
+        <div className={styles.dashboardContent}>
+            <Navbar userId={userId} />
             <div>
-                <div id={styles.title}>Flashier Cards</div>
-                <div id={styles.profileContent}>
+                <div className={styles.title}>Flashier Cards</div>
+                <div className={styles.profileContent}>
+                    <ProfileNavbar userId={userId} profileType={"theme"} />
                     <div>
-                        <Link className={styles.profileOption} to="/profile/account-information">Account Information</Link>
-                        <Link style={{backgroundColor: "#003971"}} className={styles.profileOption} to="/profile/theme">Theme</Link>
-                        <Link className={styles.profileOption} to="/profile/change-password">Change Password</Link>
-                        <Link className={styles.profileOption} to="/profile/delete-account">Delete Account</Link>
-                    </div>
-                    <div>
-                        <div>
-                            { (isLoading) ?
-                                <div className={styles.invalidRequest}>
-                                    Loading request...
-                                </div>
+                        { (loading) ?
+                            <div className={styles.invalidRequest}>
+                                Loading request...
+                            </div>
+                        :
+                            (error.status) ?
+                                <div className={styles.invalidRequest}>{error.message}</div>
                             :
-                                (error) ?
-                                    <div className={styles.invalidRequest}>
-                                        Invalid request.
-                                    </div>
-                                :
-                                    (success) ?
-                                        <div className={styles.invalidRequest}>
-                                            Theme has been updated.
-                                        </div>
-                                    :
-                                        <div></div>
-                            }
-                            <div className={styles.subtitle} style={{fontWeight: "600"}}>Background Animations</div>
-                            <div id={styles.profileThemes}>
-                                <div onClick={() => updateProfileData("animationOne")}>add animation 1 here</div>
-                                <div onClick={() => updateProfileData("animationTwo")}>add animation 2 here</div>
+                                <div></div>
+                        }
+                        <div className={styles.subtitle} style={{fontWeight: "600"}}>
+                            Background Animations
+                        </div>
+                        <div className={styles.profileText}>
+                            Select background animation for the study web page.
+                        </div>
+                        <div className={styles.profileThemes}>
+                            <div
+                                style={{border: (profile?.animationType === "none" ? "2px solid #004A94" : "2px solid #D9EDF8")}} 
+                                onClick={() => updateProfileData("none")}
+                            >
+                                <span className={styles.profileText}>No Animation</span>
+                            </div>
+                            <div 
+                                style={{border: (profile?.animationType === "animationOne" ? "2px solid #004A94" : "2px solid #D9EDF8")}} 
+                                onClick={() => updateProfileData("animationOne")}
+                            >
+                                
+                                <span className={styles.profileText}>Circles Animation</span>
+                            </div>
+                            <div 
+                                style={{border: (profile?.animationType === "animationTwo" ? "2px solid #004A94" : "2px solid #D9EDF8")}} 
+                                onClick={() => updateProfileData("animationTwo")}
+                            >
+                                <span className={styles.profileText}>Diamonds Animation</span>
                             </div>
                         </div>
                     </div>

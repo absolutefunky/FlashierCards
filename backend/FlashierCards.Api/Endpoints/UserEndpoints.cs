@@ -3,6 +3,8 @@ using FlashierCards.Api.Dtos.UpdateDtos;
 using FlashierCards.Api.Models;
 using FlashierCards.Api.Dtos.CreateDtos;
 using FlashierCards.Api.Dtos.VerifyDtos;
+using Microsoft.AspNetCore.Authorization;
+using System.Text.RegularExpressions;
 
 namespace FlashierCards.Api.Endpoints;
 
@@ -10,8 +12,8 @@ public static class UserEndpoints
 {
     public static void MapUserEndpoints(this WebApplication app)
     {
-        // GET /users/{id} to get user data
-        app.MapGet("/users/{id}", async(int id, Supabase.Client supabase) =>
+        // GET /user/{id} to get user data
+        app.MapGet("/user/{id}", [Authorize] async(int id, Supabase.Client supabase) =>
         {
             Console.WriteLine("Ok I know I at least ented this finc");
             // find user who has the given id
@@ -38,8 +40,8 @@ public static class UserEndpoints
             return Results.Ok(userDto);
         });
 
-        // GET /users/register to create new user
-        app.MapPost("/users/register", async (CreateUserDto newUser, Supabase.Client supabase) =>
+        // GET /user/register to create new user
+        app.MapPost("/user/register", async (CreateUserDto newUser, Supabase.Client supabase, JwtService jwt) =>
         {
             // check if an input field is empty
             if (string.IsNullOrWhiteSpace(newUser.Email) ||
@@ -50,13 +52,6 @@ public static class UserEndpoints
                 return Results.BadRequest(new { message = "Please properly complete the form." });
             }
 
-            // check if passwords match
-            if (newUser.Password != newUser.ConfirmPassword)
-            {
-                return Results.BadRequest(new { message = "Password and Confirm password do not match." });
-            }
-
-            var normalizedRegisterEmail = newUser.Email.Trim().ToLower();
             var existingUser = await supabase
                 .From<User>()
                 .Where(u => u.Email == normalizedRegisterEmail)
@@ -68,6 +63,24 @@ public static class UserEndpoints
                 return Results.BadRequest(new { message = "User with this email already has an account. Please login instead." });
             }
 
+            string regPassword =  @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$";
+
+            // check if password meets criteria
+            if(!Regex.IsMatch(newUser.Password, regPassword))
+            {
+                return Results.BadRequest(new
+                {
+                    message = "Password should have 8 characters with at least one uppercase letter, lowercase letter, number, and special character."
+                });
+            }
+
+            // check if passwords match
+            if (newUser.Password != newUser.ConfirmPassword)
+            {
+                return Results.BadRequest(new { message = "Password and Confirm password do not match." });
+            }
+
+            // create hash of password
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(newUser.Password);
 
             var userToInsert = new User
@@ -87,8 +100,11 @@ public static class UserEndpoints
 
             if (insertedUser is null)
             {
-                return Results.BadRequest(new { message = "Invalid request. User account could not be created." });
+                return Results.BadRequest(new { message = "User account could not be created." });
             }
+
+            // get token for user
+            var newToken = jwt.GenerateToken(insertedUser.Id, insertedUser.Email!);
 
             var userDto = new ReturnUserDto(
                 insertedUser.Id,
@@ -99,12 +115,13 @@ public static class UserEndpoints
             return Results.Ok(new
             {
                 message = "User account was successfully created.",
-                user = userDto
+                user = userDto,
+                token = newToken
             });
         });
 
-        // POST /users/login to verify user for login
-        app.MapPost("/users/login", async (VerifyLoginDto loginUser, Supabase.Client supabase) =>
+        // POST /user/login to verify user for login
+        app.MapPost("/user/login", async (VerifyLoginDto loginUser, Supabase.Client supabase, JwtService jwt) =>
         {
             // check if an input field is empty
             if (string.IsNullOrWhiteSpace(loginUser.Email) ||
@@ -124,7 +141,7 @@ public static class UserEndpoints
 
             if (user is null)
             {
-                return Results.BadRequest(new { message = "Invalid email. User does not exist." });
+                return Results.BadRequest(new { message = "User with this email does not exist." });
             }
 
             // check if password match
@@ -132,8 +149,11 @@ public static class UserEndpoints
 
             if (!samePassword)
             {
-                return Results.BadRequest(new { message = "Invalid password. Please enter the correct password." });
+                return Results.BadRequest(new { message = "Please enter the correct password." });
             }
+
+            // get token for user
+            var newToken = jwt.GenerateToken(user.Id, user.Email!);
 
             var userDto = new ReturnUserDto(
                 user.Id,
@@ -143,12 +163,13 @@ public static class UserEndpoints
 
             return Results.Ok(new
             {
-                user = userDto
+                user = userDto,
+                token = newToken
             });
         });
 
-        // PUT /users/{id}/changePassword when user is logged in
-        app.MapPut("/users/{id}/changePassword", async (int id, UpdateUserDto passwordDto, Supabase.Client supabase) =>
+        // PUT /user/{id}/changePassword when user is logged in
+        app.MapPut("/user/{id}/changePassword", [Authorize] async (int id, UpdateUserDto passwordDto, Supabase.Client supabase) =>
         {
             // check if an input field is empty
             if (string.IsNullOrWhiteSpace(passwordDto.CurrentPassword) ||
@@ -158,13 +179,6 @@ public static class UserEndpoints
                 return Results.BadRequest(new { message = "Please properly complete the form." });
             }
 
-            // check if passwords match
-            if (passwordDto.NewPassword != passwordDto.ConfirmNewPassword)
-            {
-                return Results.BadRequest(new { message = "New password and Confirm new password do not match." });
-            }
-
-            // check if current password is real
             var response = await supabase
                 .From<User>()
                 .Where(u => u.Id == id)
@@ -174,14 +188,32 @@ public static class UserEndpoints
 
             if (user is null)
             {
-                return Results.BadRequest(new { message = "Invalid request. User does not exist." });
+                return Results.BadRequest(new { message = "User does not exist." });
             }
 
+            // check if current password is accurate
             bool sameNewPasswords = BCrypt.Net.BCrypt.Verify(passwordDto.CurrentPassword, user.PasswordHash);
 
             if (!sameNewPasswords)
             {
-                return Results.BadRequest(new { message = "Invalid password. Please enter the correct password." });
+                return Results.BadRequest(new { message = "Invalid current password." });
+            }
+
+            string regPassword =  @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$";
+
+            // check if new password meets criteria
+            if(!Regex.IsMatch(passwordDto.NewPassword, regPassword))
+            {
+                return Results.BadRequest(new
+                {
+                    message = "Password should have 8 characters with at least one uppercase letter, lowercase letter, number, and special character."
+                });
+            }
+
+            // check if passwords match
+            if (passwordDto.NewPassword != passwordDto.ConfirmNewPassword)
+            {
+                return Results.BadRequest(new { message = "New password and Confirm new password do not match." });
             }
 
             // change password
@@ -191,8 +223,8 @@ public static class UserEndpoints
             return Results.Ok(new { message = "Password was successfully changed." });
         });
 
-        // POST /users/forgotPassword to authenticate user when they forget password
-        app.MapPost("/users/forgotPassword", async (VerifyForgotPasswordDto forgetfulUser, Supabase.Client supabase) =>
+        // POST /user/forgotPassword to authenticate user when they forget password
+        app.MapPost("/user/forgotPassword", async (VerifyForgotPasswordDto forgetfulUser, Supabase.Client supabase, JwtService jwt) =>
         {
             // check if an input field is empty
             if (string.IsNullOrWhiteSpace(forgetfulUser.Email) ||
@@ -212,7 +244,7 @@ public static class UserEndpoints
 
             if (user is null)
             {
-                return Results.BadRequest(new { message = "Invalid email. User does not exist." });
+                return Results.BadRequest(new { message = "User with this email does not exist." });
             }
 
             var submittedAnswer = forgetfulUser.SqAnswer.Trim().ToLower();
@@ -221,8 +253,11 @@ public static class UserEndpoints
             // check if security question answer match
             if (submittedAnswer != savedAnswer)
             {
-                return Results.BadRequest(new { message = "Invalid request. Please enter the correct name." });
+                return Results.BadRequest(new { message = "Please enter the correct name." });
             }
+
+            // get token for user
+            var newToken = jwt.GenerateToken(user.Id, user.Email!);
 
             var userDto = new ReturnUserDto(
                 user.Id,
@@ -232,24 +267,19 @@ public static class UserEndpoints
 
             return Results.Ok(new
             {
-                user = userDto
+                user = userDto,
+                token = newToken
             });
         });
 
-        // PUT /users/createNewPassword when user forgot password
-        app.MapPut("/users/{id}/createNewPassword", async (int id, UpdateUserDto passwordDto, Supabase.Client supabase) =>
+        // PUT /user/createNewPassword when user forgot password
+        app.MapPut("/user/{id}/createNewPassword", [Authorize] async (int id, UpdateUserDto passwordDto, Supabase.Client supabase) =>
         {
             // check if an input field is empty
             if (string.IsNullOrWhiteSpace(passwordDto.NewPassword) ||
                 string.IsNullOrWhiteSpace(passwordDto.ConfirmNewPassword))
             {
                 return Results.BadRequest(new { message = "Please properly complete the form." });
-            }
-
-            // check if passwords match
-            if (passwordDto.NewPassword != passwordDto.ConfirmNewPassword)
-            {
-                return Results.BadRequest(new { message = "Password and Confirm password do not match." });
             }
 
             // get user to create new password
@@ -262,7 +292,24 @@ public static class UserEndpoints
 
             if (user is null)
             {
-                return Results.NotFound(new { message = "Invalid request. User does not exist." });
+                return Results.NotFound(new { message = "User does not exist." });
+            }
+
+            string regPassword =  @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$";
+
+            // check if new password meets criteria
+            if(!Regex.IsMatch(passwordDto.NewPassword, regPassword))
+            {
+                return Results.BadRequest(new
+                {
+                    message = "Password should have 8 characters with at least one uppercase letter, lowercase letter, number, and special character."
+                });
+            }
+
+            // check if passwords match
+            if (passwordDto.NewPassword != passwordDto.ConfirmNewPassword)
+            {
+                return Results.BadRequest(new { message = "Password and Confirm password do not match." });
             }
 
             // check if new password same as old password
@@ -270,7 +317,7 @@ public static class UserEndpoints
 
             if (sameNewPasswords)
             {
-                return Results.BadRequest(new { message = "Invalid request. Please choose a different password." });
+                return Results.BadRequest(new { message = "Please choose a different password." });
             }
 
             // create new password for forgetful user
@@ -280,8 +327,8 @@ public static class UserEndpoints
             return Results.Ok(new { message = "Password was successfully created." });
         });
 
-        // DELETE /users/{id}/delete
-        app.MapDelete("/users/{id}/delete", async (int id, Supabase.Client supabase) =>
+        // DELETE /user/{id}/delete
+        app.MapDelete("/user/{id}/delete", [Authorize] async (int id, Supabase.Client supabase) =>
         {
             // check if user exists
             var response = await supabase

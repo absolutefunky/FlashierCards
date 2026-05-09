@@ -1,6 +1,7 @@
 .dashboardContent {
     display: flex;
-    min-height: 100%;
+    flex-direction: row;
+    position: relative;
 }
 
 .background {
@@ -40,8 +41,8 @@
 .none {}
 
 .dashboardContent > div:last-of-type {
-    flex: 1;
     display: flex;
+    flex: 1;
     flex-direction: column;
     padding: 2rem 1rem;
 }
@@ -54,6 +55,140 @@
     color: #004A94;
     text-align: center;
     margin-bottom: 2rem;
+}
+
+.panel {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.sidePanel {
+    flex: 1;
+    min-width: 300px;
+    background-color: #D9EDF8;
+    border-radius: 5px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidePanel > div {
+    display: flex;
+    flex-direction: column;
+}
+
+.sidePanelTitle {
+    font-size: 20px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: white;
+    background-color: #004A94;
+    padding: 0.5rem;
+    margin-bottom: 0.8rem;
+}
+
+.textOptions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.textOptions > div {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.textOptions button {
+    font-size: 18px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    background-color: white;
+    border: 2px solid #004A94;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    color: #004A94;
+}
+
+.textOptions button:hover {
+    cursor: pointer;
+}
+
+.textInput {
+    display: flex;
+    height: 150px;
+    margin-bottom: 1.5rem;
+}
+
+.textInput textarea {
+    outline: none;
+    width: 100%;
+    resize: none;
+    border: 2px solid #004A94;
+    border-radius: 5px;
+    padding: 0.5rem;
+    font-size: 18px;
+}
+
+.mediaForm {
+    display: flex;
+    margin-bottom: 1rem;
+}
+
+.mediaForm input {
+    flex: 1;
+    margin-right: 0.5rem;
+    border: 2px solid #004A94;
+    border-radius: 5px;
+    font-size: 16px;
+    padding: 0.5rem;
+}
+
+.mediaForm input:focus {
+    outline: none;
+}
+
+.mediaFormBtn {
+    font-size: 18px;
+    font-family: "Imprima", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    background-color: #004A94;
+    border: 2px solid #004A94;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    color: white;
+}
+
+.mediaFormBtn:hover {
+    cursor: pointer;
+}
+
+.mediaGrid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+}
+
+.mediaGrid img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    cursor: pointer;
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+}
+
+.giphyLogo {
+    align-self: flex-end;
+    justify-self: flex-end;
 }
 
 .deck {
@@ -113,7 +248,7 @@
 }
 
 .deckNav button {
-    background-color: white;
+    background-color: transparent;
     border: none;
     cursor: pointer;
     padding: 0;
@@ -196,4 +331,42 @@
     background-color: #D9EDF8;
     border-radius: 5px;
     padding: 1rem;
+}
+
+.background {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes slideRight {
+    from { background-position: 0 0; }
+    to { background-position: 180px 0; }
+}
+
+.animationOne {
+    background-image: 
+        radial-gradient(circle, rgba(0, 74, 148, 0.12) 10%, transparent 10%);
+    background-size: 60px 60px;
+    animation: slideRight 6s linear infinite;
+    
+}
+
+.animationTwo {
+    background-image:
+        linear-gradient(45deg, rgba(0, 74, 148, 0.12) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(0, 74, 148, 0.12) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, rgba(0, 74, 148, 0.12) 75%),
+        linear-gradient(-45deg, transparent 75%, rgba(0, 74, 148, 0.12) 75%);
+    background-size: 60px 60px;
+    animation: slideRight 6s linear infinite;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: 100%;
+    overflow: hidden;
 }

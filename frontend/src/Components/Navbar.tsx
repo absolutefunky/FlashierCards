@@ -6,29 +6,32 @@ import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import styles from "../Styles/Navbar.module.css";
+import UserAuth from "../AuthContext";
 
 function Navbar({userId}: any) {
     const [menuHidden, setMenuHidden] = useState(true);
     const navigate = useNavigate();
+    const { isAuthenticated, logout }: any = UserAuth();
 
     function showMenu() {
         setMenuHidden(!menuHidden);
     }
 
     function handleDeck() {
-        navigate(`/dashboard/${userId}`);
+        navigate(`/dashboard/${userId}`, {replace: true});
     }
 
     function handleProfile() {
-        navigate(`/profile/${userId}/account-information`);
+        navigate(`/profile/${userId}/accountInformation`, {replace: true});
     }
 
     function handleLogout() {
-        navigate(`/`, {replace: true});
+        logout();
+        navigate("/", {replace: true});
     }
 
     return (
-        <div id={styles.navbar}>
+        <div className={styles.navbar}>
             <button className={styles.navOption} onClick={() => {showMenu()}}>
                 <span><FontAwesomeIcon icon={faBars} /></span>
                 <span style={{display: menuHidden ? "none" : "block"}}>Menu</span>
@@ -41,10 +44,11 @@ function Navbar({userId}: any) {
                 <span><FontAwesomeIcon icon={faCircleUser} /></span>
                 <span style={{display: menuHidden ? "none" : "block"}}>Profile</span>
             </button>
+            {isAuthenticated &&
             <button className={styles.navOption} onClick={handleLogout}>
                 <span><FontAwesomeIcon icon={faRightFromBracket} /></span>
                 <span style={{display: menuHidden ? "none" : "block"}}>Logout</span>
-            </button>
+            </button>}
         </div>
     );
 }

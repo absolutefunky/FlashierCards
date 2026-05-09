@@ -1,14 +1,49 @@
 /* this css applies to signup, login,
-forgot password, create new password, ... */
+forgot password, create new password components */
 
-#content {
+.main {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding: 4rem;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
 }
 
-#title {
+.homeContent {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    position: relative;
+}
+
+.homeNav {
+    padding: 1rem;
+}
+
+.homeNavBtn {
+    background-color: white;
+    border: 3px solid #004A94;
+    border-radius: 5px;
+    width: fit-content;
+    font-size: 20px;
+    padding: 0.3rem;
+}
+
+.homeNavBtn:hover {
+    cursor: pointer;
+    background-color: #004A94;
+    color: white;
+}
+
+.content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.title {
     font-size: 45px;
     font-family: "Rampart One", sans-serif;
     font-weight: 400;
@@ -27,7 +62,7 @@ forgot password, create new password, ... */
     margin-bottom: 0.2rem;
 }
 
-#forgotLink {
+.forgotLink {
     font-size: 18px;
     font-family: "Imprima", sans-serif;
     font-weight: 400;
@@ -36,19 +71,20 @@ forgot password, create new password, ... */
     margin-top: 0.4rem;
 }
 
-#signupForm {
+.signupForm {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-bottom: 1.5rem;
 }
 
-#signupForm > div  {
+.signupForm > div  {
     display: flex;
     flex-direction: column;
     margin-bottom: 1.3rem;
 }
 
-#signupForm > div input {
+.signupForm > div input {
     border: 2px solid #004A94;
     border-radius: 5px;
     font-size: 18px;
@@ -56,7 +92,7 @@ forgot password, create new password, ... */
     min-width: 250px;
 }
 
-#signupForm > div input:focus {
+.signupForm > div input:focus {
     outline: none;
 }
 
@@ -69,10 +105,6 @@ forgot password, create new password, ... */
     cursor: pointer;
     text-decoration: none;
     outline-offset: 4px;
-}
-
-.homeBtn:first-of-type {
-    margin-bottom: 1.5rem;
 }
 
 .loginShadow {

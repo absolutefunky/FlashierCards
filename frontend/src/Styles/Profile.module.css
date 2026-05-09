@@ -1,15 +1,21 @@
-#dashboardContent {
+/* this css aplies to account information, theme,
+change password, and delete account components */
+
+.dashboardContent {
     display: flex;
+    flex-direction: row;
+    height: 100%;
+    overflow: hidden;
 }
 
-#dashboardContent > div:last-of-type {
-    flex: 1;
+.dashboardContent > div:last-of-type {
     display: flex;
+    flex: 1;
     flex-direction: column;
     padding: 2rem 1rem;
 }
 
-#title {
+.title {
     font-size: 45px;
     font-family: "Rampart One", sans-serif;
     font-weight: 400;
@@ -19,40 +25,39 @@
     margin-bottom: 2rem;
 }
 
-#profileContent {
-    height: 550px;
+.profileContent {
     display: flex;
+    flex: 1;
     flex-direction: column;
     border: 2px solid #004A94;
     position: relative;
 }
 
-#profileContent > div:first-of-type {
+.profileContent > div:last-of-type {
+    padding: 1rem;
+}
+
+.profileNavbar {
     background-color: #004A94;
     border-bottom: 2px solid #004A94;
     display: flex;
     gap: 10px;
 }
 
-#profileContent > div:last-of-type {
-    padding: 1rem;
-    
-}
-
 .profileOption {
-    text-decoration: none;
     font-size: 20px;
     font-weight: 400;
     font-family: "Imprima", sans-serif;
     color: white;
     padding: 0.8rem 1rem;
     text-wrap: nowrap;
+    border: none;
+    background-color: #004A94;
 }
 
 .profileOption:hover {
-    background-color: #003971;
+    cursor: pointer;
 }
-
 
 .profileText {
     font-size: 18px;
@@ -79,7 +84,7 @@
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-#signupForm {
+.signupForm {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -99,7 +104,6 @@
     color: #004A94;
     margin-bottom: 0.2rem;
 }
-
 
 .formField input {
     border: 2px solid #004A94;
@@ -234,24 +238,37 @@
     transform: translateY(-2px);
 }
 
-#profileThemes {
-    margin-top: 1rem;
+.profileThemes {
     display: flex;
     gap: 30px;
 }
 
-#profileThemes div {
-    width: 250px;
-    height: 200px;
+.profileThemes > div {
+    display: flex;
     background-color: #D9EDF8;
-    border-radius: 5px;
+    border: 2px solid #D9EDF8;
+    border-radius: 10px;
     box-shadow: 10px 10px 5px rgba(18, 31, 50, 0.234);
     transition: all 0.2s ease;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 165px;
+    height: 150px;
 }
 
-#profileThemes div:hover {
+.profileThemes > div > span {
+    text-align: center;
+}
+
+.profileThemes div:hover {
     transform: translateY(5px);
+}
+
+.profileThemes > div > span {
+    margin-bottom: 0;
+    padding: 0;
 }
 
 .invalidRequest {

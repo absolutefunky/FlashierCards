@@ -8,12 +8,12 @@ import AccountInformation from "./Components/AccountInformation";
 import Theme from "./Components/Theme";
 import ChangePassword from "./Components/ChangePassword";
 import DeleteAccount from "./Components/DeleteAccount";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import ForgotPassword from "./Components/ForgotPassword";
 import CreateNewPassword from "./Components/CreateNewPassword";
+import PrivateRoute from "./PrivateRoute";
 
-function App() {
-   
+function App() {   
     return (
         <BrowserRouter>
             <Routes>
@@ -22,18 +22,19 @@ function App() {
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/forgotPassword" element={<ForgotPassword />} />
-
+                
                 {/* private routes */}
-                <Route path="/dashboard/:userId" element={<Dashboard />} />
-                <Route path="/forgotPassword/:userId/createNewPassword" element={<CreateNewPassword />} />
-                <Route path="/user/:userId/study/:deckId" element={<Study />} />
-                <Route path="user/:userId/edit/:deckId" element={<Edit />} />
-
-                {/* profile routes */}
-                <Route path="/profile/:userId/account-information" element={<AccountInformation />} />
-                <Route path="/profile/theme" element={<Theme />} />
-                <Route path="/profile/change-password" element={<ChangePassword />} />
-                <Route path="/profile/delete-account" element={<DeleteAccount />} />
+                <Route element={<PrivateRoute />}>
+                    <Route path="/dashboard/:userId" element={<Dashboard />} />
+                    <Route path="/forgotPassword/:userId/createNewPassword" element={<CreateNewPassword />} />
+                    <Route path="/user/:userId/study/:deckId" element={<Study />} />
+                    <Route path="/user/:userId/edit/:deckId" element={<Edit />} />
+                    <Route path="/profile/:userId/accountInformation" element={<AccountInformation />} />
+                    <Route path="/profile/:userId/theme" element={<Theme />} />
+                    <Route path="/profile/:userId/changePassword" element={<ChangePassword />} />
+                    <Route path="/profile/:userId/deleteAccount" element={<DeleteAccount />} />
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                </Route>
             </Routes>
         </BrowserRouter>
     );

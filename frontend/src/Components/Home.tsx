@@ -1,27 +1,43 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styles from "../Styles/Home.module.css";
+import HomeAnimation from "./HomeAnimation";
 
 function Home() {
+    const navigate = useNavigate();
+
+    // navigate to sign up component
+    function handleSignup() {
+        navigate("/signup", {replace: true});
+    }
+
+    // navigate to log in component
+    function handleLogin() {
+        navigate("/login", {replace: true});
+    }
+
     return (
-        <div id={styles.homeContent}>
-            <div id={styles.title}>Flashier Cards</div>
-            <div id={styles.subtitle}>Study The Flashier Way :)</div>
-            <Link
-                to="/signup"
-                className={styles.homeBtn}
-            >
-                <span className={styles.signupShadow}></span>
-                <span className={styles.signupEdge}></span>
-                <span className={styles.signupFront}>Sign up</span>
-            </Link>
-            <Link
-                to="/login"
-                className={styles.homeBtn}
-            >
-                <span className={styles.loginShadow}></span>
-                <span className={styles.loginEdge}></span>
-                <span className={styles.loginFront}>Log in</span>
-            </Link>
+        <div className={styles.main}>
+            <HomeAnimation />
+            <div className={styles.homeContent}>
+                <div className={styles.title}>Flashier Cards</div>
+                <div className={styles.subtitle}>Study The Flashier Way</div>
+                <button
+                    onClick={handleSignup}
+                    className={styles.homeBtn}
+                >
+                    <span className={styles.signupShadow}></span>
+                    <span className={styles.signupEdge}></span>
+                    <span className={styles.signupFront}>Sign up</span>
+                </button>
+                <button
+                    onClick={handleLogin}
+                    className={styles.homeBtn}
+                >
+                    <span className={styles.loginShadow}></span>
+                    <span className={styles.loginEdge}></span>
+                    <span className={styles.loginFront}>Log in</span>
+                </button>
+            </div>
         </div>
     );
 }

@@ -1,4 +1,6 @@
-#navbar {
+/* this css is for navbar component */
+
+.navbar {
     display: flex;
     flex-direction: column;
     padding: 0.5rem;
