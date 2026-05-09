@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 // this component is used to authenticate user in the frontend
 
@@ -10,6 +10,7 @@ export function AuthProvider({children}: any) {
 
     function register(token: string) {
         return new Promise((res) => {
+            localStorage.setItem("token", token);
             setToken(token);
             setIsAuthenticated(true);
             res({});
@@ -18,11 +19,21 @@ export function AuthProvider({children}: any) {
 
     function logout() {
         return new Promise((res) => {
+            localStorage.removeItem("token");
             setToken(null);
             setIsAuthenticated(false);
             res({});
         });
     }
+
+    useEffect(() => {
+        const currentToken = localStorage.getItem("token");
+        if (currentToken) {
+            setToken(currentToken);
+            setIsAuthenticated(true);
+        }
+        
+    }, []);
     
     return (
         <AuthContext.Provider value={{ isAuthenticated, token, register, logout }}>

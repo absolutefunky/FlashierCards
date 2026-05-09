@@ -8,7 +8,7 @@ import AccountInformation from "./Components/AccountInformation";
 import Theme from "./Components/Theme";
 import ChangePassword from "./Components/ChangePassword";
 import DeleteAccount from "./Components/DeleteAccount";
-import { BrowserRouter, Routes, Route} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import ForgotPassword from "./Components/ForgotPassword";
 import CreateNewPassword from "./Components/CreateNewPassword";
 import PrivateRoute from "./PrivateRoute";
@@ -22,7 +22,7 @@ function App() {
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/forgotPassword" element={<ForgotPassword />} />
-
+                
                 {/* private routes */}
                 <Route element={<PrivateRoute />}>
                     <Route path="/dashboard/:userId" element={<Dashboard />} />
@@ -33,6 +33,7 @@ function App() {
                     <Route path="/profile/:userId/theme" element={<Theme />} />
                     <Route path="/profile/:userId/changePassword" element={<ChangePassword />} />
                     <Route path="/profile/:userId/deleteAccount" element={<DeleteAccount />} />
+                    <Route path="*" element={<Navigate to="/" replace />} />
                 </Route>
             </Routes>
         </BrowserRouter>
