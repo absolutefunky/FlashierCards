@@ -16,6 +16,7 @@ import type Card from "../Interfaces/Card";
 import { Stage, Layer, Text, Image } from 'react-konva';
 import useImage from "use-image";
 import UserAuth from "../AuthContext";
+import GiphyLogo from "../giphyLogo.png";
 
 type Giphy = {
     id: string;
@@ -23,7 +24,7 @@ type Giphy = {
     url: string;
 };
 
-function Giphy({newImage, onDragEnd}: any) {
+function Giphy({newImage, onDblClick, onDragEnd}: any) {
     const [image] = useImage(newImage.url);
     return (
         <Image
@@ -33,6 +34,7 @@ function Giphy({newImage, onDragEnd}: any) {
             width={newImage.width}
             height={newImage.height}
             draggable
+            onDblClick={onDblClick}
             onDragEnd={onDragEnd}
         />
     );
@@ -44,15 +46,13 @@ function Edit() {
     const [loading, setLoading] = useState(false);
     const [deckName, setDeckName] = useState();
     const { userId, deckId } = useParams();
+    const { token } = UserAuth();
 
-    // side panel related variables
+    // text side panel related variables
     const [textPanel, setTextPanel] = useState(false);
-    const [gifPanel, setGifPanel] = useState(false);
-    const [stickerPanel, setStickerPanel] = useState(false);
-    const [text, setText] = useState("");
     const [textArea, setTextArea] = useState(false);
+    const [text, setText] = useState("");
     const [textIndex, setTextIndex] = useState(0);
-    const { token }: any = UserAuth();
 
     // card related variables
     const cardRef = useRef<HTMLDivElement>(null);
@@ -66,6 +66,12 @@ function Edit() {
     const [query, setQuery] = useState("");
     const [gifResults, setGifsResults] = useState<Giphy[]>([]);
     const [stickerResults, setStickerResults] = useState<Giphy[]>([]);
+    const [giphSelected, setGiphSelected] = useState(false);
+    const [stickerSelected, setStickerSelected] = useState(false);
+    const [gifPanel, setGifPanel] = useState(false);
+    const [stickerPanel, setStickerPanel] = useState(false);
+    const [gifIndex, setGifIndex] = useState(0);
+    const [stickerIndex, setStickerIndex] = useState(0);
 
     const fetchGiphs = async (e: any) => {
         e.preventDefault();
@@ -255,6 +261,48 @@ function Edit() {
         setTextArea(false);
     }
 
+    function deleteGiphy(giphyType: string) {
+        if (giphyType == "gif") {
+            if (cardSide === "Front") {
+                setFrontCards(prev =>
+                    prev.map((card, index) =>
+                        index === (cardNum - 1) ? {...card, gif: card.gif.filter((_, index) =>
+                            index != gifIndex
+                        )} : card
+                    )
+                );
+            } else if (cardSide == "Back") {
+                setBackCards(prev =>
+                    prev.map((card, index) =>
+                        index === (cardNum - 1) ? {...card, gif: card.gif.filter((_, index) =>
+                            index != gifIndex
+                        )} : card
+                    )
+                );
+            }
+            showGiphArea(false, 0);
+        } else if (giphyType == "sticker") {
+            if (cardSide === "Front") {
+                setFrontCards(prev =>
+                    prev.map((card, index) =>
+                        index === (cardNum - 1) ? {...card, sticker: card.sticker.filter((_, index) =>
+                            index != stickerIndex
+                        )} : card
+                    )
+                );
+            } else if (cardSide == "Back") {
+                setBackCards(prev =>
+                    prev.map((card, index) =>
+                        index === (cardNum - 1) ? {...card, sticker: card.sticker.filter((_, index) =>
+                            index != stickerIndex
+                        )} : card
+                    )
+                );
+            }
+            showStickerArea(false, 0);
+        }
+    }
+
     function showTextArea(request: boolean, textIndex: number, input: string) {
         setText(input);
         setTextIndex(textIndex);
@@ -333,8 +381,10 @@ function Edit() {
     function showTextPanel() {
         if (stickerPanel) {
             setStickerPanel(false);
+            showStickerArea(false, 0);
         } else if (gifPanel) {
             setGifPanel(false);
+            showGiphArea(false, 0);
         }
         setTextPanel(true);
     }
@@ -345,6 +395,7 @@ function Edit() {
             setTextPanel(false);
         } else if (stickerPanel) {
             setStickerPanel(false);
+            showStickerArea(false, 0);
         }
         setGifPanel(true);
     }
@@ -355,8 +406,19 @@ function Edit() {
             setTextPanel(false);
         } else if (gifPanel) {
             setGifPanel(false);
+            showGiphArea(false, 0);
         }
         setStickerPanel(true);
+    }
+
+    function showGiphArea(request: boolean, giphIndex: number) {
+        setGiphSelected(request);
+        setGifIndex(giphIndex);
+    }
+
+    function showStickerArea(request: boolean, stickerIndex: number) {
+        setStickerSelected(request);
+        setStickerIndex(stickerIndex);
     }
 
     function hideSidePanel() {
@@ -365,8 +427,10 @@ function Edit() {
             showTextArea(false, 0, "");
         } else if (stickerPanel) {
             setStickerPanel(false);
+            showStickerArea(false, 0);
         } else if (gifPanel) {
             setGifPanel(false);
+            showGiphArea(false, 0);
         }
     }
     
@@ -610,6 +674,10 @@ function Edit() {
                                                 <Giphy
                                                     key={stickerIndex}
                                                     newImage={sticker}
+                                                    onDblClick={() => {
+                                                        showStickerPanel();
+                                                        showStickerArea(true, stickerIndex);
+                                                    }}
                                                     onDragEnd={(e: any) => {
                                                         const { x, y } = e.target.position();
                                                         setFrontCards(prev =>
@@ -629,6 +697,10 @@ function Edit() {
                                                 <Giphy
                                                     key={gifIndex}
                                                     newImage={gif}
+                                                    onDblClick={() => {
+                                                        showGifPanel();
+                                                        showGiphArea(true, gifIndex);
+                                                    }}
                                                     onDragEnd={(e: any) => {
                                                         const { x, y } = e.target.position();
                                                         setFrontCards(prev =>
@@ -693,6 +765,10 @@ function Edit() {
                                                 <Giphy
                                                     key={stickerIndex}
                                                     newImage={sticker}
+                                                    onDblClick={() => {
+                                                        showStickerPanel();
+                                                        showStickerArea(true, stickerIndex);
+                                                    }}
                                                     onDragEnd={(e: any) => {
                                                         const { x, y } = e.target.position();
                                                         setBackCards(prev =>
@@ -712,6 +788,10 @@ function Edit() {
                                                 <Giphy
                                                     key={gifIndex}
                                                     newImage={gif}
+                                                    onDblClick={() => {
+                                                        showStickerPanel();
+                                                        showStickerArea(true, gifIndex);
+                                                    }}
                                                     onDragEnd={(e: any) => {
                                                         const { x, y } = e.target.position();
                                                         setBackCards(prev =>
@@ -777,6 +857,12 @@ function Edit() {
                         </div>
                     </div>
                     <div className={styles.sidePanel} style={{display: gifPanel ? "flex" : "none"}}>
+                        <div style={{display: (giphSelected) ? "flex" : "none"}}>
+                            <div className={styles.sidePanelTitle}>Giph Deletion</div>
+                            <div className={styles.textOptions}>
+                                <button onClick={() => deleteGiphy("gif")}>Delete</button>
+                            </div>
+                        </div>
                         <div>
                             <div className={styles.sidePanelTitle}>Gifs</div>
                             <form onSubmit={fetchGiphs} className={styles.mediaForm}>
@@ -798,10 +884,18 @@ function Edit() {
                                     />
                                 ))}
                             </div>
-                            <div className={styles.giphyLogo}>Powered by Giphy</div>
+                            <div className={styles.giphyLogo}>
+                                <img src={GiphyLogo} alt="Powered by GIPHY" />
+                            </div>
                         </div>
                     </div>
                     <div className={styles.sidePanel} style={{display: stickerPanel ? "flex" : "none"}}>
+                        <div style={{display: (stickerSelected) ? "flex" : "none"}}>
+                            <div className={styles.sidePanelTitle}>Sticker Deletion</div>
+                            <div className={styles.textOptions}>
+                                <button onClick={() => deleteGiphy("sticker")}>Delete</button>
+                            </div>
+                        </div>
                         <div>
                             <div className={styles.sidePanelTitle}>Stickers</div>
                             <form onSubmit={fetchStickers} className={styles.mediaForm}>
@@ -823,7 +917,9 @@ function Edit() {
                                     />
                                 ))}
                             </div>
-                            <div className={styles.giphyLogo}>Powered by Giphy</div>
+                            <div className={styles.giphyLogo}>
+                                <img src={GiphyLogo} alt="Powered by GIPHY" />
+                            </div>
                         </div>
                     </div>
                 </div>

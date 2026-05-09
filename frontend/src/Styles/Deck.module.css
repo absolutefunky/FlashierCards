@@ -150,11 +150,6 @@
 }
 
 .giphyLogo {
-    font-size: 18px;
-    font-family: "Imprima", sans-serif;
-    font-weight: 600;
-    font-style: normal;
-    color: #004A94;
     align-self: flex-end;
     justify-self: flex-end;
 }
