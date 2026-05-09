@@ -1,11 +1,12 @@
 .dashboardContent {
     display: flex;
-    min-height: 100%;
+    flex-direction: row;
+    position: relative;
 }
 
 .dashboardContent > div:last-of-type {
-    flex: 1;
     display: flex;
+    flex: 1;
     flex-direction: column;
     padding: 2rem 1rem;
 }
@@ -211,7 +212,7 @@
 }
 
 .deckNav button {
-    background-color: white;
+    background-color: transparent;
     border: none;
     cursor: pointer;
     padding: 0;
@@ -294,4 +295,42 @@
     background-color: #D9EDF8;
     border-radius: 5px;
     padding: 1rem;
+}
+
+.background {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes slideRight {
+    from { background-position: 0 0; }
+    to { background-position: 180px 0; }
+}
+
+.animationOne {
+    background-image: 
+        radial-gradient(circle, rgba(0, 74, 148, 0.12) 10%, transparent 10%);
+    background-size: 60px 60px;
+    animation: slideRight 6s linear infinite;
+    
+}
+
+.animationTwo {
+    background-image:
+        linear-gradient(45deg, rgba(0, 74, 148, 0.12) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(0, 74, 148, 0.12) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, rgba(0, 74, 148, 0.12) 75%),
+        linear-gradient(-45deg, transparent 75%, rgba(0, 74, 148, 0.12) 75%);
+    background-size: 60px 60px;
+    animation: slideRight 6s linear infinite;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: 100%;
+    overflow: hidden;
 }
