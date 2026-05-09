@@ -1,24 +1,42 @@
-import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useState } from "react";
 import { View, Text, TextInput, StyleSheet, Pressable, KeyboardAvoidingView, Platform } from "react-native";
+import { VITE_API_URL } from "@env";
 import { RootStackParamList } from "../../App";
 
 type ForgotPasswordScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "ForgotPassword">;
-type ForgotPasswordScreenRouteProp = RouteProp<RootStackParamList, "ForgotPassword">;
 
 export default function ForgotPasswordScreen() {
     const navigation = useNavigation<ForgotPasswordScreenNavigationProp>();
-    const route = useRoute<ForgotPasswordScreenRouteProp>();
     const [email, setEmail] = useState("");
     const [sqAnswer, setSqAnswer] = useState("");
     const [error, setError] = useState({status: false, message: ""});
     const [loading, setLoading] = useState(false);
 
-    function handleForgotPassword() {
-        // handle user authentication here
+    const handleForgotPassword = async () => {
+        setLoading(true);
+        setError({ status: false, message: "" });
 
-    }
+        try {
+            const response = await fetch(`${VITE_API_URL}/users/forgotPassword`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: email.trim(), sqAnswer })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) throw new Error(data.message);
+
+            setLoading(false);
+            navigation.navigate("CreateNewPassword", { userId: String(data.user.id) });
+
+        } catch (err: any) {
+            setLoading(false);
+            setError({ status: true, message: err.message });
+        }
+    };
 
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>

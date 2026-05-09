@@ -4,6 +4,7 @@ import { RouteProp, useRoute } from "@react-navigation/native";
 import { useRef, useState, useEffect } from "react";
 import { View, Text, StyleSheet, Animated, Pressable, TouchableOpacity, Image } from "react-native";
 import * as ScreenOrientation from "expo-screen-orientation";
+import { VITE_API_URL } from "@env";
 import { Dimensions } from "react-native";
 import { RootStackParamList } from "../../App";
 
@@ -74,7 +75,7 @@ export default function StudyScreen() {
 
     try {
         const deckResponse = await fetch(
-        `http://10.0.0.136:5204/users/${userId}/decks/${deckId}`
+        `${VITE_API_URL}/users/${userId}/decks/${deckId}`
         );
 
         const deckData = await deckResponse.json();
@@ -84,7 +85,7 @@ export default function StudyScreen() {
         }
 
         const cardResponse = await fetch(
-        `http://10.0.0.136:5204/users/${userId}/decks/${deckId}/cards`
+        `${VITE_API_URL}/users/${userId}/decks/${deckId}/cards`
         );
 
         const cardData = await cardResponse.json();

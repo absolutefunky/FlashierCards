@@ -2,6 +2,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { View, Text, StyleSheet, TouchableOpacity, Pressable } from "react-native";
 import { RootStackParamList } from "../../App";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { VITE_API_URL } from "@env";
 import { useState } from "react";
 
 type DeleteAccountScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "DeleteAccount">;
@@ -12,13 +13,12 @@ export default function DeleteAccountScreen() {
     const route = useRoute<DeleteAccountScreenRouteProp>();
     const [error, setError] = useState({status: false, message: ""});
     const [loading, setLoading] = useState(false);
-    const FLASHIER_CARDS_API = "add flashier cards backend url here";
 
     const deleteUserData = async () => {
         setLoading(true);
 
         try {
-            const response = await fetch(`${FLASHIER_CARDS_API}/users/${route.params.userId}/delete`, {
+            const response = await fetch(`${VITE_API_URL}/users/${route.params.userId}/delete`, {
                 method: "DELETE"
             });
 

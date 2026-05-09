@@ -3,6 +3,7 @@ import { View, Text, Pressable, StyleSheet, FlatList } from "react-native";
 import { RootStackParamList } from "../../App";
 import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import * as ScreenOrientation from "expo-screen-orientation";
+import { VITE_API_URL } from "@env";
 import { useState, useEffect } from "react";
 
 type DashboardScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "Dashboard">;
@@ -36,7 +37,7 @@ export default function DashboardScreen() {
       setError("");
 
       try {
-        const response = await fetch(`http://10.0.0.136:5204/users/${userId}/decks`);
+        const response = await fetch(`${VITE_API_URL}/users/${userId}/decks`);
         const data = await response.json();
 
         if (!response.ok) {

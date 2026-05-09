@@ -19,7 +19,7 @@ import { faArrowLeft, faArrowRightFromBracket, faFolder } from '@fortawesome/fre
 export type RootStackParamList = {
     Login: undefined;
     ForgotPassword: undefined;
-    CreateNewPassword: undefined;   // add prop for userId here
+    CreateNewPassword: {userId: string};   // add prop for userId here
     Dashboard: {userId: string};
     Study: {userId: string, deckId: number};    // add prop for deckId here
     AccountInformation: {userId: string};
@@ -54,7 +54,7 @@ export default function App() {
                         title: "",
                         headerLeft: () => (
                             <Pressable style={styles.headerBtn} onPress={() => navigation.navigate("Login")}>
-                                <FontAwesomeIcon style={styles.headerText} icon={faArrowLeft} size={26} />
+                                <FontAwesomeIcon style={styles.headerText} icon={faArrowLeft} size={20} />
                             </Pressable>
                         ),
                         headerStyle: {
@@ -153,7 +153,7 @@ export default function App() {
                             </Pressable>
                         ),
                         headerStyle: {
-                            backgroundColor: "#D9EDF8"
+                            backgroundColor: "#D9EDF8",
                         }
                     })}
                 />
@@ -171,11 +171,12 @@ const styles = StyleSheet.create({
         paddingLeft: 12,
         marginRight: 10,
         marginLeft: 10,
-        borderRadius: 10
+        borderRadius: 10,
+        height: 35
     },
     headerText: {
         textAlign: "center",
-        fontSize: 20,
+        fontSize: 18,
         fontFamily: "Imprima_400Regular",
         fontWeight: "400",
         color: "white"

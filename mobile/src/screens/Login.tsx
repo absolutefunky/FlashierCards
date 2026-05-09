@@ -2,6 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useState } from "react";
 import { View, Text, TextInput, StyleSheet, Pressable, KeyboardAvoidingView, Platform } from "react-native";
+import { VITE_API_URL } from "@env";
 import { RootStackParamList } from "../../App";
 
 type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "Login">;
@@ -12,14 +13,13 @@ export default function LoginScreen() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState({status: false, message: ""});
     const [loading, setLoading] = useState(false);
-    const FLASHIER_CARDS_API = "http://10.0.0.136:5204";
 
     const handleLogin = async () => {
         setLoading(true);
 
         try {
             // find user account
-            const userResponse = await fetch(`${FLASHIER_CARDS_API}/users/login`, {
+            const userResponse = await fetch(`${VITE_API_URL}/users/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

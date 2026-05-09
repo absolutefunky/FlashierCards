@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Pressable, TouchableOpacity } from "react-nativ
 import { RootStackParamList } from "../../App";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
+import { VITE_API_URL } from "@env";
 import type Profile from "../interfaces/Profile";
 
 type ThemeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "Theme">;
@@ -14,13 +15,12 @@ export default function ThemeScreen() {
     const [profile, setProfile] = useState<Profile>();
     const [error, setError] = useState({status: false, message: ""});
     const [loading, setLoading] = useState(false);
-    const FLASHIER_CARDS_API = "http://localhost:5204";
 
     const fetchProfileData = async () => {
         setLoading(true);
 
         try {
-            const response = await fetch(`${FLASHIER_CARDS_API}/users/${route.params.userId}/profiles`);
+            const response = await fetch(`${VITE_API_URL}/users/${route.params.userId}/profiles`);
             const data = await response.json();
 
             if (!response.ok) {
@@ -44,7 +44,7 @@ export default function ThemeScreen() {
         setLoading(true);
 
         try {
-            const response = await fetch(`${FLASHIER_CARDS_API}/users/${route.params.userId}/profiles/${profile?.id}/update`, {
+            const response = await fetch(`${VITE_API_URL}/users/${route.params.userId}/profiles/${profile?.id}/update`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
