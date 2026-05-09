@@ -8,6 +8,7 @@ import type Deck from "../Interfaces/Deck";
 import styles from "../Styles/Dashboard.module.css";
 import UserAuth from "../AuthContext";
 import { animate } from "animejs";
+import Tooltip from "@mui/material/Tooltip";
 
 function Dashboard() {
     const [toolVisible, setToolVisible] = useState(false);
@@ -282,77 +283,89 @@ function Dashboard() {
                     <div>
                         <div className={styles.title}>Flashier Cards</div>
                         <div className={styles.toolbar}>
-                            <button
-                                type="button"
-                                className={styles.toolOption}
-                                onClick={() => handleCreateOverlay(true)} 
-                            >
-                                <span className={styles.shadow}></span>
-                                <span className={styles.edge}></span>
-                                <span className={styles.front}>
-                                    <FontAwesomeIcon icon={faPlus} />
-                                </span>
-                            </button>
-                            <button
-                                type="button"
-                                style={{ display: toolVisible ? "inline-block" : "none" }}
-                                className={styles.toolOption}
-                                onClick={handleStudyView}
-                            >
-                                <span className={styles.shadow}></span>
-                                <span className={styles.edge}></span>
-                                <span className={styles.front}>
-                                    <FontAwesomeIcon icon={faFolderOpen} />
-                                </span>
-                            </button>
-                            <button
-                                type="button"
-                                style={{ display: toolVisible ? "inline-block" : "none" }}
-                                className={styles.toolOption}
-                                onClick={handleEditView}
-                            >
-                                <span className={styles.shadow}></span>
-                                <span className={styles.edge}></span>
-                                <span className={styles.front}>
-                                    <FontAwesomeIcon icon={faPencil} />
-                                </span>
-                            </button>
-                            <button
-                                type="button"
-                                style={{ display: toolVisible ? "inline-block" : "none" }}
-                                className={styles.toolOption}
-                                onClick={() => handleRenameOverlay(true)}
-                            >
-                                <span className={styles.shadow}></span>
-                                <span className={styles.edge}></span>
-                                <span className={styles.front}>
-                                    <FontAwesomeIcon icon={faICursor} />
-                                </span>
-                            </button>
-                            <button
-                                type="button"
-                                style={{ display: toolVisible ? "inline-block" : "none" }}
-                                className={styles.toolOption}
-                                onClick={deleteDeck}
-                            >
-                                <span className={styles.shadow}></span>
-                                <span className={styles.edge}></span>
-                                <span className={styles.front}>
-                                    <FontAwesomeIcon icon={faTrash} />
-                                </span>
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => handleToolbar(false, 0)}
-                                style={{ display: toolVisible ? "inline-block" : "none" }}
-                                className={styles.toolOption}
-                            >
-                                <span className={styles.shadow}></span>
-                                <span className={styles.edge}></span>
-                                <span className={styles.front}>
-                                    <FontAwesomeIcon icon={faCircleXmark} />
-                                </span>
-                            </button>
+                            <Tooltip title="Create New Deck">
+                                <button
+                                    type="button"
+                                    className={styles.toolOption}
+                                    onClick={() => handleCreateOverlay(true)} 
+                                >
+                                    <span className={styles.shadow}></span>
+                                    <span className={styles.edge}></span>
+                                    <span className={styles.front}>
+                                        <FontAwesomeIcon icon={faPlus} />
+                                    </span>
+                                </button>
+                            </Tooltip>
+                            <Tooltip title="Study Deck">
+                                <button
+                                    type="button"
+                                    style={{ display: toolVisible ? "inline-block" : "none" }}
+                                    className={styles.toolOption}
+                                    onClick={handleStudyView}
+                                >
+                                    <span className={styles.shadow}></span>
+                                    <span className={styles.edge}></span>
+                                    <span className={styles.front}>
+                                        <FontAwesomeIcon icon={faFolderOpen} />
+                                    </span>
+                                </button>
+                            </Tooltip>
+                            <Tooltip title="Edit Deck">
+                                <button
+                                    type="button"
+                                    style={{ display: toolVisible ? "inline-block" : "none" }}
+                                    className={styles.toolOption}
+                                    onClick={handleEditView}
+                                >
+                                    <span className={styles.shadow}></span>
+                                    <span className={styles.edge}></span>
+                                    <span className={styles.front}>
+                                        <FontAwesomeIcon icon={faPencil} />
+                                    </span>
+                                </button>
+                            </Tooltip>
+                            <Tooltip title="Rename Deck">
+                                <button
+                                    type="button"
+                                    style={{ display: toolVisible ? "inline-block" : "none" }}
+                                    className={styles.toolOption}
+                                    onClick={() => handleRenameOverlay(true)}
+                                >
+                                    <span className={styles.shadow}></span>
+                                    <span className={styles.edge}></span>
+                                    <span className={styles.front}>
+                                        <FontAwesomeIcon icon={faICursor} />
+                                    </span>
+                                </button>
+                            </Tooltip>
+                            <Tooltip title="Delete Deck">
+                                <button
+                                    type="button"
+                                    style={{ display: toolVisible ? "inline-block" : "none" }}
+                                    className={styles.toolOption}
+                                    onClick={deleteDeck}
+                                >
+                                    <span className={styles.shadow}></span>
+                                    <span className={styles.edge}></span>
+                                    <span className={styles.front}>
+                                        <FontAwesomeIcon icon={faTrash} />
+                                    </span>
+                                </button>
+                            </Tooltip>
+                            <Tooltip title="Cancel Selection">
+                                <button
+                                    type="button"
+                                    onClick={() => handleToolbar(false, 0)}
+                                    style={{ display: toolVisible ? "inline-block" : "none" }}
+                                    className={styles.toolOption}
+                                >
+                                    <span className={styles.shadow}></span>
+                                    <span className={styles.edge}></span>
+                                    <span className={styles.front}>
+                                        <FontAwesomeIcon icon={faCircleXmark} />
+                                    </span>
+                                </button>
+                            </Tooltip>
                         </div>
                         { (loading) ?
                             <div className={styles.invalidRequest}>

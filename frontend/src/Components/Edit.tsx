@@ -17,6 +17,7 @@ import { Stage, Layer, Text, Image } from 'react-konva';
 import useImage from "use-image";
 import UserAuth from "../AuthContext";
 import GiphyLogo from "../giphyLogo.png";
+import Tooltip from "@mui/material/Tooltip";
 
 type Giphy = {
     id: string;
@@ -536,94 +537,110 @@ function Edit() {
                         <div></div>
                 }
                 <div className={styles.toolbar}>
-                    <button
-                        type="button"
-                        className={styles.toolOption}
-                        onClick={addCard}
-                    >
-                        <span className={styles.shadow}></span>
-                        <span className={styles.edge}></span>
-                        <span className={styles.front}>
-                            <FontAwesomeIcon icon={faPlus} />
-                        </span>
-                    </button>
-                    <button
-                        type="button"
-                        className={styles.toolOption}
-                        onClick={showTextPanel}
-                    >
-                        <span className={styles.shadow}></span>
-                        <span className={styles.edge}></span>
-                        <span className={styles.front}>
-                            <FontAwesomeIcon icon={faT} />
-                        </span>
-                    </button>
-                    <button
-                        type="button"
-                        className={styles.toolOption}
-                        onClick={showGifPanel}
-                    >
-                        <span className={styles.shadow}></span>
-                        <span className={styles.edge}></span>
-                        <span className={styles.front} style={{fontWeight: "600"}}>
-                            GIF
-                        </span>
-                    </button>
-                    <button
-                        type="button"
-                        className={styles.toolOption}
-                        onClick={showStickerPanel}
-                    >
-                        <span className={styles.shadow}></span>
-                        <span className={styles.edge}></span>
-                        <span className={styles.front}>
-                            <FontAwesomeIcon icon={faHeart} />
-                        </span>
-                    </button>
-                    <button
-                        type="button"
-                        className={styles.toolOption}
-                        onClick={deleteCard}
-                    >
-                        <span className={styles.shadow}></span>
-                        <span className={styles.edge}></span>
-                        <span className={styles.front}>
-                            <FontAwesomeIcon icon={faTrash} />
-                        </span>
-                    </button>
-                    <button
-                        type="button"
-                        className={styles.toolOption}
-                        onClick={() => flipCard()}
-                    >
-                        <span className={styles.shadow}></span>
-                        <span className={styles.edge}></span>
-                        <span className={styles.front}>
-                            <FontAwesomeIcon icon={faRightLeft} />
-                        </span>
-                    </button>
-                    <button
-                        type="button"
-                        className={styles.toolOption} 
-                        onClick={() => updateDeckContent()}                       
-                    >
-                        <span className={styles.shadow}></span>
-                        <span className={styles.edge}></span>
-                        <span className={styles.front}>
-                            <FontAwesomeIcon icon={faFloppyDisk} />
-                        </span>
-                    </button>
-                    <button
-                        type="button"
-                        className={styles.toolOption}
-                        onClick={hideSidePanel}
-                    >
-                        <span className={styles.shadow}></span>
-                        <span className={styles.edge}></span>
-                        <span className={styles.front}>
-                            <FontAwesomeIcon icon={faCircleXmark} />
-                        </span>
-                    </button>
+                    <Tooltip title="Add Card">
+                        <button
+                            type="button"
+                            className={styles.toolOption}
+                            onClick={addCard}
+                        >
+                            <span className={styles.shadow}></span>
+                            <span className={styles.edge}></span>
+                            <span className={styles.front}>
+                                <FontAwesomeIcon icon={faPlus} />
+                            </span>
+                        </button>
+                    </Tooltip>
+                    <Tooltip title="Add Text">
+                        <button
+                            type="button"
+                            className={styles.toolOption}
+                            onClick={showTextPanel}
+                        >
+                            <span className={styles.shadow}></span>
+                            <span className={styles.edge}></span>
+                            <span className={styles.front}>
+                                <FontAwesomeIcon icon={faT} />
+                            </span>
+                        </button>
+                    </Tooltip>
+                    <Tooltip title="Add Gif">
+                        <button
+                            type="button"
+                            className={styles.toolOption}
+                            onClick={showGifPanel}
+                        >
+                            <span className={styles.shadow}></span>
+                            <span className={styles.edge}></span>
+                            <span className={styles.front} style={{fontWeight: "600"}}>
+                                GIF
+                            </span>
+                        </button>
+                    </Tooltip>
+                    <Tooltip title="Add Sticker">
+                        <button
+                            type="button"
+                            className={styles.toolOption}
+                            onClick={showStickerPanel}
+                        >
+                            <span className={styles.shadow}></span>
+                            <span className={styles.edge}></span>
+                            <span className={styles.front}>
+                                <FontAwesomeIcon icon={faHeart} />
+                            </span>
+                        </button>
+                    </Tooltip>
+                    <Tooltip title="Delete Card">
+                        <button
+                            type="button"
+                            className={styles.toolOption}
+                            onClick={deleteCard}
+                        >
+                            <span className={styles.shadow}></span>
+                            <span className={styles.edge}></span>
+                            <span className={styles.front}>
+                                <FontAwesomeIcon icon={faTrash} />
+                            </span>
+                        </button>
+                    </Tooltip>
+                    <Tooltip title="Flip Card">
+                        <button
+                            type="button"
+                            className={styles.toolOption}
+                            onClick={() => flipCard()}
+                        >
+                            <span className={styles.shadow}></span>
+                            <span className={styles.edge}></span>
+                            <span className={styles.front}>
+                                <FontAwesomeIcon icon={faRightLeft} />
+                            </span>
+                        </button>
+                    </Tooltip>
+                    <Tooltip title="Save Content">
+                        <button
+                            type="button"
+                            className={styles.toolOption} 
+                            onClick={() => updateDeckContent()}                       
+                        >
+                            <span className={styles.shadow}></span>
+                            <span className={styles.edge}></span>
+                            <span className={styles.front}>
+                                <FontAwesomeIcon icon={faFloppyDisk} />
+                            </span>
+                        </button>
+                    </Tooltip>
+                    <Tooltip title="Close Side Panel">
+                        <button
+                            type="button"
+                            className={styles.toolOption}
+                            onClick={hideSidePanel}
+                        >
+                            <span className={styles.shadow}></span>
+                            <span className={styles.edge}></span>
+                            <span className={styles.front}>
+                                <FontAwesomeIcon icon={faCircleXmark} />
+                            </span>
+                        </button>
+                    </Tooltip>
                 </div>
                 <div className={styles.panel}>
                     <div className={styles.deck}>

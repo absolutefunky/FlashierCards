@@ -2,6 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import styles from "../Styles/HomeForms.module.css";
 import { useState, type ChangeEvent } from "react";
 import UserAuth from "../AuthContext";
+import Tooltip from "@mui/material/Tooltip";
 
 function CreateNewPassword() {
     const navigate = useNavigate();
@@ -69,15 +70,17 @@ function CreateNewPassword() {
                         <div></div>
                 }
                 <form className={styles.signupForm} onSubmit={submitForm}>
-                    <div>
-                        <div className={styles.subtitle}>New password</div>
-                        <input 
-                            type="password"
-                            name="newPassword"
-                            value={formData.newPassword}
-                            onChange={handleFormData}
-                        />
-                    </div>
+                    <Tooltip title="Password should have 8 characters with at least one uppercase letter, lowercase letter, number, and special character.">
+                        <div>
+                            <div className={styles.subtitle}>New password</div>
+                            <input 
+                                type="password"
+                                name="newPassword"
+                                value={formData.newPassword}
+                                onChange={handleFormData}
+                            />
+                        </div>
+                    </Tooltip>
                     <div>
                         <div className={styles.subtitle}>Confirm new password</div>
                         <input 

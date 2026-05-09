@@ -7,6 +7,7 @@ import { useState, type ChangeEvent } from 'react';
 import styles from "../Styles/Profile.module.css";
 import UserAuth from "../AuthContext";
 import ProfileNavbar from "./ProfileNavbar";
+import Tooltip from "@mui/material/Tooltip";
 
 function ChangePassword() {
     const { userId } = useParams();
@@ -110,15 +111,17 @@ function ChangePassword() {
                                     onChange={handleFormData}
                                 />
                             </div>
-                            <div className={styles.formField}>
-                                <div className={styles.subtitle}>New password</div>
-                                <input 
-                                    type="password"
-                                    name="newPassword"
-                                    value={formData.newPassword}
-                                    onChange={handleFormData}
-                                />
-                            </div>
+                            <Tooltip title="Password should have 8 characters with at least one uppercase letter, lowercase letter, number, and special character.">
+                                <div className={styles.formField}>
+                                    <div className={styles.subtitle}>New password</div>
+                                    <input 
+                                        type="password"
+                                        name="newPassword"
+                                        value={formData.newPassword}
+                                        onChange={handleFormData}
+                                    />
+                                </div>
+                            </Tooltip>
                             <div className={styles.formField}>
                                 <div className={styles.subtitle}>Confirm new password</div>
                                 <input 

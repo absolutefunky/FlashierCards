@@ -5,6 +5,7 @@ import UserAuth from "../AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import HomeAnimation from "./HomeAnimation";
+import Tooltip from "@mui/material/Tooltip";
 
 function Signup() {
     const navigate = useNavigate();
@@ -120,15 +121,17 @@ function Signup() {
                                 onChange={handleFormData}
                             />
                         </div>
-                        <div>
-                            <div className={styles.subtitle}>Password</div>
-                            <input
-                                type="password"
-                                name="password"
-                                value={formData.password}
-                                onChange={handleFormData}
-                            />
-                        </div>
+                        <Tooltip title="Password should have 8 characters with at least one uppercase letter, lowercase letter, number, and special character.">
+                            <div>
+                                <div className={styles.subtitle}>Password</div>
+                                <input
+                                    type="password"
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleFormData}
+                                />
+                            </div>
+                        </Tooltip>
                         <div>
                             <div className={styles.subtitle}>Confirm password</div>
                             <input
