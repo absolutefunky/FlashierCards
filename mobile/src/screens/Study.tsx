@@ -7,103 +7,73 @@ import * as ScreenOrientation from "expo-screen-orientation";
 import { VITE_API_URL } from "@env";
 import { Dimensions } from "react-native";
 import { RootStackParamList } from "../../App";
+import type Card from "../interfaces/Card";
 
 const SPREADWIDTH = Dimensions.get("window").width;
-const CARD_WIDTH = SPREADWIDTH * 0.6;
+const CARD_WIDTH = SPREADWIDTH * 0.65;
 const CARD_HEIGHT = CARD_WIDTH / 2;
 
 const scaleX = CARD_WIDTH / 800;
 const scaleY = CARD_HEIGHT / 400;
 
-type CardText = {
-  input: string;
-  x: number;
-  y: number;
-  width: number;
-  color: string;
-  fontSize: number;
-};
-
-type CardSticker = {
-  url: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-};
-
-type Card = {
-  text: CardText[];
-  gif: CardSticker[];
-  sticker: CardSticker[];
-};
-
 type StudyScreenRouteProp = RouteProp<RootStackParamList, "Study">;
 
 export default function StudyScreen() {
-      useEffect(() => {
+    const route = useRoute<StudyScreenRouteProp>();
+    const { userId, deckId, token } = route.params;
+    const [error, setError] = useState({status: false, message: ""});
+    const [loading, setLoading] = useState(false);
+    const [isFlipped, setIsFlipped] = useState(false);
+    const flipDisplay = useRef(new Animated.Value(0)).current;
+    const [frontCards, setFrontCards] = useState<Card[]>([{text: [], gif: [], sticker: []}]);
+    const [backCards, setBackCards] = useState<Card[]>([{text: [], gif: [], sticker: []}]);
+    const [cardNum, setCardNum] = useState(1);
+    const [total, setTotal] = useState(1);
+
+    const fetchCardContent = async () => {
+        setLoading(true);
+
+        try {
+            // get card content from mongodb
+            const docResponse = await fetch(`${VITE_API_URL}/user/${userId}/deck/${deckId}/cards`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+
+            // get message and card content
+            const docData = await docResponse.json();
+
+            if (!docResponse.ok) {
+                throw new Error(docData.message || "Failed to load cards.");
+            }
+
+            // set deck content
+            setFrontCards(docData.frontCards);
+            setBackCards(docData.backCards);
+            setTotal(docData.frontCards.length);
+            
+            setLoading(false);
+
+        } catch(error: any) {
+            setLoading(false);
+            setError({status: true, message: error.message});
+        }
+    }
+
+    useEffect(() => {
         async function changeScreenPos() {
             await ScreenOrientation.lockAsync(
                 ScreenOrientation.OrientationLock.LANDSCAPE
             );
         }
-
         changeScreenPos();
-        fetchCardData();
-
+        fetchCardContent();
         return () => {
             ScreenOrientation.unlockAsync();
         };
     }, []);
-    
-    const route = useRoute<StudyScreenRouteProp>();
-
-    const { userId, deckId } = route.params;
-
-    const [error, setError] = useState({status: false, message: ""});
-    const [loading, setLoading] = useState(false);
-    const [isFlipped, setIsFlipped] = useState(false);
-    const flipDisplay = useRef(new Animated.Value(0)).current;
-    const [frontCards, setFrontCards] = useState<Card[]>([]);
-    const [backCards, setBackCards] = useState<Card[]>([]);
-    const [cardNum, setCardNum] = useState(1);
-    const [total, setTotal] = useState(0);
-
-    async function fetchCardData() {
-    setLoading(true);
-    setError({ status: false, message: "" });
-
-    try {
-        const deckResponse = await fetch(
-        `${VITE_API_URL}/users/${userId}/decks/${deckId}`
-        );
-
-        const deckData = await deckResponse.json();
-
-        if (!deckResponse.ok) {
-        throw new Error(deckData.message || "Failed to load card content.");
-        }
-
-        const cardResponse = await fetch(
-        `${VITE_API_URL}/users/${userId}/decks/${deckId}/cards`
-        );
-
-        const cardData = await cardResponse.json();
-
-        if (!cardResponse.ok) {
-        throw new Error(cardData.message || "Failed to load cards.");
-        }
-
-        setFrontCards(cardData.frontCards || []);
-        setBackCards(cardData.backCards || []);
-        setTotal(cardData.frontCards?.length || 0);
-        } catch (err: any) {
-            setError({ status: true, message: err.message });
-        } finally {
-            setLoading(false);
-        }
-    }
-
 
     const frontRotate = flipDisplay.interpolate({
         inputRange: [0, 180],

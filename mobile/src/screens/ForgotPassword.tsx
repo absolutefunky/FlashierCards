@@ -19,10 +19,15 @@ export default function ForgotPasswordScreen() {
         setError({ status: false, message: "" });
 
         try {
-            const response = await fetch(`${VITE_API_URL}/users/forgotPassword`, {
+            const response = await fetch(`${VITE_API_URL}/user/forgotPassword`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email: email.trim(), sqAnswer })
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: email.trim().toLowerCase(),
+                    sqAnswer: sqAnswer
+                })
             });
 
             const data = await response.json();
@@ -30,7 +35,9 @@ export default function ForgotPasswordScreen() {
             if (!response.ok) throw new Error(data.message);
 
             setLoading(false);
-            navigation.navigate("CreateNewPassword", { userId: String(data.user.id) });
+
+            // go to create new password when user is verified
+            navigation.navigate("CreateNewPassword", { userId: data.user.id, token: data.token });
 
         } catch (err: any) {
             setLoading(false);

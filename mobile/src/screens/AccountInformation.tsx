@@ -12,6 +12,7 @@ type AccountInformationScreenRouteProp = RouteProp<RootStackParamList, "AccountI
 export default function AccountInformationScreen() {
     const navigation = useNavigation<AccountInformationScreenNavigationProp>();
     const route = useRoute<AccountInformationScreenRouteProp>();
+    const { userId, token } = route.params;
     const [error, setError] = useState({status: false, message: ""});
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState<UserModel>();
@@ -21,7 +22,12 @@ export default function AccountInformationScreen() {
         setLoading(true);
 
         try {
-            const response = await fetch(`${VITE_API_URL}/users/${route.params.userId}`);
+            const response = await fetch(`${VITE_API_URL}/user/${userId}`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
 
             // get message and user data
             const data = await response.json();
@@ -33,7 +39,7 @@ export default function AccountInformationScreen() {
             setUser(data);
 
             // get list of decks to count
-            const deckResponse = await fetch(`${VITE_API_URL}/users/${route.params.userId}/decks`);
+            const deckResponse = await fetch(`${VITE_API_URL}/user/${userId}/decks`);
 
             // get message and deck data
             const deckData = await deckResponse.json();
@@ -61,19 +67,13 @@ export default function AccountInformationScreen() {
             <View style={styles.profileNav}>
                 <TouchableOpacity
                     style={styles.profileNavButton}
-                    onPress={() => navigation.navigate("AccountInformation", {userId: route.params.userId})}
+                    onPress={() => navigation.navigate("AccountInformation", {userId: route.params.userId, token: token})}
                 >
                    <Text style={styles.profileNavText}>Account</Text>
                 </TouchableOpacity>
-                {/* <TouchableOpacity
-                    style={styles.profileNavButton}
-                    onPress={() => navigation.navigate("Theme", {userId: route.params.userId})}
-                >
-                    <Text style={styles.profileNavText}>Theme</Text>
-                </TouchableOpacity> plans on further development for mobile*/}
                 <TouchableOpacity
                     style={styles.profileNavButton}
-                    onPress={() => navigation.navigate("DeleteAccount", {userId: route.params.userId})}
+                    onPress={() => navigation.navigate("DeleteAccount", {userId: route.params.userId, token: token})}
                 >
                     <Text style={styles.profileNavText}>Delete</Text>
                 </TouchableOpacity>

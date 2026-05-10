@@ -11,6 +11,7 @@ type DeleteAccountScreenRouteProp = RouteProp<RootStackParamList, "DeleteAccount
 export default function DeleteAccountScreen() {
     const navigation = useNavigation<DeleteAccountScreenNavigationProp>();
     const route = useRoute<DeleteAccountScreenRouteProp>();
+    const { userId, token } = route.params;
     const [error, setError] = useState({status: false, message: ""});
     const [loading, setLoading] = useState(false);
 
@@ -18,8 +19,11 @@ export default function DeleteAccountScreen() {
         setLoading(true);
 
         try {
-            const response = await fetch(`${VITE_API_URL}/users/${route.params.userId}/delete`, {
-                method: "DELETE"
+            const response = await fetch(`${VITE_API_URL}/user/${userId}/delete`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
             });
 
             const data = await response.json();
@@ -28,7 +32,22 @@ export default function DeleteAccountScreen() {
                 throw new Error(data.message);
             }
 
+            // delete user card content in mongodb
+            const docResponse = await fetch(`${VITE_API_URL}/user/${userId}/deleteCards`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
+
+            const docData = await docResponse.json();
+
+            if (!response.ok) {
+                throw new Error(docData.message);
+            }
+
             setLoading(false);
+            
 			navigation.navigate("Login");
 
         } catch(error: any) {
@@ -43,20 +62,19 @@ export default function DeleteAccountScreen() {
             <View style={styles.profileNav}>
                 <TouchableOpacity
                     style={styles.profileNavButton}
-                    onPress={() => navigation.navigate("AccountInformation", {userId: route.params.userId})}
+                    onPress={() => navigation.navigate("AccountInformation", {userId: route.params.userId, token: token})}
                 >
                     <Text style={styles.profileNavText}>Account</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+             {/*   <TouchableOpacity
                     style={styles.profileNavButton}
                     onPress={() => navigation.navigate("Theme", {userId: route.params.userId})}
                 >
                     <Text style={styles.profileNavText}>Theme</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <TouchableOpacity
                     style={styles.profileNavButton}
-                    onPress={() => navigation.navigate("DeleteAccount", {userId: route.params.userId})}
-                >
+                    onPress={() => navigation.navigate("DeleteAccount", {userId: route.params.userId, token: token})}>
                     <Text style={styles.profileNavText}>Delete</Text>
                 </TouchableOpacity>
             </View>
@@ -79,7 +97,7 @@ export default function DeleteAccountScreen() {
                             <Text style={styles.signupFrontText}>I am certain!</Text>
                         </View>
                     </Pressable> 
-                    <Pressable style={styles.homeBtn} onPress={() => navigation.navigate("Dashboard", {userId: route.params.userId})}>
+                    <Pressable style={styles.homeBtn} onPress={() => navigation.navigate("Dashboard", {userId: route.params.userId, token: token})}>
                         <View style={styles.loginShadow} />
                         <View style={styles.loginEdge} />
                         <View style={styles.loginFront}>
