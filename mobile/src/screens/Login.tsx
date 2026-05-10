@@ -19,13 +19,13 @@ export default function LoginScreen() {
 
         try {
             // find user account
-            const userResponse = await fetch(`${VITE_API_URL}/users/login`, {
+            const userResponse = await fetch(`${VITE_API_URL}/user/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    email: email.trim(),
+                    email: email.trim().toLowerCase(),
                     password: password
                 })
             });
@@ -39,8 +39,8 @@ export default function LoginScreen() {
 
             setLoading(false);
 
-            // go to dashboard after user account is created
-            navigation.navigate("Dashboard", {userId: userData.user.id});
+            // go to dashboard after user logs in
+            navigation.navigate("Dashboard", {userId: userData.user.id, token: userData.token});
 
         } catch(error: any) {
             setLoading(false);

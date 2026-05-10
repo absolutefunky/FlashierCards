@@ -11,8 +11,7 @@ type CreateNewPasswordScreenRouteProp = RouteProp<RootStackParamList, "CreateNew
 export default function CreateNewPasswordScreen() {
     const navigation = useNavigation<CreateNewPasswordScreenNavigationProp>();
     const route = useRoute<CreateNewPasswordScreenRouteProp>();
-    const { userId } = route.params;
-
+    const {userId, token} = route.params;
     const [newPassword, setNewPassword] = useState("");
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
     const [error, setError] = useState({ status: false, message: "" });
@@ -23,10 +22,16 @@ export default function CreateNewPasswordScreen() {
         setError({ status: false, message: "" });
 
         try {
-            const response = await fetch(`${VITE_API_URL}/users/${userId}/createNewPassword`, {
+            const response = await fetch(`${VITE_API_URL}/user/${userId}/createNewPassword`, {
                 method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ newPassword, confirmNewPassword })
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    newPassword: newPassword,
+                    confirmNewPassword: confirmNewPassword
+                })
             });
 
             const data = await response.json();
@@ -34,7 +39,7 @@ export default function CreateNewPasswordScreen() {
             if (!response.ok) throw new Error(data.message);
 
             setLoading(false);
-            navigation.navigate("Dashboard", { userId });
+            navigation.navigate("Dashboard", { userId, token });
 
         } catch (err: any) {
             setLoading(false);

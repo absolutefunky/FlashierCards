@@ -5,65 +5,73 @@ import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import * as ScreenOrientation from "expo-screen-orientation";
 import { VITE_API_URL } from "@env";
 import { useState, useEffect } from "react";
+import type Deck from "../interfaces/Deck";
 
 type DashboardScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, "Dashboard">;
 type DashboardScreenRouteProp = RouteProp<RootStackParamList, "Dashboard">;
 
-type Deck = {
-  id: number;
-  name: string;
-};
-
-
 export default function DashboardScreen() {
     const navigation = useNavigation<DashboardScreenNavigationProp>();
     const route = useRoute<DashboardScreenRouteProp>();
-    const userId = route.params.userId;
+    const { userId, token } = route.params;
     const [decks, setDecks] = useState<Deck[]>([]);
-
+    const [error, setError] = useState({status: false, message: ""});
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
-
 
     useEffect(() => {
-    ScreenOrientation.lockAsync(
-        ScreenOrientation.OrientationLock.PORTRAIT_UP
-      );
-      fetchDeckData();
-  }, []);
+        ScreenOrientation.lockAsync(
+            ScreenOrientation.OrientationLock.PORTRAIT_UP
+        );
+        fetchDeckData();
+    }, []);
     
     async function fetchDeckData() {
-      setLoading(true);
-      setError("");
+        setLoading(true);
 
-      try {
-        const response = await fetch(`${VITE_API_URL}/users/${userId}/decks`);
-        const data = await response.json();
+        try {
+            const response = await fetch(`${VITE_API_URL}/user/${userId}/decks`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
 
-        if (!response.ok) {
-          throw new Error(data.message || "Failed to load decks.");
-        }
+            const data = await response.json();
 
-        setDecks(data);
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
+            if (!response.ok) {
+                throw new Error(data.message || "Failed to load decks.");
+            }
+
+            setDecks(data);
+            setLoading(false);
+
+        } catch (error: any) {
+            setError({status: true, message: error.message});
+            setLoading(false);
+        } 
     }
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Flashier Cards</Text>
-              {loading && <Text style={styles.message}>Loading...</Text>}
-              {error !== "" && <Text style={styles.error}>{error}</Text>}
-            <Text></Text>
+            { (loading) ?
+                <Text style={styles.message}>Loading request...</Text>
+            :
+                (error.status) ?
+                    <Text style={styles.message}>{error.message}</Text>
+                :
+                    <></>
+            }
             <FlatList
                 showsVerticalScrollIndicator={false}
                 data={decks}
                 keyExtractor={item => item.id.toString()}
                 renderItem={({item}) => (                                                               // add prop for deckId here
-                    <Pressable key={item.id} style={styles.deck} onPress={() => navigation.navigate("Study", {userId: route.params.userId, deckId: item.id})}>
+                    <Pressable 
+                        key={item.id.toString()}
+                        style={styles.deck}
+                        onPress={() => navigation.navigate("Study", {userId: route.params.userId, deckId: item.id.toString(), token: token})}
+                    >
                         <Text style={styles.deckText}>{item.name}</Text>
                     </Pressable>
                 )}

@@ -9,7 +9,6 @@ import StudyScreen from './src/screens/Study';
 import ForgotPasswordScreen from './src/screens/ForgotPassword';
 import CreateNewPasswordScreen from './src/screens/CreateNewPassword';
 import AccountInformationScreen from './src/screens/AccountInformation';
-import ThemeScreen from './src/screens/Theme';
 import DeleteAccountScreen from './src/screens/DeleteAccount';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { Pressable, Text, StyleSheet } from 'react-native';
@@ -19,12 +18,11 @@ import { faArrowLeft, faArrowRightFromBracket, faFolder } from '@fortawesome/fre
 export type RootStackParamList = {
     Login: undefined;
     ForgotPassword: undefined;
-    CreateNewPassword: {userId: string};   // add prop for userId here
-    Dashboard: {userId: string};
-    Study: {userId: string, deckId: number};    // add prop for deckId here
-    AccountInformation: {userId: string};
-    Theme: {userId: string};
-    DeleteAccount: {userId: string};
+    CreateNewPassword: {userId: string, token: string};
+    Dashboard: {userId: string, token: string};
+    Study: {userId: string, deckId: string, token: string};
+    AccountInformation: {userId: string, token: string};
+    DeleteAccount: {userId: string, token: string};
 };
 
 const RootStack = createStackNavigator<RootStackParamList>();
@@ -65,17 +63,7 @@ export default function App() {
                 <RootStack.Screen
                     name="CreateNewPassword"
                     component={CreateNewPasswordScreen}
-                    options={({ navigation, route }) => ({
-                        title: "",
-                        headerLeft: () => (     // add prop for userId
-                            <Pressable style={styles.headerBtn} onPress={() => navigation.navigate("ForgotPassword")}>
-                                <FontAwesomeIcon style={styles.headerText} icon={faArrowLeft} size={26} />
-                            </Pressable>
-                        ),
-                        headerStyle: {
-                            backgroundColor: "#D9EDF8"
-                        }
-                    })}
+                    options={{headerShown: false}}
                 />
                 <RootStack.Screen
                     name="Dashboard"
@@ -88,7 +76,7 @@ export default function App() {
                             </Pressable>
                         ),
                         headerRight: () => (
-                            <Pressable style={styles.headerBtn} onPress={() => navigation.navigate("AccountInformation", {userId: route.params.userId})}>
+                            <Pressable style={styles.headerBtn} onPress={() => navigation.navigate("AccountInformation", {userId: route.params.userId, token: route.params.token})}>
                                 <Text style={styles.headerText}>Profile</Text>
                             </Pressable>
                         ),
@@ -100,17 +88,7 @@ export default function App() {
                 <RootStack.Screen
                     name="Study"
                     component={StudyScreen}
-                    options={({ navigation, route }) => ({
-                        title: "",
-                        headerLeft: () => (         // add prop for deckId
-                            <Pressable style={styles.headerBtn} onPress={() => navigation.navigate("Dashboard", {userId: route.params.userId})}>
-                                <FontAwesomeIcon style={styles.headerText} icon={faFolder} size={26} />
-                            </Pressable>
-                        ),
-                        headerStyle: {
-                            backgroundColor: "#D9EDF8"
-                        }
-                    })}
+                    options={{headerShown: false}}
                 />
                 <RootStack.Screen 
                     name="AccountInformation"
@@ -118,22 +96,7 @@ export default function App() {
                     options={({ navigation, route }) => ({
                         title: "",
                         headerLeft: () => (
-                            <Pressable style={styles.headerBtn} onPress={() => navigation.navigate("Dashboard", {userId: route.params.userId})}>
-                                <FontAwesomeIcon style={styles.headerText} icon={faFolder} size={26} />
-                            </Pressable>
-                        ),
-                        headerStyle: {
-                            backgroundColor: "#D9EDF8"
-                        }
-                    })}
-                />
-                <RootStack.Screen
-                    name="Theme"
-                    component={ThemeScreen}
-                    options={({ navigation, route }) => ({
-                        title: "",
-                        headerLeft: () => (
-                            <Pressable style={styles.headerBtn} onPress={() => navigation.navigate("Dashboard", {userId: route.params.userId})}>
+                            <Pressable style={styles.headerBtn} onPress={() => navigation.navigate("Dashboard", {userId: route.params.userId, token: route.params.token})}>
                                 <FontAwesomeIcon style={styles.headerText} icon={faFolder} size={26} />
                             </Pressable>
                         ),
@@ -148,7 +111,7 @@ export default function App() {
                     options={({ navigation, route }) => ({
                         title: "",
                         headerLeft: () => (
-                            <Pressable style={styles.headerBtn} onPress={() => navigation.navigate("Dashboard", {userId: route.params.userId})}>
+                            <Pressable style={styles.headerBtn} onPress={() => navigation.navigate("Dashboard", {userId: route.params.userId, token: route.params.token})}>
                                 <FontAwesomeIcon style={styles.headerText} icon={faFolder} size={26} />
                             </Pressable>
                         ),
@@ -171,8 +134,7 @@ const styles = StyleSheet.create({
         paddingLeft: 12,
         marginRight: 10,
         marginLeft: 10,
-        borderRadius: 10,
-        height: 35
+        borderRadius: 10
     },
     headerText: {
         textAlign: "center",
