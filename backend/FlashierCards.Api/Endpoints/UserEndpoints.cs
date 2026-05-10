@@ -15,7 +15,6 @@ public static class UserEndpoints
         // GET /user/{id} to get user data
         app.MapGet("/user/{id}", [Authorize] async(int id, Supabase.Client supabase) =>
         {
-            Console.WriteLine("Ok I know I at least ented this finc");
             // find user who has the given id
             var response = await supabase
                 .From<User>()
@@ -54,7 +53,7 @@ public static class UserEndpoints
 
             var existingUser = await supabase
                 .From<User>()
-                .Where(u => u.Email == normalizedRegisterEmail)
+                .Where(u => u.Email == newUser.Email)
                 .Get();
 
             // check if user already exists
@@ -85,7 +84,7 @@ public static class UserEndpoints
 
             var userToInsert = new User
             {
-                Email = newUser.Email.Trim().ToLower(),
+                Email = newUser.Email,
                 PasswordHash = hashedPassword,
                 SqAnswer = newUser.SqAnswer,
                 DateAccountCreated = DateOnly.FromDateTime(DateTime.UtcNow)
@@ -131,10 +130,9 @@ public static class UserEndpoints
             }
 
             // check if user exists
-            var normalizedLoginEmail = loginUser.Email.Trim().ToLower();
             var response = await supabase
                 .From<User>()
-                .Where(u => u.Email == normalizedLoginEmail)
+                .Where(u => u.Email == loginUser.Email)
                 .Get();
 
             var user = response.Models.FirstOrDefault();
@@ -234,10 +232,9 @@ public static class UserEndpoints
             }
 
             // check if user exists
-            var normalizedForgotEmail = forgetfulUser.Email.Trim().ToLower();
              var response = await supabase
                 .From<User>()
-                .Where(u => u.Email == normalizedForgotEmail)
+                .Where(u => u.Email == forgetfulUser.Email)
                 .Get();
 
             var user = response.Models.FirstOrDefault();

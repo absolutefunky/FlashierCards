@@ -4,42 +4,6 @@
     position: relative;
 }
 
-.background {
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-}
-
-@keyframes slideRight {
-    from { background-position: 0 0; }
-    to { background-position: 200px 0; }
-}
-
-@keyframes slideRightFast {
-    from { background-position: 0 0; }
-    to { background-position: 300px 0; }
-}
-
-.animationOne {
-    background-image: radial-gradient(circle, rgba(0, 74, 148, 0.12) 10%, transparent 10%);
-    background-size: 60px 60px;
-    animation: slideRight 6s linear infinite;
-}
-
-.animationTwo {
-    background-image: repeating-linear-gradient(
-        60deg,
-        transparent,
-        transparent 25px,
-        rgba(0, 74, 148, 0.08) 25px,
-        rgba(0, 74, 148, 0.08) 50px
-    );
-    animation: slideRightFast 3s linear infinite;
-}
-
-.none {}
-
 .dashboardContent > div:last-of-type {
     display: flex;
     flex: 1;

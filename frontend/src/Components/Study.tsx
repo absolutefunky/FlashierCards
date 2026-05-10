@@ -12,7 +12,6 @@ function Study() {
     const [error, setError] = useState({status: false, message: ""});
     const [loading, setLoading] = useState(false);
     const [deckName, setDeckName] = useState();
-    const [animationType, setAnimationType] = useState("none");
     const { userId, deckId } = useParams();
     const [frontCards, setFrontCards] = useState<Card[]>([{text: [], gif: [], sticker: []}]);
     const [backCards, setBackCards] = useState<Card[]>([{text: [], gif: [], sticker: []}]);
@@ -139,14 +138,6 @@ function Study() {
             setError({status: true, message: error.message});
         }
     }
-
-    const fetchProfileData = async () => {
-        try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/profiles`);
-            const data = await response.json();
-            if (response.ok) setAnimationType(data.animationType ?? "none");
-        } catch { }
-    };
 
     useEffect(() => {
         fetchDeckData();
