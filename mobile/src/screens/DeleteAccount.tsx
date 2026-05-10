@@ -68,18 +68,13 @@ export default function DeleteAccountScreen() {
                 </TouchableOpacity>
              {/*   <TouchableOpacity
                     style={styles.profileNavButton}
-<<<<<<< HEAD
                     onPress={() => navigation.navigate("Theme", {userId: route.params.userId})}
                 >
                     <Text style={styles.profileNavText}>Theme</Text>
                 </TouchableOpacity> */}
                 <TouchableOpacity
                     style={styles.profileNavButton}
-                    onPress={() => navigation.navigate("DeleteAccount", {userId: route.params.userId})}
-=======
-                    onPress={() => navigation.navigate("DeleteAccount", {userId: route.params.userId, token: token})}
->>>>>>> e4654653efab09966ccc9afc5a842e1d10a34b29
-                >
+                    onPress={() => navigation.navigate("DeleteAccount", {userId: route.params.userId, token: token})}>
                     <Text style={styles.profileNavText}>Delete</Text>
                 </TouchableOpacity>
             </View>
