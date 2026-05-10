@@ -92,7 +92,7 @@ function Theme() {
                             Background Animations
                         </div>
                         <div className={styles.profileText}>
-                            Select background animation for the study web page.
+                            Select background animation for the study page.
                         </div>
                         <div className={styles.profileThemes}>
                             <div
