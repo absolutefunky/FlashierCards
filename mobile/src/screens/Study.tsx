@@ -9,7 +9,7 @@ import { Dimensions } from "react-native";
 import { RootStackParamList } from "../../App";
 
 const SPREADWIDTH = Dimensions.get("window").width;
-const CARD_WIDTH = SPREADWIDTH * 0.6;
+const CARD_WIDTH = SPREADWIDTH * 0.65;
 const CARD_HEIGHT = CARD_WIDTH / 2;
 
 const scaleX = CARD_WIDTH / 800;
