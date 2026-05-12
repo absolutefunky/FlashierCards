@@ -9,7 +9,7 @@ import { Dimensions } from "react-native";
 import { RootStackParamList } from "../../App";
 import type Card from "../interfaces/Card";
 
-const SPREADWIDTH = Dimensions.get("window").width;
+const SPREADWIDTH = 700;
 const CARD_WIDTH = SPREADWIDTH * 0.65;
 const CARD_HEIGHT = CARD_WIDTH / 2;
 
