@@ -39,8 +39,13 @@ export default function AccountInformationScreen() {
             setUser(data);
 
             // get list of decks to count
-            const deckResponse = await fetch(`${VITE_API_URL}/user/${userId}/decks`);
-
+           
+            const deckResponse = await fetch(`${VITE_API_URL}/user/${userId}/decks`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            });
             // get message and deck data
             const deckData = await deckResponse.json();
 

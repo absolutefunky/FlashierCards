@@ -56,7 +56,8 @@ export default function App() {
                             </Pressable>
                         ),
                         headerStyle: {
-                            backgroundColor: "#D9EDF8"
+                            backgroundColor: "#D9EDF8",
+                            height : 120 
                         }
                     })}
                 />
@@ -81,14 +82,15 @@ export default function App() {
                             </Pressable>
                         ),
                         headerStyle: {
-                            backgroundColor: "#D9EDF8"
+                            backgroundColor: "#D9EDF8",
+                            height : 120 
                         }
                     })}
                 />
                 <RootStack.Screen
                     name="Study"
                     component={StudyScreen}
-                    options={({ navigation, route }) => ({
+                     options={({ navigation, route }) => ({
                         title: "",
                         headerLeft: () => (
                             <Pressable style={styles.headerBtn} onPress={() => navigation.navigate("Dashboard", {userId: route.params.userId, token: route.params.token})}>
@@ -96,9 +98,12 @@ export default function App() {
                             </Pressable>
                         ),
                         headerStyle: {
-                            backgroundColor: "#D9EDF8"
+                            backgroundColor: "#D9EDF8",
+                            height : 70 
+
                         }
                     })}
+                    
                 />
                 <RootStack.Screen 
                     name="AccountInformation"
@@ -111,7 +116,8 @@ export default function App() {
                             </Pressable>
                         ),
                         headerStyle: {
-                            backgroundColor: "#D9EDF8"
+                            backgroundColor: "#D9EDF8",
+                            height : 120 
                         }
                     })}
                 />
@@ -127,6 +133,7 @@ export default function App() {
                         ),
                         headerStyle: {
                             backgroundColor: "#D9EDF8",
+                            height : 120 
                         }
                     })}
                 />
