@@ -106,6 +106,7 @@ function Edit() {
     }
 
     const fetchStickers = async (e: any) =>  {
+        console.log("hello world");
         e.preventDefault();
         setLoading(true);
         setQuery("");
