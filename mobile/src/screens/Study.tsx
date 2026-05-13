@@ -60,6 +60,7 @@ export default function StudyScreen() {
             setLoading(false);
             setError({status: true, message: error.message});
         }
+        
     }
 
     useEffect(() => {
@@ -169,6 +170,19 @@ export default function StudyScreen() {
                         }}
                     />
                     ))}
+                    {currentFrontCard?.gif.map((gif, index) => (
+                    <Image
+                        key={`front-gif-${index}`}
+                        source={{ uri: gif.url }}
+                        style={{
+                            position: "absolute",
+                            left: gif.x * scaleX,
+                            top: gif.y * scaleY,
+                            width: gif.width * scaleX,
+                            height: gif.height * scaleY,
+                        }}
+                    />
+                    ))}
                 </Animated.View>
                 <Animated.View style={[styles.card, styles.backCard, flipToBackStyle]}>
                     {currentBackCard?.text.map((text, index) => (
@@ -200,6 +214,19 @@ export default function StudyScreen() {
                             top: sticker.y * scaleY,
                             width: sticker.width * scaleX,
                             height: sticker.height * scaleY,
+                        }}
+                    />
+                    ))}
+                    {currentBackCard?.gif.map((gif, index) => (
+                    <Image
+                        key={`back-gif-${index}`}
+                        source={{ uri: gif.url }}
+                        style={{
+                        position: "absolute",
+                        left: gif.x * scaleX,
+                        top: gif.y * scaleY,
+                        width: gif.width * scaleX,
+                        height: gif.height * scaleY,
                         }}
                     />
                     ))}
