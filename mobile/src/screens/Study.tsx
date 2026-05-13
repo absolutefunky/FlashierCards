@@ -297,7 +297,6 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: "400",
         color: "#004A94",
-        textAlign: "center"
     },
     deckNav: {
         flexDirection: "row",
